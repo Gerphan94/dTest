@@ -4,6 +4,9 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 // import js
 import Navbar from './Component/navBar';
 
+import NotFound from './Page/404';
+import CasePage from './Component/Case/CasePage';
+
 function App() {
 
   return (
@@ -11,20 +14,23 @@ function App() {
       <Router>
         <HelmetProvider>
           <Navbar />
-          <Routes>
-            {/* <Route path="/"
+          <div className='mt-16'>
+          <Routes >
+            <Route path="/cases"
               element={
                 <>
                   <Helmet>
-                    <title>Home Page</title>
+                    <title>Case Page</title>
                   </Helmet>
-                  <HomePage />
+                  <CasePage/>
                 </>
               }
-            /> */}
+            />
            
-          
+          <Route path="*" element={<NotFound />} />
           </Routes>
+          </div>
+          
         </HelmetProvider>
 
       </Router>
