@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 function SideBar() {
 
     const URL = "http://127.0.0.1:5000/api/"
-    const [projects, setProjects] = useState(["One", "Two", "Three"])
+    const [projects, setProjects] = useState([])
 
     useEffect(() => {
         const fetchProject = async () => {
@@ -11,7 +11,6 @@ function SideBar() {
                 const response = await fetch(URL + 'projects');
                 const data = await response.json();
                 setProjects(data);
-                console.log('chekcing-----', data)
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -22,6 +21,8 @@ function SideBar() {
         }
         fetchProject();
     }, [])
+
+
 
     
 
