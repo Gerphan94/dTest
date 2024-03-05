@@ -31,7 +31,6 @@
 .PageBody {
   height: calc(100vh - 64px);
   margin-top: 64px;
-  overflow-y: hidden;
 }
 
 @keyframes App-logo-spin {

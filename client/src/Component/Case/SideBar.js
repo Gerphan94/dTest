@@ -29,7 +29,7 @@ function SideBar({ setProject, projectId }) {
 
     return (
 
-        <div className="bg-[#001529] w-48 h-screen text-white">
+        <div className="bg-[#d2e2ed] w-48 h-screen text-[#0e3754]">
             <div className="">
                 {projects.map((project) => (
                     <Link

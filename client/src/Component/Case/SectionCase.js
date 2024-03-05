@@ -157,7 +157,6 @@ function SectionCase(props) {
                                         onClick={() => setisShowSectionForm(false)}
                                     />
                                 </button>
-
                             </div>
                         </form>
                         :

@@ -28,7 +28,7 @@ function App() {
                 </>
               }
             />
-            <Route path="/cases/add/:projectId"
+            <Route path="/cases/add/:module_id"
               element={
                 <>
                   <Helmet>

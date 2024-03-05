@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, make_response
-from .model import db, Project, Module, Section, Testcase
+from .model import db, Project, Module, Section, Testcase, Priority
 
 main = Blueprint('main', __name__)
 
@@ -7,6 +7,13 @@ main = Blueprint('main', __name__)
 def handle_404_error(_error):
     """Return a http 404 error to client"""
     return make_response(jsonify({'error': 'Not found'}), 404)
+
+@main.route('/api/priority', methods=['GET'])
+def get_priority():
+    return jsonify([{
+        'id': priority.id, 
+        'name': priority.name 
+        } for priority in Priority.query.all()])
 
 @main.route('/api/projects', methods=['GET'])
 def get_projects():
@@ -42,7 +49,43 @@ def get_modules(project_id):
         'project_id': module.project_id
         } for module in Module.query.filter_by(project_id=project_id)])
     
-
+@main.route('/api/get_sections_of_module/<int:module_id>', methods=['GET'])
+def get_sections_of_module(module_id):
+    result_ar = []
+    sections = Section.query.filter_by(module_id=module_id, level= 0)
+    for section in sections:
+        obj = {}
+        obj['id'] = section.id
+        obj['name'] = section.name
+        obj['level'] = section.level
+        result_ar.append(obj)
+        # LEVEL 1
+        section_child1s = Section.query.filter_by(parent_id=section.id)
+        for child1 in section_child1s:
+            obj_child1 = {}
+            obj_child1['id'] = child1.id
+            obj_child1['name'] = child1.name
+            obj_child1['level'] = child1.level
+            result_ar.append(obj_child1)
+            # LEVEL 2
+            section_child2s = Section.query.filter_by(parent_id=child1.id)
+            for child2 in section_child2s:
+                obj_child2 = {}
+                obj_child2['id'] = child2.id
+                obj_child2['name'] = child2.name
+                obj_child2['level'] = child2.level
+                result_ar.append(obj_child2)
+                # LEVEL 3
+                section_chil3s = Section.query.filter_by(parent_id=child2.id)
+                for child3 in section_chil3s:
+                    obj_child3 = {}
+                    obj_child3['id'] = child3.id
+                    obj_child3['name'] = child3.name
+                    obj_child3['level'] = child3.level
+                    result_ar.append(obj_child3)
+    return jsonify(result_ar)
+            
+    
     
 @main.route('/api/cases_by_section/<int:section_id>', methods=['GET'])
 def get_cases(section_id):
