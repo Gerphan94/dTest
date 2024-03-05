@@ -6,6 +6,8 @@ import Navbar from './Component/navBar';
 
 import NotFound from './Page/404';
 import CasePage from './Component/Case/CasePage';
+import CaseForm from './Component/Case/CaseForm';
+
 
 function App() {
 
@@ -14,15 +16,25 @@ function App() {
       <Router>
         <HelmetProvider>
           <Navbar />
-          <div className='mt-16'>
+          <div className='PageBody'>
           <Routes >
-            <Route path="/cases"
+            <Route path="/cases/:projectId"
               element={
                 <>
                   <Helmet>
                     <title>Case Page</title>
                   </Helmet>
                   <CasePage/>
+                </>
+              }
+            />
+            <Route path="/cases/add/:projectId"
+              element={
+                <>
+                  <Helmet>
+                    <title>Case Add</title>
+                  </Helmet>
+                  <CaseForm/>
                 </>
               }
             />

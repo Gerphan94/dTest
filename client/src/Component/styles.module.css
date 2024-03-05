@@ -1,7 +1,6 @@
 .MainPage {
     width: calc(100vw - 192px);
-    margin-top: 64px;
-    overflow-y: hidden;
-    padding: 20px 20px;
+
 }
+
 
