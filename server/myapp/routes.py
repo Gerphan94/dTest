@@ -152,12 +152,12 @@ def add_case(section_id):
     if (title  != ''):
         new_case = Testcase(
             title = title,
-            description ='',
-            precondition = '',
-            step = '',
-            expectation = '',
-            priority_id = 2,
-            estimate = 0,
+            description = data['description'],
+            precondition = data['precondition'],
+            step = data['step'],
+            expectation = data['expectation'],
+            priority_id = data['priority'],
+            estimate = data['estimate'],
             section_id =section_id
         )
         db.session.add(new_case)

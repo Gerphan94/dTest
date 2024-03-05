@@ -12,15 +12,15 @@ function CaseForm() {
     const action = "Add";
 
     const [sectionOption, setSectionOption] = useState([]);
-    
+
     const priorityOptions = [
-        { label:"Low", value: 1},
-        { label:"Medium", value: 2},
-        { label:"High", value: 3},
-        { label:"Critical", value: 4}
+        { label: "Low", value: 1 },
+        { label: "Medium", value: 2 },
+        { label: "High", value: 3 },
+        { label: "Critical", value: 4 }
 
     ]
- 
+
     useEffect(() => {
         const fecthSectionList = async () => {
             try {
@@ -28,7 +28,7 @@ function CaseForm() {
                 const data = await response.json();
                 const sections = []
                 data.forEach(element => {
-                    sections.push({ value: element.id, label: Array(element.level*3).fill('\u00a0').join('') + element.name })
+                    sections.push({ value: element.id, label: Array(element.level * 3).fill('\u00a0').join('') + element.name })
                 });
                 setSectionOption(sections)
             } catch (error) {
@@ -46,7 +46,7 @@ function CaseForm() {
             const formJson = Object.fromEntries(formData.entries());
             console.log(formJson);
             try {
-                const response = await fetch(urlAPI + 'add_case/' + formJson['section'] , {
+                const response = await fetch(urlAPI + 'add_case/' + formJson['section'], {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -89,19 +89,32 @@ function CaseForm() {
                                     Section*
                                 </label>
                                 <Select
-                                name="section"
-                                options={sectionOption}
+                                    name="section"
+                                    options={sectionOption}
                                 />
                             </div>
                             <div className="text-left">
                                 <label htmlFor="section" className="block">
                                     Priority *
                                 </label>
-                                <Select 
-                                name="priority"
-                                defaultValue={{label:"Medium", value: 2}}
-                                options={priorityOptions} />
+                                <Select
+                                    name="priority"
+                                    defaultValue={{ label: "Medium", value: 2 }}
+                                    options={priorityOptions} />
                             </div>
+                            <div className="text-left">
+                                <label htmlFor="estimate" className="block">
+                                    Estimate
+                                </label>
+                                <input
+                                    name="estimate"
+                                    type="number"
+                                    className="border border-[#d2e2ed] rounded-sm outline-none px-2 py-1 text-right"
+                                />
+                            </div>
+
+
+
                         </div>
                         {/* Description */}
                         <div className="text-left mt-5">
@@ -111,7 +124,7 @@ function CaseForm() {
                                 type="text"
                                 rows={4}
                                 className="border border-[#d2e2ed] rounded-sm outline-none w-full px-2"
-                                />
+                            />
                             <p className="text-gray-400">The preconditions of this test case. Reference other test cases with [C#] (e.g. [C17]).
                             </p>
                         </div>
@@ -124,7 +137,7 @@ function CaseForm() {
                                 type="text"
                                 rows={4}
                                 className="border border-[#d2e2ed] rounded-sm outline-none w-full px-2"
-                                 />
+                            />
                             <p className="text-gray-400">The preconditions of this test case. Reference other test cases with [C#] (e.g. [C17]).
                             </p>
                         </div>
@@ -137,7 +150,7 @@ function CaseForm() {
                                 type="text"
                                 rows={4}
                                 className="border border-[#d2e2ed] rounded-sm outline-none w-full px-2"
-                               />
+                            />
                             <p className="text-gray-400">The required steps to execute the test case.</p>
                         </div>
 
@@ -149,7 +162,7 @@ function CaseForm() {
                                 type="text"
                                 rows={4}
                                 className="border border-[#d2e2ed] rounded-sm outline-none w-full px-2"
-                               />
+                            />
                             <p className="text-gray-400">The expected result after executing the test case.</p>
                         </div>
 
