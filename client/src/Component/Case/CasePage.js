@@ -60,6 +60,7 @@ function CasePage() {
             try {
                 const response = await fetch(urlAPI + "cases_by_module/" + selectedModule);
                 const data = await response.json();
+                console.log(data)
                 setCaseData(data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -90,6 +91,7 @@ function CasePage() {
                 });
                 if (response.ok) {
                     const data = await response.json();
+                    setCaseData(prevData => [...prevData, data]);
                     setisShowSectionForm(false);
 
                 }
@@ -99,10 +101,13 @@ function CasePage() {
         }, [curModule]);
 
     return (
-        <div className="h-full overflow-y-hidden">
+        <div className="h-full">
 
             <div className="flex bg-slate-50 ">
+                <div className={styles.SideBarHeight}>
                 <SideBar setProject={setProject} projectId={projectId} />
+
+                </div>
                 <div className={styles.MainPage}>
                     <div className="flex gap-4 p-2 border-b-2">
                         <div className="flex flex-wrap content-center font-bold text-lg uppercase w-40">{project['name']}</div>
@@ -124,11 +129,7 @@ function CasePage() {
                                 {/* Level 1 */}
                                 <div className="ml-2 border-l-2 border-gray-300 pl-4">
                                     {data.sub.map((level1) =>
-
                                         <SectionCase section_id={level1.section_id} section_name={level1.section_name} cases={level1.cases} curModule={curModule} />
-
-
-
                                     )}
                                 </div>
                             </div>
@@ -138,14 +139,12 @@ function CasePage() {
                                 {isShowSectionForm ?
                                     <form method="post" onSubmit={(e) => handleSubmitSection(e)} autoComplete='off'>
                                         <div className="flex items-center gap-2">
-
                                             <div>Section</div>
                                             <input
                                                 type="text"
                                                 className="rounded-md border outline-none px-2 py-1"
                                                 name="section_name"
                                                 required={true}
-
                                             />
                                             <button type="submit">
                                                 <FaCheck

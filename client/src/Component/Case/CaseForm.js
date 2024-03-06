@@ -112,9 +112,6 @@ function CaseForm() {
                                     className="border border-[#d2e2ed] rounded-sm outline-none px-2 py-1 text-right"
                                 />
                             </div>
-
-
-
                         </div>
                         {/* Description */}
                         <div className="text-left mt-5">

@@ -143,7 +143,8 @@ def add_section(module_id):
         )
         db.session.add(new_section)
         db.session.commit()
-    return jsonify({"msg": "pass"})
+        return jsonify({"id": new_section.id,"name": name})
+    return jsonify({"Error": "Section name is Empty"})
 
 @main.route('/api/add_case/<int:section_id>', methods=['POST'])
 def add_case(section_id):
