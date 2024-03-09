@@ -29,10 +29,11 @@ function SideBar({ setProject, projectId }) {
 
     return (
 
-        <div className="bg-[#d2e2ed] w-48 h-screen text-[#0e3754]">
+        <div className="bg-[#d2e2ed] w-48 h-screen text-[#0e3754] overflow-hidden">
             <div className="">
                 {projects.map((project) => (
                     <Link
+                        key={project.id}
                         to={`/cases/${project.id}`}
                         className={`w-full block text-left px-4 py-2 hover:bg-blue-400 ${project.id === projectId ? "bg-[#1890FF]" : ""}`}
                     >

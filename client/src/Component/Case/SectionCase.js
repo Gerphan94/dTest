@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { FaCheck, FaXmark } from "react-icons/fa6";
 import { CiEdit } from "react-icons/ci";
+import SectionModalAdd from "./SectionModalAdd";
 
 
 function SectionCase(props) {
@@ -71,8 +72,10 @@ function SectionCase(props) {
 
     return (
         <div className="mb-6">
-            <div className="text-left mb-2 font-bold text-lg">{props.section_name}</div>
-
+            <div className="flex mb-2">
+                <div className="text-left font-bold text-lg">{props.section_name}</div>
+                <button>Edit</button>
+            </div>
             <div className="w-full">
                 <table className="w-full">
                     <thead className="">
@@ -85,7 +88,7 @@ function SectionCase(props) {
                     </thead>
                     <tbody>
                         {props.cases && props.cases.map((ele, index) =>
-                            <tr className="border border-gray-200">
+                            <tr className="border border-gray-200" key={ele.case_id}>
                                 <td>{index + 1}</td>
                                 <td>
                                     <div className="px-2 text-left">

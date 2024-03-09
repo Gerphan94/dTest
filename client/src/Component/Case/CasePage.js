@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
-import SideBar from "./SideBar";
+
 import Select from 'react-select'
 import SectionCase from "./SectionCase";
 import styles from "../styles.module.css"
 import { FaCheck, FaXmark } from "react-icons/fa6";
 import { useParams, Link } from 'react-router-dom';
+
+import SideBar from "./SideBar";
+import SectionModalAdd from "./SectionModalAdd";
 
 function CasePage() {
 
@@ -15,7 +18,7 @@ function CasePage() {
     const [project, setProject] = useState({});
     const [curModule, setCurModule] = useState(null);
     const [caseData, setCaseData] = useState([]);
-    const [isShowSectionForm, setisShowSectionForm] = useState(false);
+    const [SectionModalShow, setSectionModalShow] = useState(false);
 
     const [modulesOptions, setModulesOptions] = useState([]);
 
@@ -48,7 +51,10 @@ function CasePage() {
                 console.error('Error fetching data:', error);
             }
         }
-        fetchModule();
+        if (project['id']) {
+            fetchModule();
+        }
+
     }, [project['id']])
 
     const handleChangeModule = (selectedOption) => {
@@ -71,41 +77,14 @@ function CasePage() {
 
     };
 
-    const handleSubmitSection = useCallback(
-        async (e) => {
-            e.preventDefault();
-            const form = e.target;
-            const formData = new FormData(form);
-            const formJson = Object.fromEntries(formData.entries());
 
-            formJson['p_section_id'] = 0;
-            formJson['level'] = 0;
-            console.log(formJson);
-            try {
-                const response = await fetch(urlAPI + 'add_section/' + curModule, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formJson),
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    setCaseData(prevData => [...prevData, data]);
-                    setisShowSectionForm(false);
-
-                }
-            } catch (error) {
-                console.error('Error:', error.message);
-            }
-        }, [curModule]);
 
     return (
         <div className="h-full">
 
             <div className="flex bg-slate-50 ">
                 <div className={styles.SideBarHeight}>
-                <SideBar setProject={setProject} projectId={projectId} />
+                    <SideBar setProject={setProject} projectId={projectId} />
 
                 </div>
                 <div className={styles.MainPage}>
@@ -118,8 +97,8 @@ function CasePage() {
                             options={modulesOptions}
                             onChange={handleChangeModule}
                         />
-                        <Link className="bg-[#376789] w-40 flex items-center justify-center text-white opacity-80 hover:opacity-100 ml-auto mr-0" 
-                        to={`/cases/add/${curModule}`}>Add Case</Link>
+                        <Link className="bg-[#376789] w-40 flex items-center justify-center text-white opacity-80 hover:opacity-100 ml-auto mr-0"
+                            to={`/cases/add/${curModule}`}>Add Case</Link>
 
                     </div>
                     <div className="py-2 px-4">
@@ -128,49 +107,38 @@ function CasePage() {
                                 <SectionCase section_id={data.section_id} section_name={data.section_name} cases={data.cases} curModule={curModule} />
                                 {/* Level 1 */}
                                 <div className="ml-2 border-l-2 border-gray-300 pl-4">
+
                                     {data.sub.map((level1) =>
-                                        <SectionCase section_id={level1.section_id} section_name={level1.section_name} cases={level1.cases} curModule={curModule} />
+                                        <div key={level1.section_id}>
+                                            <SectionCase section_id={level1.section_id} section_name={level1.section_name} cases={level1.cases} curModule={curModule} />
+
+                                        </div>
                                     )}
                                 </div>
                             </div>
                         )}
                         {curModule &&
-                            <div className="text-left">
-                                {isShowSectionForm ?
-                                    <form method="post" onSubmit={(e) => handleSubmitSection(e)} autoComplete='off'>
-                                        <div className="flex items-center gap-2">
-                                            <div>Section</div>
-                                            <input
-                                                type="text"
-                                                className="rounded-md border outline-none px-2 py-1"
-                                                name="section_name"
-                                                required={true}
-                                            />
-                                            <button type="submit">
-                                                <FaCheck
-                                                    className="bg-green-600 p-1 text-white w-8 h-8 rounded-sm cursor-pointer"
-                                                />
-                                            </button>
-                                            <button type="button">
-                                                <FaXmark
-                                                    className="bg-white border border-red-500 p-1 text-red-500 w-8 h-8 rounded-sm cursor-pointer"
-                                                    onClick={() => setisShowSectionForm(false)}
-                                                />
-                                            </button>
-
-                                        </div>
-                                    </form>
-                                    :
-                                    <button className="text-blue-300 hover:underline" onClick={() => setisShowSectionForm(true)}>Add Section</button>
-                                }
+                            <div className="text-left mb-28">
+                                <button
+                                    className="text-blue-300 hover:underline"
+                                    onClick={() => setSectionModalShow(true)}
+                                >
+                                    Add Section
+                                </button>
                             </div>
                         }
                     </div>
 
 
                 </div>
-
             </div>
+
+
+            {SectionModalShow &&
+                <SectionModalAdd parentSectionId={0} level={0} curModule={curModule} setSectionModalShow={setSectionModalShow} setCaseData={setCaseData} />
+            }
+
+
         </div>
 
     )
