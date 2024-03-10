@@ -23,6 +23,7 @@ class Section(db.Model):
     parent_id = db.Column(db.Integer)
     module_id = db.Column(db.Integer, db.ForeignKey('module.id'), nullable=False)
     level = db.Column(db.Integer)
+    description = db.Column(db.String(1000))
     module = db.relationship("Module", backref=backref("sections", uselist=True))
     
 class Testcase(db.Model):

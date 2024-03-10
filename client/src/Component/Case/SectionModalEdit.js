@@ -1,10 +1,23 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 
 
-function SectionModalAdd({ parentSectionId, level, curModule, setNewSectionModalShow, setCaseData }) {
+function SectionModalEdit({section_id, section_name, section_des,  setEditSectionModalShow  }) {
 
     const urlAPI = "http://127.0.0.1:5000/api/";
 
+
+    const [inputName, setInputName] = useState(section_name);
+    const [inputDes, setInputDes] = useState(section_des);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        if (name === 'section_name') {
+            setInputName(value);
+        }
+        else {
+            setInputDes(value);
+        }
+    }
 
     const handleSubmit = useCallback(
         async (e) => {
@@ -13,33 +26,32 @@ function SectionModalAdd({ parentSectionId, level, curModule, setNewSectionModal
             const formData = new FormData(form);
             const formJson = Object.fromEntries(formData.entries());
 
-            formJson['p_section_id'] = parentSectionId;
-            formJson['level'] = level;
+            
             // console.log(formJson);
-            try {
-                const response = await fetch(urlAPI + 'add_section/' + curModule, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formJson),
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    const new_data = {
-                        "section_id": data.id,
-                        "section_name": data.name,
-                        "cases": [],
-                        "sub": []
+            // try {
+            //     const response = await fetch(urlAPI + 'add_section/' + curModule, {
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //         },
+            //         body: JSON.stringify(formJson),
+            //     });
+            //     if (response.ok) {
+            //         const data = await response.json();
+            //         const new_data = {
+            //             "section_id": data.id,
+            //             "section_name": data.name,
+            //             "cases": [],
+            //             "sub": []
 
-                    }
-                    setCaseData(prevData => [...prevData, new_data]);
-                    setNewSectionModalShow(false);
+            //         }
+            //         setCaseData(prevData => [...prevData, new_data]);
+            //         setSectionModalShow(false);
 
-                }
-            } catch (error) {
-                console.error('Error:', error.message);
-            }
+            //     }
+            // } catch (error) {
+            //     console.error('Error:', error.message);
+            // }
         }, []);
 
 
@@ -54,20 +66,22 @@ function SectionModalAdd({ parentSectionId, level, curModule, setNewSectionModal
                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                             {/*header*/}
                             <div className="flex items-start justify-between p-3 bg-[#eaf1f7]">
-                                <div className="text-xl font-semibold select-none">Add Section</div>
+                                <div className="text-xl font-semibold select-none">Edit Section</div>
                             </div>
                             {/*body*/}
                             <div className="relative p-6 text-left text-sm">
                                 <div>
                                     <div className="py-2">
                                         <label htmlFor="section_name" className="block font-bold">
-                                            Name*
+                                            Name
                                         </label>
                                         <input
                                             type="text"
                                             name="section_name"
-                                            className="border w-full outline-none"
+                                            className="border w-full outline-none px-2 py-1"
+                                            value={inputName}
                                             required={true}
+                                            onChange={ handleChange }
                                         />
 
                                     </div>
@@ -80,6 +94,8 @@ function SectionModalAdd({ parentSectionId, level, curModule, setNewSectionModal
                                             name="section_des"
                                             rows={5}
                                             className="border w-full outline-none"
+                                            value={inputDes}
+                                            onChange={ handleChange }
                                             
                                         />
                                     </div>
@@ -92,7 +108,7 @@ function SectionModalAdd({ parentSectionId, level, curModule, setNewSectionModal
                                 <button
                                     className="text-red-500 background-transparent font-bold px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 border-red-500 border opacity-80 hover:opacity-100"
                                     type="button"
-                                    onClick={() => setNewSectionModalShow(false)}
+                                    onClick={() => setEditSectionModalShow(false)}
                                 >
                                     Cancel
                                 </button>
@@ -117,4 +133,4 @@ function SectionModalAdd({ parentSectionId, level, curModule, setNewSectionModal
 
 }
 
-export default SectionModalAdd;
+export default SectionModalEdit;

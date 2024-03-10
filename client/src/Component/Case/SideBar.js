@@ -8,8 +8,6 @@ function SideBar({ setProject, projectId }) {
     const URL = "http://127.0.0.1:5000/api/"
     const [projects, setProjects] = useState([])
 
-    console.log("PROJECT ID IS: ", projectId);
-
     useEffect(() => {
         const fetchProject = async () => {
             try {

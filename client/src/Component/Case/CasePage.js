@@ -19,7 +19,6 @@ function CasePage() {
     const [curModule, setCurModule] = useState(null);
     const [caseData, setCaseData] = useState([]);
     const [SectionModalShow, setSectionModalShow] = useState(false);
-
     const [modulesOptions, setModulesOptions] = useState([]);
 
     useEffect(() => {
@@ -37,51 +36,70 @@ function CasePage() {
     }, [projectId])
 
 
-    useEffect(() => {
-        const fetchModule = async () => {
-            try {
-                const response = await fetch(urlAPI + "modules/" + project['id']);
-                const data = await response.json();
-                const modules = []
-                data.forEach(element => {
-                    modules.push({ value: element.id, label: element.name })
-                });
-                setModulesOptions(modules)
-            } catch (error) {
-                console.error('Error fetching data:', error);
+
+    const fetchCase = async () => {
+        console.log("module is", curModule)
+        try {
+            const response = await fetch(urlAPI + "cases_by_module/" + curModule);
+            const data = await response.json();
+            
+            if (data) {
+                setCaseData(data);
             }
+            else {
+                setCaseData([])
+            }
+            
+        } catch (error) {
+            console.error('Error fetching data:', error);
         }
-        if (project['id']) {
-            fetchModule();
+    };
+
+    const fetchModule = async () => {
+        try {
+            const response = await fetch(urlAPI + "modules/" + projectId);
+            const data = await response.json();
+            const modules = []
+            data.forEach(element => {
+                modules.push({ value: element.id, label: element.name })
+            });
+            if (modules.length > 0) {
+                setModulesOptions(modules);
+                setCurModule(modules[0].value);
+            }
+            else {
+                setModulesOptions([]);
+                setCurModule(null);
+            }
+            
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (curModule) {
+            fetchCase();
         }
 
-    }, [project['id']])
+    }, [curModule])
+
+    useEffect(() => {
+        if (projectId) {
+            fetchModule(); 
+            
+        }
+
+    }, [projectId])
 
     const handleChangeModule = (selectedOption) => {
         // Handle the selected option here
         const selectedModule = selectedOption.value;
-        document.title = "Test Case - " + selectedOption.label;
         setCurModule(selectedOption.value);
-        const fetchCase = async () => {
-            try {
-                const response = await fetch(urlAPI + "cases_by_module/" + selectedModule);
-                const data = await response.json();
-                console.log(data)
-                setCaseData(data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
         fetchCase();
-
-
     };
-
-
-
     return (
-        <div className="h-full">
-
+        <div className="h-full overflow-y-hidden text-sm">
             <div className="flex bg-slate-50 ">
                 <div className={styles.SideBarHeight}>
                     <SideBar setProject={setProject} projectId={projectId} />
@@ -95,24 +113,21 @@ function CasePage() {
                         <Select
                             className="text-left w-56"
                             options={modulesOptions}
+                            value={modulesOptions[0]}
                             onChange={handleChangeModule}
                         />
                         <Link className="bg-[#376789] w-40 flex items-center justify-center text-white opacity-80 hover:opacity-100 ml-auto mr-0"
                             to={`/cases/add/${curModule}`}>Add Case</Link>
-
                     </div>
-                    <div className="py-2 px-4">
+                    <div className="py-2 px-4 overflow-y-auto h-[600px]">
                         {caseData.map((data) =>
-                            <div key={data.section_id}>
-                                <SectionCase section_id={data.section_id} section_name={data.section_name} cases={data.cases} curModule={curModule} />
+                            <div >
+                                <SectionCase key={data.section_id} data={data} curModule={curModule} setCaseData={setCaseData} />
+
                                 {/* Level 1 */}
                                 <div className="ml-2 border-l-2 border-gray-300 pl-4">
-
                                     {data.sub.map((level1) =>
-                                        <div key={level1.section_id}>
-                                            <SectionCase section_id={level1.section_id} section_name={level1.section_name} cases={level1.cases} curModule={curModule} />
-
-                                        </div>
+                                        <SectionCase data={level1} curModule={curModule} setCaseData={setCaseData} />
                                     )}
                                 </div>
                             </div>

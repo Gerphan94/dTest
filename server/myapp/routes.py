@@ -114,6 +114,9 @@ def get_cases_by_module(module_id):
         obj = {}
         obj["section_id"] = section.id
         obj["section_name"] = section.name
+        obj["section_level"] = section.level
+        obj["section_des"] = section.description
+        
         obj['cases'] = get_cases_by_section(section.id)
         # LEVEL 1
         level1_sections = Section.query.filter_by(parent_id = section.id)

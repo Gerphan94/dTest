@@ -2,17 +2,16 @@ import React, { useState, useCallback } from "react";
 import { FaCheck, FaXmark } from "react-icons/fa6";
 import { CiEdit } from "react-icons/ci";
 import SectionModalAdd from "./SectionModalAdd";
+import SectionModalEdit from "./SectionModalEdit";
 
-
-function SectionCase(props) {
+function SectionCase({ data, curModule, setCaseData }) {
 
     const urlAPI = "http://127.0.0.1:5000/api/";
-    const section_id = props.section_id;
-    const module_id = props.curModule;
-
-
+    const section_id = data.section_id;
+    const module_id = curModule;
     const [isShowCaseForm, setisShowCaseForm] = useState(false);
-    const [isShowSectionForm, setisShowSectionForm] = useState(false);
+    const [NewSectionModalShow, setNewSectionModalShow] = useState(false);
+    const [EditSectionModalShow, setEditSectionModalShow] = useState(false);
 
 
     const handleSubmit = useCallback(
@@ -41,40 +40,11 @@ function SectionCase(props) {
         [section_id] // Dependency array is empty because there are no dependencies
     );
 
-    const handleSubmitSection = useCallback(
-        async (e) => {
-            e.preventDefault();
-      
-            const form = e.target;
-            const formData = new FormData(form);
-            const formJson = Object.fromEntries(formData.entries());
-            formJson['p_section_id'] = section_id;
-            console.log(formJson);
-            try {
-                const response = await fetch(urlAPI + 'add_section/' + module_id, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formJson),
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    setisShowSectionForm(false);
-
-                }
-            } catch (error) {
-                console.error('Error:', error.message);
-            }
-        },
-        [] // Dependency array is empty because there are no dependencies
-    );
-
     return (
         <div className="mb-6">
             <div className="flex mb-2">
-                <div className="text-left font-bold text-lg">{props.section_name}</div>
-                <button>Edit</button>
+                <div className="text-left font-bold text-lg">{data.section_name}</div>
+                <button className="ml-4" onClick={() => setEditSectionModalShow(true)}>Edit</button>
             </div>
             <div className="w-full">
                 <table className="w-full">
@@ -87,7 +57,7 @@ function SectionCase(props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {props.cases && props.cases.map((ele, index) =>
+                        {data.cases && data.cases.map((ele, index) =>
                             <tr className="border border-gray-200" key={ele.case_id}>
                                 <td>{index + 1}</td>
                                 <td>
@@ -98,13 +68,13 @@ function SectionCase(props) {
                                 <td></td>
                                 <td>
                                     <button>
-                                    <CiEdit />
+                                        <CiEdit />
                                     </button>
                                     <button type="button">
-                                    <FaXmark
-                                    className="bg-red-500 border border-red-500 rounded-full text-white cursor-pointer opacity-80 hover:opacity-100"
-                                    onClick={() => setisShowCaseForm(false)}
-                                />
+                                        <FaXmark
+                                            className="bg-red-500 border border-red-500 rounded-full text-white cursor-pointer opacity-80 hover:opacity-100"
+                                            onClick={() => setisShowCaseForm(false)}
+                                        />
                                     </button>
                                 </td>
                             </tr>
@@ -137,42 +107,28 @@ function SectionCase(props) {
                         </div>
                     </form>
                     :
-                    isShowSectionForm ?
-                        <form method="post" onSubmit={(e) => handleSubmitSection(e)} autoComplete='off'>
-                            <div className="flex items-center gap-2">
-
-                                <div>Section</div>
-                                <input
-                                    type="text"
-                                    className="border  outline-none px-2 py-1"
-                                    name="section_name"
-                                    required={true}
-
-                                />
-                                <button type="submit">
-                                    <FaCheck
-                                        className="bg-green-600 p-1 text-white w-8 h-8 rounded-sm cursor-pointer opacity-80 hover:opacity-100 "
-                                    />
-                                </button>
-                                <button type="button">
-                                    <FaXmark
-                                        className="bg-white border border-red-500 p-1 text-red-500 w-8 h-8 rounded-sm cursor-pointer opacity-80 hover:opacity-100"
-                                        onClick={() => setisShowSectionForm(false)}
-                                    />
-                                </button>
-                            </div>
-                        </form>
-                        :
-                        <div className="flex gap-2">
-                            <button className="text-[#5993bc] underline" onClick={() => setisShowCaseForm(true)}>Add Case</button>
-                            <div>|</div>
-                            <button className="text-[#5993bc] underline" onClick={() => setisShowSectionForm(true)}>Add Subsection</button>
-                        </div>
+                    <div className="flex gap-2">
+                        <button className="text-[#5993bc] underline" onClick={() => setisShowCaseForm(true)}>Add Case</button>
+                        <div>|</div>
+                        <button className="text-[#5993bc] underline" onClick={() => setNewSectionModalShow(true)}>Add Subsection</button>
+                    </div>
                 }
 
 
 
             </div>
+
+            {NewSectionModalShow &&
+                <SectionModalAdd parentSectionId={section_id} level={data.section_level + 1} curModule={module_id} setNewSectionModalShow={setNewSectionModalShow} setCaseData={data.setCaseData} />
+            }
+            {EditSectionModalShow &&
+                <SectionModalEdit
+                    section_id={data.section_id}
+                    section_name={data.section_name}
+                    section_des={data.section_des}
+                    setEditSectionModalShow={setEditSectionModalShow}
+                />
+            }
 
         </div>
 
