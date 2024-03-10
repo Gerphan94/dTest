@@ -3,6 +3,8 @@ import { FaCheck, FaXmark } from "react-icons/fa6";
 import { CiEdit } from "react-icons/ci";
 import SectionModalAdd from "./SectionModalAdd";
 import SectionModalEdit from "./SectionModalEdit";
+import DeleteConfilmModal from "./DeleteConfirmModal";
+
 
 function SectionCase({ data, curModule, setCaseData }) {
 
@@ -12,6 +14,7 @@ function SectionCase({ data, curModule, setCaseData }) {
     const [isShowCaseForm, setisShowCaseForm] = useState(false);
     const [NewSectionModalShow, setNewSectionModalShow] = useState(false);
     const [EditSectionModalShow, setEditSectionModalShow] = useState(false);
+    const [isDeleteSection, setDeleteSection] = useState(false);
 
 
     const handleSubmit = useCallback(
@@ -44,7 +47,12 @@ function SectionCase({ data, curModule, setCaseData }) {
         <div className="mb-6">
             <div className="flex mb-2">
                 <div className="text-left font-bold text-lg">{data.section_name}</div>
-                <button className="ml-4" onClick={() => setEditSectionModalShow(true)}>Edit</button>
+                <button className="ml-4 text-blue-600" onClick={() => setEditSectionModalShow(true)}>
+                    <CiEdit />
+                </button>
+                <button className="ml-1 text-red-500" onClick={() => setDeleteSection(true)}>
+                    <FaXmark />
+                </button>
             </div>
             <div className="w-full">
                 <table className="w-full">
@@ -128,6 +136,10 @@ function SectionCase({ data, curModule, setCaseData }) {
                     section_des={data.section_des}
                     setEditSectionModalShow={setEditSectionModalShow}
                 />
+            }
+
+            {isDeleteSection && 
+                <DeleteConfilmModal />
             }
 
         </div>
