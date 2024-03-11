@@ -1,9 +1,14 @@
 import React, { useCallback } from "react";
 
 
-function DeleteConfilmModal() {
+function DeleteConfilmModal( { setDeleteSection }) {
 
     const urlAPI = "http://127.0.0.1:5000/api/";
+
+
+    const handleSubmit = () => {
+        
+    }
 
     return (
 
@@ -14,31 +19,32 @@ function DeleteConfilmModal() {
                         {/*content*/}
                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                             {/*header*/}
-                            <div className="flex items-start justify-between p-3 bg-[#eaf1f7]">
-                                <div className="text-xl font-semibold select-none">Confirmation</div>
+                            <div className="flex items-start justify-between p-3 bg-[#e40046]">
+                                <div className="text-xl font-semibold select-none text-white">Confirmation</div>
                             </div>
                             {/*body*/}
                             <div className="relative p-6 text-left text-sm">
                                 <div>
                                     Are you want delete?
-                                    
-                                    
                                 </div>
 
                             </div>
                             {/*footer*/}
                             <div className="flex items-center justify-end p-2 bg-[#f5f5f5]">
+                                
                                 <button
-                                    className="text-red-500 background-transparent font-bold px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 border-red-500 border opacity-80 hover:opacity-100"
+                                    className="text-white bg-[#049474] font-bold px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150  opacity-80 hover:opacity-100"
                                     type="button"
+                                    onClick={() => handleSubmit()}
                                 >
-                                    Cancel
+                                    Delete
                                 </button>
                                 <button
                                     className="text-red-500 background-transparent font-bold px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 border-red-500 border opacity-80 hover:opacity-100"
                                     type="button"
+                                    onClick={() => setDeleteSection(false)}
                                 >
-                                    Delete
+                                    Cancel
                                 </button>
                             </div>
                         </div>

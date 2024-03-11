@@ -139,7 +139,7 @@ function SectionCase({ data, curModule, setCaseData }) {
             }
 
             {isDeleteSection && 
-                <DeleteConfilmModal />
+                <DeleteConfilmModal setDeleteSection={setDeleteSection} />
             }
 
         </div>
