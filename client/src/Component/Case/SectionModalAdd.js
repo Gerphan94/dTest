@@ -5,6 +5,7 @@ function SectionModalAdd({ parentSectionId, level, curModule, setNewSectionModal
 
     const urlAPI = "http://127.0.0.1:5000/api/";
 
+    console.log(level)
 
     const handleSubmit = useCallback(
         async (e) => {
@@ -49,7 +50,7 @@ function SectionModalAdd({ parentSectionId, level, curModule, setNewSectionModal
         <div>
             <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
                 <div className="relative lg:w-1/3 md:w-2/3 w-full my-6 mx-auto max-w-3xl p-4">
-                    <form method="post" onSubmit={(e) => handleSubmit(e)} autoComplete='off'>
+                    <form method="post" onSubmit={(e) => handleSubmit(e)} autoComplete='none'>
                         {/*content*/}
                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                             {/*header*/}
@@ -66,8 +67,9 @@ function SectionModalAdd({ parentSectionId, level, curModule, setNewSectionModal
                                         <input
                                             type="text"
                                             name="section_name"
-                                            className="border w-full outline-none"
+                                            className="border w-full outline-none px-2 py-1"
                                             required={true}
+                                            autoComplete='off'
                                         />
 
                                     </div>
@@ -79,7 +81,7 @@ function SectionModalAdd({ parentSectionId, level, curModule, setNewSectionModal
                                             type="text"
                                             name="section_des"
                                             rows={5}
-                                            className="border w-full outline-none"
+                                            className="border w-full outline-none px-2 py-1"
                                             
                                         />
                                     </div>

@@ -106,27 +106,36 @@ def get_cases_by_section(sectionId):
             case_ar.append(case_obj)
     return case_ar
 
+
+def init_case(section):
+    obj = {}
+    obj["section_id"] = section.id
+    obj["section_name"] = section.name
+    obj["section_level"] = section.level
+    obj["section_des"] = section.description
+    obj['cases'] = get_cases_by_section(section.id)
+    return obj
+    
+
 @main.route('/api/cases_by_module/<int:module_id>', methods=['GET'])
 def get_cases_by_module(module_id):
     sections = Section.query.filter_by(module_id=module_id, level= 0)
     result_ar = []
     for section in sections:
-        obj = {}
-        obj["section_id"] = section.id
-        obj["section_name"] = section.name
-        obj["section_level"] = section.level
-        obj["section_des"] = section.description
-        
-        obj['cases'] = get_cases_by_section(section.id)
+        obj = init_case(section)
         # LEVEL 1
         level1_sections = Section.query.filter_by(parent_id = section.id)
         child_ar = []
         for sec in level1_sections:
-            childobj = {}
-            childobj["section_id"] = sec.id
-            childobj["section_name"] = sec.name
-            childobj['cases'] = get_cases_by_section(sec.id)
-            child_ar.append(childobj)
+            child1_obj = init_case(sec)
+            level2_sections = Section.query.filter_by(parent_id = sec.id)
+            child2_ar = []
+            for sec2 in level2_sections:
+                child2_obj = init_case(sec2)
+                child2_ar.append(child2_obj)
+            
+            child1_obj['sub'] = child2_ar
+            child_ar.append(child1_obj)
         obj['sub'] = child_ar
         result_ar.append(obj)
     return jsonify(result_ar)
@@ -135,6 +144,7 @@ def get_cases_by_module(module_id):
 def add_section(module_id):
     data = request.get_json()
     name = data['section_name']
+    des = data['section_des']
     parent_id = data['p_section_id']
     level = data['level']
     if (name  != ''):
@@ -142,12 +152,25 @@ def add_section(module_id):
             name = name,
             parent_id = parent_id,
             module_id = module_id,
-            level = level
+            level = level,
+            description = des
         )
         db.session.add(new_section)
         db.session.commit()
         return jsonify({"id": new_section.id,"name": name})
     return jsonify({"Error": "Section name is Empty"})
+
+@main.route('/api/update_section/<int:section_id>', methods=['POST'])
+def update_section(section_id):
+    section = Section.query.get(section_id)
+    if (section):
+        data = request.get_json()
+        section.name = data["section_name"]
+        section.description = data["section_des"]
+        db.session.commit()
+        return jsonify({"id":section_id, "name":data["section_name"]})
+    return jsonify({"error": "Section not found"})
+    
 
 @main.route('/api/add_case/<int:section_id>', methods=['POST'])
 def add_case(section_id):
@@ -166,6 +189,12 @@ def add_case(section_id):
         )
         db.session.add(new_case)
         db.session.commit()
-    return jsonify({"msg": "pass"})
+        return jsonify({
+            "id" : new_case.id,
+            "title": title
+        })
+        
+        
+    return jsonify({"error": "title is EMPTY"})
     
     

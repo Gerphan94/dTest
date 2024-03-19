@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 
 
-function SectionModalEdit({section_id, section_name, section_des,  setEditSectionModalShow  }) {
+function SectionModalEdit({section_id, section_name, section_des,  setEditSectionModalShow, setSectionName  }) {
 
     const urlAPI = "http://127.0.0.1:5000/api/";
 
@@ -25,35 +25,24 @@ function SectionModalEdit({section_id, section_name, section_des,  setEditSectio
             const form = e.target;
             const formData = new FormData(form);
             const formJson = Object.fromEntries(formData.entries());
-
-            
-            // console.log(formJson);
-            // try {
-            //     const response = await fetch(urlAPI + 'add_section/' + curModule, {
-            //         method: 'POST',
-            //         headers: {
-            //             'Content-Type': 'application/json',
-            //         },
-            //         body: JSON.stringify(formJson),
-            //     });
-            //     if (response.ok) {
-            //         const data = await response.json();
-            //         const new_data = {
-            //             "section_id": data.id,
-            //             "section_name": data.name,
-            //             "cases": [],
-            //             "sub": []
-
-            //         }
-            //         setCaseData(prevData => [...prevData, new_data]);
-            //         setSectionModalShow(false);
-
-            //     }
-            // } catch (error) {
-            //     console.error('Error:', error.message);
-            // }
+            console.log(formJson);
+            try {
+                const response = await fetch(urlAPI + 'update_section/' + section_id, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formJson),
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setSectionName(data.name);
+                    setEditSectionModalShow(false);
+                }
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
         }, []);
-
 
 
     return (

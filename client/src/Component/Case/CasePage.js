@@ -11,6 +11,8 @@ import SectionModalAdd from "./SectionModalAdd";
 
 function CasePage() {
 
+    console.log("MainPage rending .....")
+
     const { projectId } = useParams();
 
     const urlAPI = "http://127.0.0.1:5000/api/";
@@ -42,14 +44,14 @@ function CasePage() {
         try {
             const response = await fetch(urlAPI + "cases_by_module/" + curModule);
             const data = await response.json();
-            
+
             if (data) {
                 setCaseData(data);
             }
             else {
                 setCaseData([])
             }
-            
+
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -71,7 +73,7 @@ function CasePage() {
                 setModulesOptions([]);
                 setCurModule(null);
             }
-            
+
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -86,8 +88,8 @@ function CasePage() {
 
     useEffect(() => {
         if (projectId) {
-            fetchModule(); 
-            
+            fetchModule();
+
         }
 
     }, [projectId])
@@ -106,7 +108,7 @@ function CasePage() {
 
                 </div>
                 <div className={styles.MainPage}>
-                    <div className="flex gap-4 p-2 border-b-2">
+                    <div className="flex gap-4 p-2 h-14 border-b-2">
                         <div className="flex flex-wrap content-center font-bold text-lg uppercase w-40">{project['name']}</div>
 
                         <div className="flex flex-wrap content-center font-bold ml-10">Module</div>
@@ -119,29 +121,45 @@ function CasePage() {
                         <Link className="bg-[#376789] w-40 flex items-center justify-center text-white opacity-80 hover:opacity-100 ml-auto mr-0"
                             to={`/cases/add/${curModule}`}>Add Case</Link>
                     </div>
-                    <div className="py-2 px-4 overflow-y-auto h-[600px]">
-                        {caseData.map((data) =>
-                            <div >
-                                <SectionCase key={data.section_id} data={data} curModule={curModule} setCaseData={setCaseData} />
+                    <div className={styles.casePage}>
+                        <div className="py-2 px-5">
+                            {caseData.map((data) =>
+                                <div >
+                                    <SectionCase key={data.section_id} data={data} curModule={curModule} setCaseData={setCaseData} />
 
-                                {/* Level 1 */}
-                                <div className="ml-2 border-l-2 border-gray-300 pl-4">
-                                    {data.sub.map((level1) =>
-                                        <SectionCase data={level1} curModule={curModule} setCaseData={setCaseData} />
-                                    )}
+                                    {/* Level 1 */}
+                                    <div className="border-l-2 border-gray-300 pl-5">
+                                        {data.sub.map((level1) =>
+                                            <div>
+
+                                                <SectionCase data={level1} curModule={curModule} setCaseData={setCaseData} />
+                                                <div className="border-l-2 border-gray-300 pl-5">
+                                                    {level1.sub.map((level2) =>
+                                                        <SectionCase data={level2} curModule={curModule} setCaseData={setCaseData} />
+
+                                                    )}
+
+                                                </div>
+                                            </div>
+
+
+
+
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        )}
-                        {curModule &&
-                            <div className="text-left mb-28">
-                                <button
-                                    className="text-blue-300 hover:underline"
-                                    onClick={() => setSectionModalShow(true)}
-                                >
-                                    Add Section
-                                </button>
-                            </div>
-                        }
+                            )}
+                            {curModule &&
+                                <div className="text-left mb-28">
+                                    <button
+                                        className="text-blue-300 hover:underline"
+                                        onClick={() => setSectionModalShow(true)}
+                                    >
+                                        Add Section
+                                    </button>
+                                </div>
+                            }
+                        </div>
                     </div>
 
 
@@ -149,12 +167,17 @@ function CasePage() {
             </div>
 
 
-            {SectionModalShow &&
-                <SectionModalAdd parentSectionId={0} level={0} curModule={curModule} setSectionModalShow={setSectionModalShow} setCaseData={setCaseData} />
+            {
+                SectionModalShow &&
+                <SectionModalAdd
+                    parentSectionId={0} level={0}
+                    curModule={curModule}
+                    setNewSectionModalShow={setSectionModalShow}
+                    setCaseData={setCaseData} />
             }
 
 
-        </div>
+        </div >
 
     )
 }

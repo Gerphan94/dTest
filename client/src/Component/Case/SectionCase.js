@@ -6,16 +6,23 @@ import SectionModalEdit from "./SectionModalEdit";
 import DeleteConfilmModal from "./DeleteConfirmModal";
 
 
-function SectionCase({ data, curModule, setCaseData }) {
-
+function SectionCase({ data, curModule }) {
+    console.log("-----------", data)
     const urlAPI = "http://127.0.0.1:5000/api/";
     const section_id = data.section_id;
+
     const module_id = curModule;
+
+    const [sectionName, setSectionName] = useState(data.section_name)
+    const [caseData, setCaseData] = useState(data.cases);
     const [isShowCaseForm, setisShowCaseForm] = useState(false);
     const [NewSectionModalShow, setNewSectionModalShow] = useState(false);
     const [EditSectionModalShow, setEditSectionModalShow] = useState(false);
+    // delte info
     const [isDeleteSection, setDeleteSection] = useState(false);
-
+    const [deleteType, setDeleteType] = useState('');
+    const [deleteMessage, setDeleteMessage] = useState('');
+    // 
 
     const handleSubmit = useCallback(
         async (e) => {
@@ -23,6 +30,12 @@ function SectionCase({ data, curModule, setCaseData }) {
             const form = e.target;
             const formData = new FormData(form);
             const formJson = Object.fromEntries(formData.entries());
+            formJson['description'] = ''
+            formJson['precondition'] = ''
+            formJson['step'] = ''
+            formJson['expectation'] = ''
+            formJson['priority'] = 2
+            formJson['estimate'] = 0
             try {
                 const response = await fetch(urlAPI + 'add_case/' + section_id, {
                     method: 'POST',
@@ -35,6 +48,8 @@ function SectionCase({ data, curModule, setCaseData }) {
                     const data = await response.json();
                     setisShowCaseForm(false);
 
+                    setCaseData(prevData => [...prevData, { "case_id": data.id, "case_title": data.title }]);
+
                 }
             } catch (error) {
                 console.error('Error:', error.message);
@@ -43,14 +58,27 @@ function SectionCase({ data, curModule, setCaseData }) {
         [section_id] // Dependency array is empty because there are no dependencies
     );
 
+    const handleClickSectionDel = () => {
+        setDeleteSection(true);
+        setDeleteType("section_delete");
+        setDeleteMessage(sectionName);
+    };
+    const handleClickCaseDel = (case_name) => {
+        setDeleteSection(true);
+        setDeleteType("case_delete");
+        setDeleteMessage(case_name);
+    };
+
+
+
     return (
         <div className="mb-6">
             <div className="flex mb-2">
-                <div className="text-left font-bold text-lg">{data.section_name}</div>
+                <div className="text-left font-bold text-lg">{sectionName}</div>
                 <button className="ml-4 text-blue-600" onClick={() => setEditSectionModalShow(true)}>
                     <CiEdit />
                 </button>
-                <button className="ml-1 text-red-500" onClick={() => setDeleteSection(true)}>
+                <button className="ml-1 text-red-500" onClick={() => handleClickSectionDel()}>
                     <FaXmark />
                 </button>
             </div>
@@ -58,30 +86,30 @@ function SectionCase({ data, curModule, setCaseData }) {
                 <table className="w-full">
                     <thead className="">
                         <tr className="bg-gray-300 border border-gray-300">
-                            <th className="w-20 text-center">#</th>
-                            <th className="text-left">Title</th>
-                            <th className="text-left">Priority</th>
-                            <th className="text-left">...</th>
+                            <th className="w-20 text-center py-1">#</th>
+                            <th className="text-left px-2">Title</th>
+                            <th className="text-center w-36">Priority</th>
+                            <th className="text-center w-20">...</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {data.cases && data.cases.map((ele, index) =>
-                            <tr className="border border-gray-200" key={ele.case_id}>
+                        {caseData && caseData.map((ele, index) =>
+                            <tr className="border border-gray-200 py-1 hover:bg-blue-100" key={ele.case_id}>
                                 <td>{index + 1}</td>
                                 <td>
-                                    <div className="px-2 text-left">
+                                    <div className="px-2 py-1 text-left">
                                         {ele.case_title}
                                     </div>
                                 </td>
                                 <td></td>
-                                <td>
-                                    <button>
+                                <td className="">
+                                    <button className="mr-2">
                                         <CiEdit />
                                     </button>
                                     <button type="button">
                                         <FaXmark
                                             className="bg-red-500 border border-red-500 rounded-full text-white cursor-pointer opacity-80 hover:opacity-100"
-                                            onClick={() => setisShowCaseForm(false)}
+                                            onClick={() => handleClickCaseDel(ele.case_title)}
                                         />
                                     </button>
                                 </td>
@@ -127,19 +155,26 @@ function SectionCase({ data, curModule, setCaseData }) {
             </div>
 
             {NewSectionModalShow &&
-                <SectionModalAdd parentSectionId={section_id} level={data.section_level + 1} curModule={module_id} setNewSectionModalShow={setNewSectionModalShow} setCaseData={data.setCaseData} />
+                <SectionModalAdd parentSectionId={section_id} level={data["section_level"] + 1} curModule={module_id} setNewSectionModalShow={setNewSectionModalShow} setCaseData={data.setCaseData} />
             }
             {EditSectionModalShow &&
                 <SectionModalEdit
                     section_id={data.section_id}
-                    section_name={data.section_name}
+                    section_name={sectionName}
                     section_des={data.section_des}
                     setEditSectionModalShow={setEditSectionModalShow}
+                    data={data}
+                    setSectionName={setSectionName}
                 />
             }
 
-            {isDeleteSection && 
-                <DeleteConfilmModal setDeleteSection={setDeleteSection} />
+            {isDeleteSection &&
+                <DeleteConfilmModal
+                    setDeleteSection={setDeleteSection}
+                    deleteType={deleteType}
+                    deleteMessage={deleteMessage}
+
+                />
             }
 
         </div>

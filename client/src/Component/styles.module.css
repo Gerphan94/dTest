@@ -4,6 +4,11 @@
 
 }
 
+.casePage {
+    height: calc(100vh - 128px);
+    overflow-y: auto;
+}
+
 
 .SideBarHeight {
     height: 100%;

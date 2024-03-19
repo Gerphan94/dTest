@@ -1,12 +1,16 @@
 import React, { useCallback } from "react";
 
 
-function DeleteConfilmModal( { setDeleteSection }) {
+function DeleteConfilmModal( { setDeleteSection, deleteType, deleteMessage }) {
 
     const urlAPI = "http://127.0.0.1:5000/api/";
 
+    
+
 
     const handleSubmit = () => {
+
+
         
     }
 
@@ -19,13 +23,13 @@ function DeleteConfilmModal( { setDeleteSection }) {
                         {/*content*/}
                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                             {/*header*/}
-                            <div className="flex items-start justify-between p-3 bg-[#e40046]">
+                            <div className="flex items-start justify-between px-3 py-1 bg-[#e40046]">
                                 <div className="text-xl font-semibold select-none text-white">Confirmation</div>
                             </div>
                             {/*body*/}
                             <div className="relative p-6 text-left text-sm">
                                 <div>
-                                    Are you want delete?
+                                    Are you want delete <strong>{deleteMessage}</strong> {deleteType === 'section_delete' ? 'section': 'case'} ? 
                                 </div>
 
                             </div>
