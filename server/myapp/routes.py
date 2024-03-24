@@ -99,11 +99,11 @@ def get_cases_by_section(sectionId):
     cases = Testcase.query.filter_by(section_id=sectionId)
     case_ar = []
     for case in cases:
-            case_obj = {}
-            case_obj['case_id'] = case.id
-            case_obj['case_title'] = case.title
-            case_obj['priority_id'] = case.priority_id
-            case_ar.append(case_obj)
+        case_obj = {}
+        case_obj['case_id'] = case.id
+        case_obj['case_title'] = case.title
+        case_obj['priority_id'] = case.priority_id
+        case_ar.append(case_obj)
     return case_ar
 
 
@@ -113,6 +113,7 @@ def init_case(section):
     obj["section_name"] = section.name
     obj["section_level"] = section.level
     obj["section_des"] = section.description
+    
     obj['cases'] = get_cases_by_section(section.id)
     return obj
     
@@ -123,15 +124,18 @@ def get_cases_by_module(module_id):
     result_ar = []
     for section in sections:
         obj = init_case(section)
+        obj["case_count"] = Testcase.query.filter_by(section_id=section.id).count()
         # LEVEL 1
         level1_sections = Section.query.filter_by(parent_id = section.id)
         child_ar = []
         for sec in level1_sections:
             child1_obj = init_case(sec)
+            child1_obj["case_count"] = Testcase.query.filter_by(section_id=sec.id).count()
             level2_sections = Section.query.filter_by(parent_id = sec.id)
             child2_ar = []
             for sec2 in level2_sections:
                 child2_obj = init_case(sec2)
+                child2_obj["case_count"] = Testcase.query.filter_by(section_id=sec2.id).count()
                 child2_ar.append(child2_obj)
             
             child1_obj['sub'] = child2_ar

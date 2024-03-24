@@ -33,8 +33,10 @@ function SideBar({ setProject, projectId }) {
                     <Link
                         key={project.id}
                         to={`/cases/${project.id}`}
-                        className={`w-full block text-left px-4 py-2 hover:bg-blue-400 ${project.id === projectId ? "bg-[#1890FF]" : ""}`}
+                        className={`w-full block text-left px-4 py-2 ${parseInt(project.id) === parseInt(projectId)  ? 'bg-[#1890FF]' : ''} hover:bg-blue-400`}
                     >
+                        {console.log('projectId', typeof(projectId), projectId)}
+                        {console.log(typeof(project.id), project.id)}
                         {project.name}
                     </Link>
 

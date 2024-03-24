@@ -4,6 +4,7 @@ import { CiEdit } from "react-icons/ci";
 import SectionModalAdd from "./SectionModalAdd";
 import SectionModalEdit from "./SectionModalEdit";
 import DeleteConfilmModal from "./DeleteConfirmModal";
+import Select from 'react-select'
 
 
 function SectionCase({ data, curModule }) {
@@ -14,6 +15,7 @@ function SectionCase({ data, curModule }) {
     const module_id = curModule;
 
     const [sectionName, setSectionName] = useState(data.section_name)
+    const [caseTotal, setCaseTotal] = useState(data.case_count);
     const [caseData, setCaseData] = useState(data.cases);
     const [isShowCaseForm, setisShowCaseForm] = useState(false);
     const [NewSectionModalShow, setNewSectionModalShow] = useState(false);
@@ -22,6 +24,13 @@ function SectionCase({ data, curModule }) {
     const [isDeleteSection, setDeleteSection] = useState(false);
     const [deleteType, setDeleteType] = useState('');
     const [deleteMessage, setDeleteMessage] = useState('');
+
+    const priorityOptions = [
+        { label: "Low", value: 1 },
+        { label: "Medium", value: 2 },
+        { label: "High", value: 3 },
+        { label: "Critical", value: 4 }
+    ]
     // 
 
     const handleSubmit = useCallback(
@@ -75,6 +84,12 @@ function SectionCase({ data, curModule }) {
         <div className="mb-6">
             <div className="flex mb-2">
                 <div className="text-left font-bold text-lg">{sectionName}</div>
+                <div className="ml-2 flex items-center flex-wrap">
+                    <span className="w-6 h-5 boder border-blue-50 bg-blue-300 rounded-xl text-white select-none">
+                    {caseTotal}
+                    </span>
+                    
+                    </div>
                 <button className="ml-4 text-blue-600" onClick={() => setEditSectionModalShow(true)}>
                     <CiEdit />
                 </button>
@@ -101,7 +116,15 @@ function SectionCase({ data, curModule }) {
                                         {ele.case_title}
                                     </div>
                                 </td>
-                                <td></td>
+                                <td>
+                                    <select className={`rounded-md px-1 w-24 border border-gray-300`}>
+                                        {priorityOptions.map((opt) =>
+                                            opt.value === ele.priority_id ?
+                                                <option value={opt.value} selected={true}>{opt.label} </option> :
+                                                <option value={opt.value}>{opt.label} </option>
+                                        )}
+                                    </select>
+                                </td>
                                 <td className="">
                                     <button className="mr-2">
                                         <CiEdit />

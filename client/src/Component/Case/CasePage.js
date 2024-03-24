@@ -13,8 +13,8 @@ function CasePage() {
 
     console.log("MainPage rending .....")
 
-    const { projectId } = useParams();
-
+    const { projectId } = useParams()
+    
     const urlAPI = "http://127.0.0.1:5000/api/";
 
     const [project, setProject] = useState({});
