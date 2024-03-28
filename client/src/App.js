@@ -7,6 +7,7 @@ import Navbar from './Component/navBar';
 import NotFound from './Page/404';
 import CasePage from './Component/Case/CasePage';
 import CaseForm from './Component/Case/CaseForm';
+import CaseDetail from './Component/Case/CaseDetail';
 
 
 function App() {
@@ -35,6 +36,16 @@ function App() {
                     <title>Case Add</title>
                   </Helmet>
                   <CaseForm/>
+                </>
+              }
+            />
+            <Route path="/case/view/:case_id"
+              element={
+                <>
+                  <Helmet>
+                    
+                  </Helmet>
+                  <CaseDetail/>
                 </>
               }
             />

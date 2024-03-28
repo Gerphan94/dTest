@@ -10,6 +10,7 @@ import Select from 'react-select'
 function SectionCase({ data, curModule }) {
     console.log("-----------", data)
     const urlAPI = "http://127.0.0.1:5000/api/";
+    const URL = "http://127.0.0.1:3000/"
     const section_id = data.section_id;
 
     const module_id = curModule;
@@ -78,8 +79,6 @@ function SectionCase({ data, curModule }) {
         setDeleteMessage(case_name);
     };
 
-
-
     return (
         <div className="mb-6">
             <div className="flex mb-2">
@@ -113,7 +112,10 @@ function SectionCase({ data, curModule }) {
                                 <td>{index + 1}</td>
                                 <td>
                                     <div className="px-2 py-1 text-left">
+                                        <a className="hover:underline" href={`${URL}case/view/${ele.case_id}`}>
                                         {ele.case_title}
+                                        </a>
+                                        
                                     </div>
                                 </td>
                                 <td>

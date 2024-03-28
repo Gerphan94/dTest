@@ -117,7 +117,6 @@ def init_case(section):
     obj['cases'] = get_cases_by_section(section.id)
     return obj
     
-
 @main.route('/api/cases_by_module/<int:module_id>', methods=['GET'])
 def get_cases_by_module(module_id):
     sections = Section.query.filter_by(module_id=module_id, level= 0)
@@ -200,5 +199,22 @@ def add_case(section_id):
         
         
     return jsonify({"error": "title is EMPTY"})
+
+@main.route('/api/get_case/<int:case_id>', methods=['GET'])
+def get_case(case_id):
+    
+    try:
+        testcase = Testcase.query.get(case_id)
+        return jsonify({
+            'id': testcase.id,
+            'title': testcase.title
+        })
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+    
+    
+    
     
     
