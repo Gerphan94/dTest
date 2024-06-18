@@ -3,19 +3,21 @@ import React, { useState, useEffect, useCallback } from "react";
 import Select from 'react-select'
 import SectionCase from "./SectionCase";
 import styles from "../styles.module.css"
-import { FaCheck, FaXmark } from "react-icons/fa6";
 import { useParams, Link } from 'react-router-dom';
 
 import SideBar from "./SideBar";
 import SectionModalAdd from "./SectionModalAdd";
+import Dropdown from "../Common/Dropdown";
+
 
 function CasePage() {
 
     console.log("MainPage rending .....")
 
     const { projectId } = useParams()
-    
-    const urlAPI = "http://127.0.0.1:5000/api/";
+
+    const urlAPI = process.env.REACT_APP_API_URL;
+    console.log(urlAPI)
 
     const [project, setProject] = useState({});
     const [curModule, setCurModule] = useState(null);
@@ -27,8 +29,11 @@ function CasePage() {
         const fetchProject = async () => {
             try {
                 const response = await fetch(urlAPI + "project_by_id/" + projectId);
-                const data = await response.json();
+                console.log(urlAPI + "project_by_id/" + projectId)
 
+
+                const data = await response.json();
+                console.log(data)
                 setProject(data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -118,6 +123,8 @@ function CasePage() {
                             value={modulesOptions[0]}
                             onChange={handleChangeModule}
                         />
+                        <Dropdown />
+
                         <Link className="bg-[#376789] w-40 flex items-center justify-center text-white opacity-80 hover:opacity-100 ml-auto mr-0"
                             to={`/cases/add/${curModule}`}>Add Case</Link>
                     </div>

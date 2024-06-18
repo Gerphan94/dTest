@@ -2,12 +2,12 @@ import React, { useState, useEffect, useCallback } from "react";
 import styles from "../styles.module.css"
 import Select from 'react-select'
 import { useParams, Link } from 'react-router-dom';
-
+import Dropdown from "../Common/Dropdown";
 
 
 function CaseForm() {
 
-    const urlAPI = "http://127.0.0.1:5000/api/";
+    const urlAPI = process.env.REACT_APP_API_URL;
     const { module_id } = useParams();
     const action = "Add";
 
@@ -74,7 +74,7 @@ function CaseForm() {
                     <form onSubmit={(e) => handleSubmit(e)} autoComplete="off" spellCheck={false}>
                         <div className="text-left mb-4">
                             <label htmlFor="case_title" className="block">
-                                Title*
+                                Title <span className="text-red-500">*</span>
                             </label>
                             <input
                                 name="case_title"
@@ -98,6 +98,7 @@ function CaseForm() {
                                     Priority *
                                 </label>
                                 <Select
+                                    className="outline-none"
                                     name="priority"
                                     defaultValue={{ label: "Medium", value: 2 }}
                                     options={priorityOptions} />
