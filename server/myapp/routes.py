@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, make_response
-from .model import db, Project, Module, Section, Testcase, Priority
+from .model import db, Project, Section, Testcase, Priority
 
 main = Blueprint('main', __name__)
 
@@ -15,8 +15,8 @@ def get_priority():
         'name': priority.name 
         } for priority in Priority.query.all()])
 
-@main.route('/api/projects', methods=['GET'])
-def get_projects():
+@main.route('/api/getProjects', methods=['GET'])
+def getProjects():
     return jsonify([{
         'id': project.id, 
         'name': project.name 
@@ -37,10 +37,11 @@ def get_project_by_id(project_id):
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
     
     
-   
-    
+# MODULE #######################################################################
+
 @main.route('/api/modules/<int:project_id>', methods=['GET'])
 def get_modules(project_id):
     return jsonify([{
@@ -49,6 +50,38 @@ def get_modules(project_id):
         'project_id': module.project_id
         } for module in Module.query.filter_by(project_id=project_id)])
     
+# SECTION #######################################################################
+
+@main.route('/api/getSectionMainByModule/<int:module_id>', methods=['GET'])
+def getSectionMainByModule(module_id):
+    
+    return jsonify([{
+        'id': section.id, 
+        'name': section.name,
+        } for section in Section.query.filter_by(module_id=module_id, parent_id=0)])
+
+@main.route('/c', methods=['GET'])
+def initSectionTree(project_id):
+    result = []
+    lvl0Sections = Section.query.filter_by(project_id = project_id, level= 0)
+    for lvl0 in lvl0Sections:
+        sub0 = []
+        lvl1Sections = Section.query.filter_by(parent_id = lvl0.id, level= 1)
+        for lvl1 in lvl1Sections:
+            sub1 = []
+            lvl2Sections = Section.query.filter_by(parent_id = lvl1.id, level= 2)
+            for lvl2 in lvl2Sections:
+                sub2 = []
+                lvl3Sections = Section.query.filter_by(parent_id = lvl2.id, level= 3)
+                for lvl3 in lvl3Sections:
+                    sub3 = []
+                    sub2.append({'id': lvl3.id, 'name':lvl3.name, 'sub': sub3})
+                sub1.append({'id': lvl2.id, 'name':lvl2.name, 'sub': sub2})
+            sub0.append({'id': lvl1.id, 'name':lvl1.name, 'sub': sub1})
+        result.append({'id': lvl0.id, 'name':lvl0.name, 'sub': sub0})
+    return jsonify(result), 200
+    
+
 @main.route('/api/get_sections_of_module/<int:module_id>', methods=['GET'])
 def get_sections_of_module(module_id):
     result_ar = []
@@ -84,8 +117,13 @@ def get_sections_of_module(module_id):
                     obj_child3['level'] = child3.level
                     result_ar.append(obj_child3)
     return jsonify(result_ar)
-            
-    
+
+@main.route('/api/get_child_section_count/<int:section_id>', methods=['GET'])
+def is_delete_section(section_id):
+    child_section = Section.query.filter_by(parent_id = section_id).count()
+    return jsonify({"total": child_section})
+     
+#######################################################################   
     
 @main.route('/api/cases_by_section/<int:section_id>', methods=['GET'])
 def get_cases(section_id):
@@ -96,7 +134,7 @@ def get_cases(section_id):
 
 # Fu8nction get case by sectionID
 def get_cases_by_section(sectionId):
-    cases = Testcase.query.filter_by(section_id=sectionId)
+    cases = Testcase.query.filter_by(section_id = sectionId)
     case_ar = []
     for case in cases:
         case_obj = {}
@@ -117,10 +155,11 @@ def init_case(section):
     obj['cases'] = get_cases_by_section(section.id)
     return obj
     
-@main.route('/api/cases_by_module/<int:module_id>', methods=['GET'])
-def get_cases_by_module(module_id):
-    sections = Section.query.filter_by(module_id=module_id, level= 0)
+@main.route('/api/getCasesByProject/<int:projectId>', methods=['GET'])
+def getCasesByProject(projectId):
     result_ar = []
+    sections = Section.query.filter_by(project_id=projectId, level= 0)
+    
     for section in sections:
         obj = init_case(section)
         obj["case_count"] = Testcase.query.filter_by(section_id=section.id).count()
@@ -173,6 +212,9 @@ def update_section(section_id):
         db.session.commit()
         return jsonify({"id":section_id, "name":data["section_name"]})
     return jsonify({"error": "Section not found"})
+
+
+
     
 
 @main.route('/api/add_case/<int:section_id>', methods=['POST'])
@@ -197,7 +239,6 @@ def add_case(section_id):
             "title": title
         })
         
-        
     return jsonify({"error": "title is EMPTY"})
 
 @main.route('/api/get_case/<int:case_id>', methods=['GET'])
@@ -212,6 +253,8 @@ def get_case(case_id):
         
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+
     
     
     

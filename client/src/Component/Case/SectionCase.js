@@ -3,13 +3,13 @@ import { FaCheck, FaXmark } from "react-icons/fa6";
 import { CiEdit } from "react-icons/ci";
 import SectionModalAdd from "./SectionModalAdd";
 import SectionModalEdit from "./SectionModalEdit";
-import DeleteConfilmModal from "./DeleteConfirmModal";
-import Select from 'react-select'
+import DeleteSectionConfirm from "../MessageBox/DeleteSectionConfirm";
 
 
 function SectionCase({ data, curModule }) {
     console.log("-----------", data)
-    const urlAPI = "http://127.0.0.1:5000/api/";
+    const urlAPI = process.env.REACT_APP_API_URL;
+
     const URL = "http://127.0.0.1:3000/"
     const section_id = data.section_id;
 
@@ -96,53 +96,7 @@ function SectionCase({ data, curModule }) {
                     <FaXmark />
                 </button>
             </div>
-            <div className="w-full">
-                <table className="w-full">
-                    <thead className="">
-                        <tr className="bg-gray-300 border border-gray-300">
-                            <th className="w-20 text-center py-1">#</th>
-                            <th className="text-left px-2">Title</th>
-                            <th className="text-center w-36">Priority</th>
-                            <th className="text-center w-20">...</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {caseData && caseData.map((ele, index) =>
-                            <tr className="border border-gray-200 py-1 hover:bg-blue-100" key={ele.case_id}>
-                                <td>{index + 1}</td>
-                                <td>
-                                    <div className="px-2 py-1 text-left">
-                                        <a className="hover:underline" href={`${URL}case/view/${ele.case_id}`}>
-                                        {ele.case_title}
-                                        </a>
-                                        
-                                    </div>
-                                </td>
-                                <td>
-                                    <select className={`rounded-md px-1 w-24 border border-gray-300`}>
-                                        {priorityOptions.map((opt) =>
-                                            opt.value === ele.priority_id ?
-                                                <option value={opt.value} selected={true}>{opt.label} </option> :
-                                                <option value={opt.value}>{opt.label} </option>
-                                        )}
-                                    </select>
-                                </td>
-                                <td className="">
-                                    <button className="mr-2">
-                                        <CiEdit />
-                                    </button>
-                                    <button type="button">
-                                        <FaXmark
-                                            className="bg-red-500 border border-red-500 rounded-full text-white cursor-pointer opacity-80 hover:opacity-100"
-                                            onClick={() => handleClickCaseDel(ele.case_title)}
-                                        />
-                                    </button>
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
+            
             <div className="flex gap-2 mt-4">
                 {isShowCaseForm ?
                     <form method="post" onSubmit={(e) => handleSubmit(e)} autoComplete='off'>
@@ -194,10 +148,9 @@ function SectionCase({ data, curModule }) {
             }
 
             {isDeleteSection &&
-                <DeleteConfilmModal
-                    setDeleteSection={setDeleteSection}
-                    deleteType={deleteType}
-                    deleteMessage={deleteMessage}
+                <DeleteSectionConfirm
+                section_id= {section_id}
+                    
 
                 />
             }

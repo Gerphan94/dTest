@@ -2,38 +2,24 @@ import React, { useState, useEffect, useCallback } from "react";
 import styles from "../styles.module.css"
 import Select from 'react-select'
 import { useParams, Link } from 'react-router-dom';
-import Dropdown from "../Common/Dropdown";
 
 
-function CaseForm( { caseType, editdata=[] }   ) {
 
-    const urlAPI = process.env.REACT_APP_API;
-    const [fetchUrl, setFetchUrl] = useState("");
+function CaseForm() {
+
+    const urlAPI = "http://127.0.0.1:5000/api/";
     const { module_id } = useParams();
+    const action = "Add";
 
-
-
-
-
-    const [formTitle, setFormTitle] = useState("");
-
-    useEffect(() => {
-        if (caseType === "Add") {
-            setFormTitle("Add Case");
-            setFetchUrl(urlAPI + "add_case");
-        } else {
-            setFormTitle("Edit Case");
-        }
-    }, [caseType]);
-    
     const [sectionOption, setSectionOption] = useState([]);
 
-    const priorities = [
-        { id: 1, name: "Low" },
-        { id: 2, name: "Medium" },
-        { id: 3, name: "High" },
-        { id: 4, name: "Critical" }
-    ]   
+    const priorityOptions = [
+        { label: "Low", value: 1 },
+        { label: "Medium", value: 2 },
+        { label: "High", value: 3 },
+        { label: "Critical", value: 4 }
+
+    ]
 
     useEffect(() => {
         const fecthSectionList = async () => {
@@ -82,13 +68,13 @@ function CaseForm( { caseType, editdata=[] }   ) {
         <div className="flex">
             <div className={styles.MainPage}>
                 <div className="text-left border-b-2 p-2">
-                    {formTitle}
+                    {action === 'Add' ? "Add Testcase" : " Edit Testcase "}
                 </div>
                 <div className="p-5">
                     <form onSubmit={(e) => handleSubmit(e)} autoComplete="off" spellCheck={false}>
                         <div className="text-left mb-4">
                             <label htmlFor="case_title" className="block">
-                                Title<span className="text-red-500">*</span>
+                                Title*
                             </label>
                             <input
                                 name="case_title"
@@ -108,10 +94,13 @@ function CaseForm( { caseType, editdata=[] }   ) {
                                 />
                             </div>
                             <div className="text-left">
-                                <label htmlFor="priority" className="block">
-                                    Priority*
+                                <label htmlFor="section" className="block">
+                                    Priority *
                                 </label>
-                               <Dropdown data={priorities} />
+                                <Select
+                                    name="priority"
+                                    defaultValue={{ label: "Medium", value: 2 }}
+                                    options={priorityOptions} />
                             </div>
                             <div className="text-left">
                                 <label htmlFor="estimate" className="block">
@@ -119,8 +108,8 @@ function CaseForm( { caseType, editdata=[] }   ) {
                                 </label>
                                 <input
                                     name="estimate"
-                                    type="text"
-                                    className="border border-[#d2e2ed] rounded-sm outline-none px-2 py-0.5 text-right"
+                                    type="number"
+                                    className="border border-[#d2e2ed] rounded-sm outline-none px-2 py-1 text-right"
                                 />
                             </div>
                         </div>

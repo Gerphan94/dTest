@@ -1,13 +1,29 @@
-import React, { useCallback } from "react";
+import React, { useState, useEffect } from "react";
 
 
-function DeleteConfilmModal( { setDeleteSection, deleteType, deleteMessage }) {
+function DeleteSectionConfirm({ section_id }) {
 
     const urlAPI = "http://127.0.0.1:5000/api/";
 
-    const handleSubmit = () => {
+    const [sectionCount, setSectionCount] = useState(0);
+    const [caseCount, setCaseCount] = useState(0);
 
-    }
+
+    useEffect(() => {
+        const fetchTotalChildSection = async () => {
+            try {
+                const response = await fetch(urlAPI + "get_child_section_count/" + section_id);
+                const data = await response.json();
+                setSectionCount(data.total);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchTotalChildSection();
+
+    }, [section_id])
+
 
     return (
 
@@ -23,25 +39,26 @@ function DeleteConfilmModal( { setDeleteSection, deleteType, deleteMessage }) {
                             </div>
                             {/*body*/}
                             <div className="relative p-6 text-left text-sm">
-                                <div>
-                                    Are you want delete <strong>{deleteMessage}</strong> {deleteType === 'section_delete' ? 'section': 'case'} ? 
-                                </div>
-
+                                {sectionCount === 0 && caseCount === 0 ?
+                                    <div>
+                                        Are you want to delete this section?
+                                    </div> :
+                                    <div> Have {sectionCount} section
+                                    </div>
+                                }
                             </div>
                             {/*footer*/}
                             <div className="flex items-center justify-end p-2 bg-[#f5f5f5]">
-                                
+
                                 <button
                                     className="text-white bg-[#049474] font-bold px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150  opacity-80 hover:opacity-100"
                                     type="button"
-                                    onClick={() => handleSubmit()}
                                 >
                                     Delete
                                 </button>
                                 <button
                                     className="text-red-500 background-transparent font-bold px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 border-red-500 border opacity-80 hover:opacity-100"
                                     type="button"
-                                    onClick={() => setDeleteSection(false)}
                                 >
                                     Cancel
                                 </button>
@@ -60,4 +77,4 @@ function DeleteConfilmModal( { setDeleteSection, deleteType, deleteMessage }) {
 
 }
 
-export default DeleteConfilmModal;
+export default DeleteSectionConfirm;
