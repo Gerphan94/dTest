@@ -7,10 +7,17 @@ import DeleteSectionConfirm from "../MessageBox/DeleteSectionConfirm";
 
 
 function SectionCase({ data, curModule }) {
+<<<<<<< HEAD
     console.log("-----------", data)
     const urlAPI = process.env.REACT_APP_API_URL;
 
     const URL = "http://127.0.0.1:3000/"
+=======
+
+    const urlAPI = process.env.REACT_APP_API_URL;
+    const URL = process.env.REACT_APP_WEB_URL;
+    console.log(URL)
+>>>>>>> 5d0a2b11434ebbf7cc5a0ea3a9b257006d8145d1
     const section_id = data.section_id;
 
     const module_id = curModule;
@@ -82,13 +89,13 @@ function SectionCase({ data, curModule }) {
     return (
         <div className="mb-6">
             <div className="flex mb-2">
-                <div className="text-left font-bold text-lg">{sectionName}</div>
+                <div className="text-left font-bold text-md">{sectionName}</div>
                 <div className="ml-2 flex items-center flex-wrap">
                     <span className="w-6 h-5 boder border-blue-50 bg-blue-300 rounded-xl text-white select-none">
-                    {caseTotal}
+                        {caseTotal}
                     </span>
-                    
-                    </div>
+
+                </div>
                 <button className="ml-4 text-blue-600" onClick={() => setEditSectionModalShow(true)}>
                     <CiEdit />
                 </button>
@@ -96,7 +103,57 @@ function SectionCase({ data, curModule }) {
                     <FaXmark />
                 </button>
             </div>
+<<<<<<< HEAD
             
+=======
+            <div className="w-full">
+                <table className="w-full">
+                    <thead className="">
+                        <tr className="bg-gray-300 border border-gray-300">
+                            <th className="w-20 text-center py-1">#</th>
+                            <th className="text-left px-2">Title</th>
+                            <th className="text-center w-36">Priority</th>
+                            <th className="text-center w-20">...</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {caseData && caseData.map((ele, index) =>
+                            <tr className="border border-gray-200 py-0.5 hover:bg-blue-100" key={ele.case_id}>
+                                <td>{index + 1}</td>
+                                <td>
+                                    <div className="px-2 py-0.5 text-left">
+                                        <a className="hover:underline" href={`${URL}case/view/${ele.case_id}`}>
+                                            {ele.case_title}
+                                        </a>
+
+                                    </div>
+                                </td>
+                                <td>
+                                    <select className={`rounded-md px-1 w-24 border border-gray-300`}>
+                                        {priorityOptions.map((opt) =>
+                                            opt.value === ele.priority_id ?
+                                                <option value={opt.value} selected={true}>{opt.label} </option> :
+                                                <option value={opt.value}>{opt.label} </option>
+                                        )}
+                                    </select>
+                                </td>
+                                <td className="">
+                                    <button className="mr-2">
+                                        <CiEdit />
+                                    </button>
+                                    <button type="button">
+                                        <FaXmark
+                                            className="bg-red-500 border border-red-500 rounded-full text-white cursor-pointer opacity-80 hover:opacity-100"
+                                            onClick={() => handleClickCaseDel(ele.case_title)}
+                                        />
+                                    </button>
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+>>>>>>> 5d0a2b11434ebbf7cc5a0ea3a9b257006d8145d1
             <div className="flex gap-2 mt-4">
                 {isShowCaseForm ?
                     <form method="post" onSubmit={(e) => handleSubmit(e)} autoComplete='off'>
