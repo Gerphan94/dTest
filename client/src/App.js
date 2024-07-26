@@ -42,8 +42,7 @@ function App() {
             <Route path="/case/view/:case_id"
               element={
                 <>
-                  <Helmet>
-                    
+                  <Helmet>  
                   </Helmet>
                   <CaseDetail/>
                 </>

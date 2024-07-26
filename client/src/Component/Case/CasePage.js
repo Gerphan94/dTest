@@ -11,41 +11,17 @@ import Dropdown from "../Common/Dropdown";
 
 
 function CasePage() {
-
     console.log("MainPage rending .....")
-
     const { projectId } = useParams()
-<<<<<<< HEAD
-    console.log(projectId)
-    const urlAPI = process.env.REACT_APP_API_URL;
-=======
-
     const urlAPI = process.env.REACT_APP_API_URL;
     console.log(urlAPI)
->>>>>>> 5d0a2b11434ebbf7cc5a0ea3a9b257006d8145d1
 
     const [caseData, setCaseData] = useState([]);
     const [SectionModalShow, setSectionModalShow] = useState(false);
 
-    // useEffect(() => {
-    //     const fetchProject = async () => {
-    //         try {
-    //             const response = await fetch(urlAPI + "project_by_id/" + projectId);
-    //             const data = await response.json();
-
-    //             setProject(data);
-    //         } catch (error) {
-    //             console.error('Error fetching data:', error);
-    //         }
-    //     }
-    //     fetchProject();
-    // }, [projectId])
-
-
     useEffect (() => {
         const fetchCase = async () => {
             try {
-<<<<<<< HEAD
                 const fetchUrl = urlAPI + "api/getCasesByProject/" + projectId;
                 console.log(fetchUrl)
                 const response = await fetch(fetchUrl);
@@ -57,16 +33,6 @@ function CasePage() {
                 else {
                     setCaseData([])
                 }
-    
-=======
-                const response = await fetch(urlAPI + "project_by_id/" + projectId);
-                console.log(urlAPI + "project_by_id/" + projectId)
-
-
-                const data = await response.json();
-                console.log(data)
-                setProject(data);
->>>>>>> 5d0a2b11434ebbf7cc5a0ea3a9b257006d8145d1
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -86,21 +52,11 @@ function CasePage() {
                 </div>
                 <div className={styles.MainPage}>
                     <div className="flex gap-4 p-2 h-14 border-b-2">
-<<<<<<< HEAD
                         <div className="flex flex-wrap content-center font-bold text-lg uppercase w-40">TÊN PROJECT</div>
-=======
-                        <div className="flex flex-wrap content-center font-bold text-lg uppercase w-40">{project['name']}</div>
-
                         <div className="flex flex-wrap content-center font-bold ml-10">Module</div>
-                        <Select
-                            className="text-left w-56"
-                            options={modulesOptions}
-                            value={modulesOptions[0]}
-                            onChange={handleChangeModule}
-                        />
-                        <Dropdown />
+                    
+                        {/* <Dropdown /> */}
 
->>>>>>> 5d0a2b11434ebbf7cc5a0ea3a9b257006d8145d1
                         <Link className="bg-[#376789] w-40 flex items-center justify-center text-white opacity-80 hover:opacity-100 ml-auto mr-0"
                             to={`/cases/add/${projectId}`}>Add Case</Link>
                     </div>

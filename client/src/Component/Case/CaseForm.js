@@ -3,33 +3,18 @@ import styles from "../styles.module.css"
 import Select from 'react-select'
 import { useParams, Link } from 'react-router-dom';
 import Dropdown from "../Common/Dropdown";
-<<<<<<< HEAD
-
-=======
->>>>>>> 5d0a2b11434ebbf7cc5a0ea3a9b257006d8145d1
 
 function CaseForm( { caseType, editdata=[] }   ) {
 
-<<<<<<< HEAD
-    const urlAPI = process.env.REACT_APP_API;
-    const [fetchUrl, setFetchUrl] = useState("");
-=======
-function CaseForm() {
-
     const urlAPI = process.env.REACT_APP_API_URL;
->>>>>>> 5d0a2b11434ebbf7cc5a0ea3a9b257006d8145d1
     const { module_id } = useParams();
-
-
-
-
 
     const [formTitle, setFormTitle] = useState("");
 
     useEffect(() => {
         if (caseType === "Add") {
             setFormTitle("Add Case");
-            setFetchUrl(urlAPI + "add_case");
+            // setFetchUrl(urlAPI + "add_case");
         } else {
             setFormTitle("Edit Case");
         }
@@ -85,8 +70,6 @@ function CaseForm() {
             }
         }, []);
 
-
-
     return (
         <div className="flex">
             <div className={styles.MainPage}>
@@ -97,11 +80,7 @@ function CaseForm() {
                     <form onSubmit={(e) => handleSubmit(e)} autoComplete="off" spellCheck={false}>
                         <div className="text-left mb-4">
                             <label htmlFor="case_title" className="block">
-<<<<<<< HEAD
                                 Title<span className="text-red-500">*</span>
-=======
-                                Title <span className="text-red-500">*</span>
->>>>>>> 5d0a2b11434ebbf7cc5a0ea3a9b257006d8145d1
                             </label>
                             <input
                                 name="case_title"
@@ -124,15 +103,8 @@ function CaseForm() {
                                 <label htmlFor="priority" className="block">
                                     Priority*
                                 </label>
-<<<<<<< HEAD
                                <Dropdown data={priorities} />
-=======
-                                <Select
-                                    className="outline-none"
-                                    name="priority"
-                                    defaultValue={{ label: "Medium", value: 2 }}
-                                    options={priorityOptions} />
->>>>>>> 5d0a2b11434ebbf7cc5a0ea3a9b257006d8145d1
+                             
                             </div>
                             <div className="text-left">
                                 <label htmlFor="estimate" className="block">

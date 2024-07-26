@@ -1,29 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 
-<<<<<<< HEAD
-function SideBar({ projectId }) {
-    const urlAPI = process.env.REACT_APP_API_URL;
-    const [treeData, setTreeData] = useState([]);
-    useEffect(() => {
-        const fetchProject = async () => {
-            try {
-                const fetchUrl = urlAPI + "api/initSectionTree/" + projectId;
-                console.log(fetchUrl)
-                const response = await fetch(urlAPI + "api/initSectionTree/" + projectId);
-=======
+
 
 
 function SideBar({ setProject, projectId }) {
 
     const urlAPI = process.env.REACT_APP_API_URL;
     const [projects, setProjects] = useState([])
+    const   [treeData, setTreeData] = useState([])
 
     useEffect(() => {
         const fetchProject = async () => {
             try {
                 const response = await fetch(urlAPI + 'projects');
->>>>>>> 5d0a2b11434ebbf7cc5a0ea3a9b257006d8145d1
                 const data = await response.json();
                 setTreeData(data);
             } catch (error) {
@@ -50,7 +40,6 @@ function SideBar({ setProject, projectId }) {
         </div>
 
     )
-
 
 }
 
