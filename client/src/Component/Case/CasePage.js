@@ -14,7 +14,6 @@ function CasePage() {
     console.log("MainPage rending .....")
     const { projectId } = useParams()
     const urlAPI = process.env.REACT_APP_API_URL;
-    console.log(urlAPI)
 
     const [caseData, setCaseData] = useState([]);
     const [SectionModalShow, setSectionModalShow] = useState(false);
@@ -23,16 +22,11 @@ function CasePage() {
         const fetchCase = async () => {
             try {
                 const fetchUrl = urlAPI + "api/getCasesByProject/" + projectId;
-                console.log(fetchUrl)
+                console.log('--------',fetchUrl)
                 const response = await fetch(fetchUrl);
                 const data = await response.json();
-    
-                if (data) {
-                    setCaseData(data);
-                }
-                else {
-                    setCaseData([])
-                }
+                setCaseData(data);
+                console.log(data)
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -41,9 +35,6 @@ function CasePage() {
         fetchCase();
     },[projectId])
     
-
-
- 
     return (
         <div className="h-full overflow-y-hidden text-sm">
             <div className="flex bg-slate-50 ">

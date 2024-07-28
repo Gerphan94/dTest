@@ -80,7 +80,18 @@ def initSectionTree(project_id):
             sub0.append({'id': lvl1.id, 'name':lvl1.name, 'sub': sub1})
         result.append({'id': lvl0.id, 'name':lvl0.name, 'sub': sub0})
     return jsonify(result), 200
-    
+
+
+@main.route('/api/get-root-sections/<int:projectId>', methods=['GET'])
+def get_root_sections(projectId):
+    result_ar = []
+    sections = Section.query.filter_by(project_id=projectId, level= 0)
+    for section in sections:
+        obj = {}
+        obj['id'] = section.id
+        obj['name'] = section.name
+        result_ar.append(obj)
+    return jsonify(result_ar), 200
 
 @main.route('/api/get_sections_of_module/<int:module_id>', methods=['GET'])
 def get_sections_of_module(module_id):
