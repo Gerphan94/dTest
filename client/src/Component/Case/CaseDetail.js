@@ -7,14 +7,15 @@ import CaseDetailBox from "./CaseDetailBox";
 function CaseDetail() {
 
     const { case_id } = useParams();
-    const urlAPI = "http://127.0.0.1:5000/api/";
+
+    const urlAPI = process.env.REACT_APP_API_URL;
 
     const [caseDetail, setCaseDetail] = useState({});
 
     useEffect(() => {
         const fetchProject = async () => {
             try {
-                const response = await fetch(urlAPI + "get_case/" + case_id);
+                const response = await fetch(urlAPI + "api/get_case/" + case_id);
                 const data = await response.json();
                 setCaseDetail(data);
             } catch (error) {

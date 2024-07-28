@@ -1,8 +1,9 @@
 import React from "react";
 import { FaCheck, FaXmark } from "react-icons/fa6";
 import { CiEdit } from "react-icons/ci";
-function CaseTable( caseData ) {
+function CaseTable( {data} ) {
 
+    const urlWEB = process.env.REACT_APP_WEB_URL;
 
     return(
         <>
@@ -17,21 +18,18 @@ function CaseTable( caseData ) {
                         </tr>
                     </thead>
                     <tbody>
-                        {caseData && caseData.map((ele, index) =>
+                        {data.map((ele, index) =>
                             <tr className="border border-gray-200 py-1 hover:bg-blue-100" key={ele.case_id}>
                                 <td>{index + 1}</td>
                                 <td>
                                     <div className="px-2 py-1 text-left">
-                                        <a className="hover:underline" href={`${URL}case/view/${ele.case_id}`}>
+                                        <a className="hover:underline" href={`${urlWEB}case/view/${ele.case_id}`}>
                                         {ele.case_title}
                                         </a>
-                                        
                                     </div>
                                 </td>
-                                <td>
-                                    <select className={`rounded-md px-1 w-24 border border-gray-300`}>
-                                        
-                                    </select>
+                                <td><div>{ele.priority_name}</div>
+                                    
                                 </td>
                                 <td className="">
                                     <button className="mr-2">

@@ -1,9 +1,10 @@
 import React, { useCallback } from "react";
 
 
-function SectionModalAdd({ parentSectionId, level, curModule, setNewSectionModalShow, setCaseData }) {
+function SectionAddModal({ parentSectionId, level, curModule, setNewSectionModalShow, setCaseData }) {
 
-    const urlAPI = "http://127.0.0.1:5000/api/";
+    const urlAPI = process.env.REACT_APP_API_URL;
+    const urlWEB = process.env.REACT_APP_WEB_URL;
 
     console.log(level)
 
@@ -18,7 +19,7 @@ function SectionModalAdd({ parentSectionId, level, curModule, setNewSectionModal
             formJson['level'] = level;
             // console.log(formJson);
             try {
-                const response = await fetch(urlAPI + 'add_section/' + curModule, {
+                const response = await fetch(urlAPI + '/api/add_section/' + curModule, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -119,4 +120,4 @@ function SectionModalAdd({ parentSectionId, level, curModule, setNewSectionModal
 
 }
 
-export default SectionModalAdd;
+export default SectionAddModal;

@@ -6,7 +6,7 @@ import styles from "../styles.module.css"
 import { useParams, Link } from 'react-router-dom';
 
 import SideBar from "./SideBar";
-import SectionModalAdd from "./SectionModalAdd";
+import SectionModalAdd from "./SectionAddModal";
 import Dropdown from "../Common/Dropdown";
 
 
@@ -21,7 +21,7 @@ function CasePage() {
     useEffect (() => {
         const fetchCase = async () => {
             try {
-                const fetchUrl = urlAPI + "api/getCasesByProject/" + projectId;
+                const fetchUrl = urlAPI + "api/get-case-by-project/" + projectId;
                 console.log('--------',fetchUrl)
                 const response = await fetch(fetchUrl);
                 const data = await response.json();
@@ -45,9 +45,6 @@ function CasePage() {
                     <div className="flex gap-4 p-2 h-14 border-b-2">
                         <div className="flex flex-wrap content-center font-bold text-lg uppercase w-40">TÊN PROJECT</div>
                         <div className="flex flex-wrap content-center font-bold ml-10">Module</div>
-                    
-                        {/* <Dropdown /> */}
-
                         <Link className="bg-[#376789] w-40 flex items-center justify-center text-white opacity-80 hover:opacity-100 ml-auto mr-0"
                             to={`/cases/add/${projectId}`}>Add Case</Link>
                     </div>
@@ -68,10 +65,6 @@ function CasePage() {
 
                                                 </div>
                                             </div>
-
-
-
-
                                         )}
                                     </div>
                                 </div>

@@ -1,20 +1,18 @@
 import React, { useState, useCallback } from "react";
 import { FaCheck, FaXmark } from "react-icons/fa6";
 import { CiEdit } from "react-icons/ci";
-import SectionModalAdd from "./SectionModalAdd";
+import SectionModalAdd from "./SectionAddModal";
 import SectionModalEdit from "./SectionModalEdit";
 import DeleteSectionConfirm from "../MessageBox/DeleteSectionConfirm";
-
+import SectionCaseTable from "./SectionCaseTable";
 
 function SectionCase({ data, curModule }) {
-    console.log("-----------", data)
+    console.log("-----------", data.cases)
     const urlAPI = process.env.REACT_APP_API_URL;
     const urlWEB = process.env.REACT_APP_WEB_URL;
-    
+
     const section_id = data.section_id;
-
     const module_id = curModule;
-
     const [sectionName, setSectionName] = useState(data.section_name)
     const [caseTotal, setCaseTotal] = useState(data.case_count);
     const [caseData, setCaseData] = useState(data.cases);
@@ -22,7 +20,7 @@ function SectionCase({ data, curModule }) {
     const [NewSectionModalShow, setNewSectionModalShow] = useState(false);
     const [EditSectionModalShow, setEditSectionModalShow] = useState(false);
     // delte info
-    const [isDeleteSection, setDeleteSection] = useState(false);
+    const [showDeleteSection, setShowDeleteSection] = useState(false);
     const [deleteType, setDeleteType] = useState('');
     const [deleteMessage, setDeleteMessage] = useState('');
 
@@ -47,7 +45,7 @@ function SectionCase({ data, curModule }) {
             formJson['priority'] = 2
             formJson['estimate'] = 0
             try {
-                const response = await fetch(urlAPI + 'add_case/' + section_id, {
+                const response = await fetch(urlAPI + 'api/add-case/' + section_id, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -57,8 +55,8 @@ function SectionCase({ data, curModule }) {
                 if (response.ok) {
                     const data = await response.json();
                     setisShowCaseForm(false);
-
-                    setCaseData(prevData => [...prevData, { "case_id": data.id, "case_title": data.title }]);
+                    setCaseTotal(caseTotal + 1);
+                    setCaseData(prevData => [...prevData, { "case_id": data.id, "case_title": data.title, "priority_name": "Medium" }]);
 
                 }
             } catch (error) {
@@ -69,12 +67,12 @@ function SectionCase({ data, curModule }) {
     );
 
     const handleClickSectionDel = () => {
-        setDeleteSection(true);
+        setShowDeleteSection(true);
         setDeleteType("section_delete");
         setDeleteMessage(sectionName);
     };
     const handleClickCaseDel = (case_name) => {
-        setDeleteSection(true);
+        setShowDeleteSection(true);
         setDeleteType("case_delete");
         setDeleteMessage(case_name);
     };
@@ -85,10 +83,9 @@ function SectionCase({ data, curModule }) {
                 <div className="text-left font-bold text-lg">{sectionName}</div>
                 <div className="ml-2 flex items-center flex-wrap">
                     <span className="w-6 h-5 boder border-blue-50 bg-blue-300 rounded-xl text-white select-none">
-                    {caseTotal}
+                        {caseTotal}
                     </span>
-                    
-                    </div>
+                </div>
                 <button className="ml-4 text-blue-600" onClick={() => setEditSectionModalShow(true)}>
                     <CiEdit />
                 </button>
@@ -96,7 +93,9 @@ function SectionCase({ data, curModule }) {
                     <FaXmark />
                 </button>
             </div>
-            
+            <div>
+                <SectionCaseTable data={caseData} />
+            </div>
             <div className="flex gap-2 mt-4">
                 {isShowCaseForm ?
                     <form method="post" onSubmit={(e) => handleSubmit(e)} autoComplete='off'>
@@ -110,12 +109,12 @@ function SectionCase({ data, curModule }) {
                             />
                             <button type="submit">
                                 <FaCheck
-                                    className="bg-green-600 p-1 text-white w-8 h-8 rounded-sm cursor-pointer opacity-80 hover:opacity-100"
+                                    className="bg-green-600 border border-green-600 p-1 text-white size-full rounded-sm cursor-pointer opacity-80 hover:opacity-100"
                                 />
                             </button>
                             <button type="button">
                                 <FaXmark
-                                    className="bg-white border border-red-500 p-1 text-red-500 w-8 h-8 rounded-sm cursor-pointer opacity-80 hover:opacity-100"
+                                    className="bg-white border border-red-500 p-1 text-red-500 size-full rounded-sm cursor-pointer opacity-80 hover:opacity-100"
                                     onClick={() => setisShowCaseForm(false)}
                                 />
                             </button>
@@ -134,7 +133,12 @@ function SectionCase({ data, curModule }) {
             </div>
 
             {NewSectionModalShow &&
-                <SectionModalAdd parentSectionId={section_id} level={data["section_level"] + 1} curModule={module_id} setNewSectionModalShow={setNewSectionModalShow} setCaseData={data.setCaseData} />
+                <SectionModalAdd 
+                parentSectionId={section_id} 
+                level={data["section_level"] + 1} 
+                curModule={module_id} 
+                setNewSectionModalShow={setNewSectionModalShow} 
+                setCaseData={data.setCaseData} />
             }
             {EditSectionModalShow &&
                 <SectionModalEdit
@@ -147,10 +151,11 @@ function SectionCase({ data, curModule }) {
                 />
             }
 
-            {isDeleteSection &&
+            {showDeleteSection &&
                 <DeleteSectionConfirm
-                section_id= {section_id}
-                    
+                    setShowModal={setShowDeleteSection}
+                    section_id={section_id}
+
 
                 />
             }

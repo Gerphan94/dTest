@@ -81,7 +81,7 @@ def initSectionTree(project_id):
         result.append({'id': lvl0.id, 'name':lvl0.name, 'sub': sub0})
     return jsonify(result), 200
 
-
+# SECTION #######################################################################
 @main.route('/api/get-root-sections/<int:projectId>', methods=['GET'])
 def get_root_sections(projectId):
     result_ar = []
@@ -133,7 +133,9 @@ def get_sections_of_module(module_id):
 def is_delete_section(section_id):
     child_section = Section.query.filter_by(parent_id = section_id).count()
     return jsonify({"total": child_section})
-     
+
+
+# TESTCASE  
 #######################################################################   
     
 @main.route('/api/cases_by_section/<int:section_id>', methods=['GET'])
@@ -143,15 +145,27 @@ def get_cases(section_id):
         'title': case.title
         } for case in Testcase.query.filter_by(section_id=section_id)])
 
+
 # Fu8nction get case by sectionID
-def get_cases_by_section(sectionId):
-    cases = Testcase.query.filter_by(section_id = sectionId)
+# def get_cases_by_section(sectionId):
+#     cases = Testcase.query.join(Priority, Testcase.priority_id == Priority.id).filter_by(section_id = sectionId)
+#     case_ar = []
+#     for case in cases:
+#         case_obj = {}
+#         case_obj['case_id'] = case.id
+#         case_obj['case_title'] = case.title
+#         case_obj['priority_name'] = case.priority_id
+#         case_ar.append(case_obj)
+#     return case_ar
+
+def get_cases_by_section(section_id):
+    cases = db.session.query(Testcase, Priority).join(Priority, Testcase.priority_id == Priority.id).filter(Testcase.section_id == section_id).all()
     case_ar = []
-    for case in cases:
+    for testcase, priority in cases:
         case_obj = {}
-        case_obj['case_id'] = case.id
-        case_obj['case_title'] = case.title
-        case_obj['priority_id'] = case.priority_id
+        case_obj['case_id'] = testcase.id
+        case_obj['case_title'] = testcase.title
+        case_obj['priority_name'] = priority.name  # Assuming Priority has a 'name' attribute
         case_ar.append(case_obj)
     return case_ar
 
@@ -162,15 +176,13 @@ def init_case(section):
     obj["section_name"] = section.name
     obj["section_level"] = section.level
     obj["section_des"] = section.description
-    
     obj['cases'] = get_cases_by_section(section.id)
     return obj
     
-@main.route('/api/getCasesByProject/<int:projectId>', methods=['GET'])
+@main.route('/api/get-case-by-project/<int:projectId>', methods=['GET'])
 def getCasesByProject(projectId):
     result_ar = []
     sections = Section.query.filter_by(project_id=projectId, level= 0)
-    
     for section in sections:
         obj = init_case(section)
         obj["case_count"] = Testcase.query.filter_by(section_id=section.id).count()
@@ -228,7 +240,7 @@ def update_section(section_id):
 
     
 
-@main.route('/api/add_case/<int:section_id>', methods=['POST'])
+@main.route('/api/add-case/<int:section_id>', methods=['POST'])
 def add_case(section_id):
     data = request.get_json()
     title = data['case_title']

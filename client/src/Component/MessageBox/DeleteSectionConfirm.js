@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 
 
-function DeleteSectionConfirm({ section_id }) {
+function DeleteSectionConfirm({ setShowModal, section_id }) {
 
     const urlAPI = "http://127.0.0.1:5000/api/";
 
     const [sectionCount, setSectionCount] = useState(0);
     const [caseCount, setCaseCount] = useState(0);
-
 
     useEffect(() => {
         const fetchTotalChildSection = async () => {
@@ -59,6 +58,7 @@ function DeleteSectionConfirm({ section_id }) {
                                 <button
                                     className="text-red-500 background-transparent font-bold px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 border-red-500 border opacity-80 hover:opacity-100"
                                     type="button"
+                                    onClick={() => setShowModal(false)}
                                 >
                                     Cancel
                                 </button>
