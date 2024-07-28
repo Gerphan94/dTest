@@ -15,7 +15,7 @@ def get_priority():
         'name': priority.name 
         } for priority in Priority.query.all()])
 
-@main.route('/api/getProjects', methods=['GET'])
+@main.route('/api/get-all-projects', methods=['GET'])
 def getProjects():
     return jsonify([{
         'id': project.id, 

@@ -8,7 +8,7 @@ import NotFound from './Page/404';
 import CasePage from './Component/Case/CasePage';
 import CaseForm from './Component/Case/CaseForm';
 import CaseDetail from './Component/Case/CaseDetail';
-
+import Dashboard from './Component/Dashboard/Dashboard';
 
 function App() {
 
@@ -19,6 +19,16 @@ function App() {
           <Navbar />
           <div className='PageBody'>
           <Routes >
+          <Route path="/"
+              element={
+                <>
+                  <Helmet>
+                    <title>Dashboard</title>
+                  </Helmet>
+                  <Dashboard/>
+                </>
+              }
+            />
             <Route path="/cases/:projectId"
               element={
                 <>
