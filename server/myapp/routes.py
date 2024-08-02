@@ -17,6 +17,7 @@ def get_priority():
 
 @main.route('/api/get-all-projects', methods=['GET'])
 def getProjects():
+    print("đang fetching ...")
     return jsonify([{
         'id': project.id, 
         'name': project.name 
@@ -92,6 +93,9 @@ def get_root_sections(projectId):
         obj['name'] = section.name
         result_ar.append(obj)
     return jsonify(result_ar), 200
+
+@main.route('/api/create-section/<int:module_id>', methods=['GET'])
+
 
 @main.route('/api/get_sections_of_module/<int:module_id>', methods=['GET'])
 def get_sections_of_module(module_id):
@@ -235,10 +239,6 @@ def update_section(section_id):
         db.session.commit()
         return jsonify({"id":section_id, "name":data["section_name"]})
     return jsonify({"error": "Section not found"})
-
-
-
-    
 
 @main.route('/api/add-case/<int:section_id>', methods=['POST'])
 def add_case(section_id):

@@ -5,12 +5,10 @@ function Dashboard() {
     const urlAPI = process.env.REACT_APP_API_URL;
     const urlWEB = process.env.REACT_APP_WEB_URL;
 
-
     const [projects, setProjects] = useState([])
 
     useEffect(() => {
         const fetchUrl = urlAPI + 'api/get-all-projects';
-        console.log(fetchUrl)
         const fetchProject = async () => {
             try {
                 console.log(fetchUrl)

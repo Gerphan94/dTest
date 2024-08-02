@@ -80,7 +80,7 @@ function SectionCase({ data, curModule }) {
     return (
         <div className="mb-6">
             <div className="flex mb-2">
-                <div className="text-left font-bold text-lg">{sectionName}</div>
+                <div className="text-left font-bold text-md">{sectionName}</div>
                 <div className="ml-2 flex items-center flex-wrap">
                     <span className="w-6 h-5 boder border-blue-50 bg-blue-300 rounded-xl text-white select-none">
                         {caseTotal}
@@ -127,9 +127,6 @@ function SectionCase({ data, curModule }) {
                         <button className="text-[#5993bc] underline" onClick={() => setNewSectionModalShow(true)}>Add Subsection</button>
                     </div>
                 }
-
-
-
             </div>
 
             {NewSectionModalShow &&
