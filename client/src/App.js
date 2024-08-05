@@ -6,6 +6,8 @@ import Navbar from './Component/navBar';
 
 import NotFound from './Page/404';
 import CasePage from './Component/Case/CasePage';
+import WorkLog from './Component/WorkLog/WorkLog';
+
 import CaseForm from './Component/Case/CaseForm';
 import CaseDetail from './Component/Case/CaseDetail';
 import Dashboard from './Component/Dashboard/Dashboard';
@@ -39,13 +41,13 @@ function App() {
                 </>
               }
             />
-            <Route path="/cases/add/:module_id"
+            <Route path="/work-log/:YYYYMM?"
               element={
                 <>
                   <Helmet>
-                    <title>Case Add</title>
+                    <title>Work Log</title>
                   </Helmet>
-                  <CaseForm/>
+                  <WorkLog/>
                 </>
               }
             />

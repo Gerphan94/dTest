@@ -14,6 +14,10 @@ function Navbar({ clicked, setClick }) {
           <Link className={menuClass} to="/cases/1">
             Test Cases
           </Link>
+          <Link className={menuClass} to="/work-log">
+            Worklogs
+          </Link>
+
         </ul>
       </nav>
     </div>

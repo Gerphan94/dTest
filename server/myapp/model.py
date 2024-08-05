@@ -13,6 +13,11 @@ class Project(db.Model):
 #     project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
 #     project = db.relationship("Project", backref=backref("modules", uselist=True))
 
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(255))
+
 class Priority(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
@@ -38,3 +43,23 @@ class Testcase(db.Model):
     estimate = db.Column(db.Integer)
     section_id = db.Column(db.Integer, db.ForeignKey('section.id'), nullable=False)
     section = db.relationship("Section", backref=backref("testcases", uselist=True))
+    
+
+
+class Worklog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    worklog_date = db.Column(db.Date)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship("User", backref=backref("worklogs", uselist=True))
+
+class Worktask(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    task_id = db.Column(db.Integer)
+    task_name = db.Column(db.String(255))
+    status = db.Column(db.String(255))
+    testrun_id = db.Column(db.Integer)
+    worklog_id = db.Column(db.Integer, db.ForeignKey('worklog.id'), nullable=False)
+    worklog = db.relationship("Worklog", backref=backref("worktasks", uselist=True))
+    
+    

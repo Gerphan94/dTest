@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, make_response
-from .model import db, Project, Section, Testcase, Priority
+from .model import db, Project, Section, Testcase, Priority, Worklog, Worktask
 
 main = Blueprint('main', __name__)
 
@@ -279,8 +279,36 @@ def get_case(case_id):
     
 
     
+@main.route('/api/get-worklog/<int:userid>', methods=['GET'])
+def get_worklog(userid):
     
+    result = []
+    try:
+        worklogs = Worklog.query.filter_by(user_id=userid).all()
+        for worklog in worklogs:
+            worktasks = Worktask.query.filter_by(worklog_id=worklog.id).all()
+            task_ar = []
+            for worktask in worktasks:
+                task_ar.append({
+                    'id': worktask.id,
+                    'task_id': worktask.task_id,
+                    'task_name': worktask.task_name,
+                    'status': worktask.status
+                })
+                
+            result.append({
+                'id': worklog.id,
+                'name': worklog.name,
+                'task': task_ar
+            })
+           
+        return jsonify(result), 200
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+        
     
+
     
     
     
