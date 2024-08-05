@@ -106,7 +106,6 @@ function CasePage() {
                                     </form>
                                     :
                                     <div className="flex gap-2">
-
                                         <button
                                             className="text-[#5993bc] underline"
                                             onClick={() => setShowSectionAddForm(true)}
