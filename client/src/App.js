@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 // import js
 import Navbar from './Component/navBar';
 
+import Login from './Component/Login/Login';
 import NotFound from './Page/404';
 import CasePage from './Component/Case/CasePage';
 import WorkLog from './Component/WorkLog/WorkLog';
@@ -19,8 +20,21 @@ function App() {
       <Router>
         <HelmetProvider>
           <Navbar />
-          <div className='PageBody'>
+          <div className='Login'>
           <Routes >
+            {/* LOGGIN */}
+            <Route path="/Login"
+              element={
+                <>
+                  <Helmet>
+                    <title>Login</title>
+                  </Helmet>
+                  <Login/>
+                </>
+              }
+            />
+
+
           <Route path="/"
               element={
                 <>
