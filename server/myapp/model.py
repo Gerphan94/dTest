@@ -50,6 +50,7 @@ class Worklog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
     worklog_date = db.Column(db.Date)
+    month = db.Column(db.String(10))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship("User", backref=backref("worklogs", uselist=True))
 

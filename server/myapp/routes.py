@@ -279,12 +279,14 @@ def get_case(case_id):
     
 
     
-@main.route('/api/get-worklog/<int:userid>', methods=['GET'])
-def get_worklog(userid):
+@main.route('/api/get-worklog/<yyyymm>', methods=['GET'])
+def get_worklog(yyyymm):
+    
+    userId = 1
     
     result = []
     try:
-        worklogs = Worklog.query.filter_by(user_id=userid).all()
+        worklogs = Worklog.query.filter_by(user_id=userId, month=yyyymm).all()
         for worklog in worklogs:
             worktasks = Worktask.query.filter_by(worklog_id=worklog.id).all()
             task_ar = []
@@ -299,6 +301,7 @@ def get_worklog(userid):
             result.append({
                 'id': worklog.id,
                 'name': worklog.name,
+                'date': worklog.worklog_date,
                 'task': task_ar
             })
            

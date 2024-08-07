@@ -20,7 +20,7 @@ function App() {
       <Router>
         <HelmetProvider>
           <Navbar />
-          <div className='Login'>
+          <div className='PageBody'>
           <Routes >
             {/* LOGGIN */}
             <Route path="/Login"
@@ -55,7 +55,7 @@ function App() {
                 </>
               }
             />
-            <Route path="/work-log/:YYYYMM?"
+            <Route path="/work-log/:month?"
               element={
                 <>
                   <Helmet>

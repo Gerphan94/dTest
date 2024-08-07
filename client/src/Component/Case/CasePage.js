@@ -12,8 +12,9 @@ import Dropdown from "../Common/Dropdown";
 import { FaCheck, FaXmark } from "react-icons/fa6";
 
 function CasePage() {
-    console.log("MainPage rending .....")
     const { projectId } = useParams()
+    console.log("MainPage rending .....,", projectId)
+
     const urlAPI = process.env.REACT_APP_API_URL;
 
     const [caseData, setCaseData] = useState([]);
