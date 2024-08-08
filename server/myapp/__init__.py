@@ -3,6 +3,7 @@ from flask_cors import CORS
 
 # from .routes import main
 from .routes import main
+from .routes_worklog import worklog
 from .model import db
 import os, sys
 
@@ -24,6 +25,7 @@ def create_app():
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
     db.init_app(app)
     app.register_blueprint(main)
+    app.register_blueprint(worklog)
    
 
     return app

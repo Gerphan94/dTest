@@ -1,5 +1,7 @@
 from flask import Blueprint, jsonify, request, make_response
 from .model import db, Project, Section, Testcase, Priority, Worklog, Worktask
+from sqlalchemy import desc
+from datetime import datetime
 
 main = Blueprint('main', __name__)
 
@@ -39,8 +41,6 @@ def get_project_by_id(project_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-    
-    
 # MODULE #######################################################################
 
 @main.route('/api/modules/<int:project_id>', methods=['GET'])
@@ -277,38 +277,23 @@ def get_case(case_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
+    
+# WORKLOG ROUTE
 
     
-@main.route('/api/get-worklog/<yyyymm>', methods=['GET'])
-def get_worklog(yyyymm):
-    
+@main.route('/api/insert-worklog', methods=['POST'])
+def inser_worklog():
     userId = 1
+    data = request.get_json()
     
-    result = []
-    try:
-        worklogs = Worklog.query.filter_by(user_id=userId, month=yyyymm).all()
-        for worklog in worklogs:
-            worktasks = Worktask.query.filter_by(worklog_id=worklog.id).all()
-            task_ar = []
-            for worktask in worktasks:
-                task_ar.append({
-                    'id': worktask.id,
-                    'task_id': worktask.task_id,
-                    'task_name': worktask.task_name,
-                    'status': worktask.status
-                })
-                
-            result.append({
-                'id': worklog.id,
-                'name': worklog.name,
-                'date': worklog.worklog_date,
-                'task': task_ar
-            })
-           
-        return jsonify(result), 200
-        
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    print(data)
+    return jsonify({}), 200
+    
+    
+    
+    
+    
+    
         
     
 
