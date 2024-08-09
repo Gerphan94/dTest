@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { FaAngleDown } from "react-icons/fa6";
 
-const Dropdown = ({ data, selectedOption, setSelectedOption, searchable = true, placeholder = '', chooseIndex = 0, optionALL = false }) => {
+const Dropdown = ({ data, selectedOption, setSelectedOption, searchable = false, placeholder = '', chooseIndex = 0, optionALL = false }) => {
 
     const [viewData, setViewData] = useState([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);

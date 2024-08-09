@@ -35,10 +35,12 @@
 
 table {
   width: 100%;
+  border: 1px solid #EEEDEB;
 }
 
 thead tr {
   background-color: #EEEDEB;
+  
 }
 
   

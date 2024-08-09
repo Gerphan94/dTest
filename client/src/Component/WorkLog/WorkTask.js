@@ -26,6 +26,8 @@ function WorkTask({ data }) {
                     }
                 </tbody>
             </table>
+            {data.length === 0 && <div className="w-full border py-0.5">Không có dữ liệu</div>}
+
 
             <div className="flex w-full">
                 <div>{data.task_id}</div>

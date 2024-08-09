@@ -28,10 +28,11 @@ def get_worklog(yyyymm):
     userId = 1
     result = []
     try:
-        worklogs = Worklog.query.filter_by(user_id=userId, month=yyyymm).all()
+        worklogs = Worklog.query.filter_by(user_id=userId, month=yyyymm).order_by(desc(Worklog.worklog_date)).all()
         for worklog in worklogs:
             worktasks = Worktask.query.filter_by(worklog_id=worklog.id).all()
             task_ar = []
+            print(type(worklog.worklog_date))
             for worktask in worktasks:
                 task_ar.append({
                     'id': worktask.id,
@@ -42,7 +43,7 @@ def get_worklog(yyyymm):
             result.append({
                 'id': worklog.id,
                 'name': worklog.name,
-                'date': worklog.worklog_date,
+                'date': worklog.worklog_date.strftime('%d/%m/%Y'),
                 'task': task_ar
             })
            
