@@ -281,13 +281,7 @@ def get_case(case_id):
 # WORKLOG ROUTE
 
     
-@main.route('/api/insert-worklog', methods=['POST'])
-def inser_worklog():
-    userId = 1
-    data = request.get_json()
-    
-    print(data)
-    return jsonify({}), 200
+
     
     
     

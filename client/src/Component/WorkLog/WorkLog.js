@@ -9,21 +9,25 @@ import WorkTask from "./WorkTask";
 import WorkRun from "./WorkRun";
 import WorklogModal from "./WorklogModal";
 import WorkTaskModal from "./WorkTaskModal";
+import Notice from "../MessageBox/Notice";
+
 
 function WorkLog() {
 
     console.log("MainPage rending .....")
     const urlAPI = process.env.REACT_APP_API_URL;
 
-    const { month } = useParams()
+    const { month } = useParams();
 
-    const [worklogData, setWorklogData] = useState([])
+    const [worklogData, setWorklogData] = useState([]);
+    const [showNewDate, setShowNewDate] = useState(false);
+    const [showWLModal, setShowWLModal] = useState(false);
+    const [showWTModal, setShowWTModal] = useState(false);
+    const [showNotice, setShowNotice] = useState(true);
+    const [noticeMsg, setNoticeMsg] = useState("");
 
 
-    const [showNewDate, setShowNewDate] = useState(false)
 
-    const [showWLModal, setShowWLModal] = useState(false)
-    const [showWTModal, setShowWTModal] = useState(false)
 
     const formatDate = (date) => {
         const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
@@ -56,6 +60,8 @@ function WorkLog() {
 
     return (
         <>
+            {showNotice && <Notice message={noticeMsg} setModalshow={setShowNotice} type="success" />}
+
             <div className="h-full overflow-y-hidden text-sm">
                 <div className="flex bg-slate-50 ">
                     <div className={styles.SideBarHeight}>
@@ -89,7 +95,7 @@ function WorkLog() {
                                                 <button
                                                     className="hover:underline text-blue-400"
                                                     onClick={() => setShowWTModal(true)}
-                                                
+
                                                 >Thêm task</button>
                                             </div>
                                         </div>
@@ -112,7 +118,7 @@ function WorkLog() {
                 </div>
             </div>
 
-            {showWLModal && <WorklogModal setShowModal={setShowWLModal} />}
+            {showWLModal && <WorklogModal setShowModal={setShowWLModal} setNoticeMsg={setNoticeMsg} setShowNotice={setShowNotice} />}
             {showWTModal && <WorkTaskModal setShowModal={setShowWTModal} />}
         </>
 

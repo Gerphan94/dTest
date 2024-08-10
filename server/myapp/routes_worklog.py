@@ -51,3 +51,39 @@ def get_worklog(yyyymm):
         
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+@worklog.route('/api/insert-worklog', methods=['POST'])
+def inser_worklog():
+    userId = 1
+    data = request.get_json()
+    wl_date = data['date']
+    formatDate = datetime.strptime(wl_date, '%d/%m/%Y')
+    wl_title = data['title']
+    
+    print(formatDate)
+    
+    if (wl_title == ''):
+        print('title is EMPTY')
+        return jsonify({'error': 'title is EMPTY'}), 500
+    
+    check_exist = Worklog.query.filter_by(user_id=userId, worklog_date=formatDate.strftime('%Y-%m-%d')).first()
+    if check_exist:
+        print('Đã tồn tại Worklog ngày ' + wl_date)
+        return jsonify({'error': 'Đã tồn tại Worklog ngày ' + wl_date }), 500
+    
+    new_worklog = Worklog(
+        name = wl_title,
+        worklog_date = formatDate,
+        month = formatDate.strftime('%Y%m'),
+        user_id = userId
+    )
+    try:
+        db.session.add(new_worklog)
+        db.session.commit()
+        return jsonify({
+            'id': new_worklog.id,
+            'name': new_worklog.name,
+            'worklog_date': new_worklog.worklog_date.strftime('%d/%m/%Y')
+            }), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

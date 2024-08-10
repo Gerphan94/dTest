@@ -3,23 +3,28 @@ import { PiEyeLight, PiEyeSlash } from "react-icons/pi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-function WorklogModal({ setShowModal }) {
+function WorklogModal({ setShowModal, setNoticeMsg, setShowNotice }) {
 
     const urlAPI = process.env.REACT_APP_API_URL;
     const urlWEB = process.env.REACT_APP_WEB_URL;
 
-    const [hidePwd, setHidePwd] = useState(true);
-    const [worklog_date, setWorklogDate] = useState(new Date());
 
+    const formatWorklogDate = (date) => {
+        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        return date.toLocaleDateString('en-GB', options);
+    };
+
+    const [formData, setFormData] = useState({
+        worklog_date: new Date(),
+        title: "Regression Test " + formatWorklogDate(new Date()),
+    })
 
     const handleSubmit = useCallback(
         async (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
             const formJson = Object.fromEntries(formData.entries());
-
             console.log(formJson);
-
             try {
                 const response = await fetch(urlAPI + "api/insert-worklog", {
                     method: "POST",
@@ -28,24 +33,23 @@ function WorklogModal({ setShowModal }) {
                     },
                     body: JSON.stringify(formJson),
                 });
+                const data = await response.json();
                 if (response.ok) {
-                    const data = await response.json();
-                    console.log(data);
                     setShowModal(false);
                 } else {
-                    console.error("Error:", response.status);
+                    console.log(data);
+                    setNoticeMsg(data.error)
+                    setShowNotice(true);
                 }
             } catch (error) {
+                console.log("--------------------")
                 console.error("Error:", error);
             }
 
 
         }, []);
 
-
-
     return (
-
         <div>
             <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-[90] outline-none focus:outline-none">
                 <div className="relative lg:w-2/3 md:w-2/3 w-full my-6 mx-auto max-w-3xl p-4 top-[-200px]">
@@ -68,8 +72,8 @@ function WorklogModal({ setShowModal }) {
                                             id="date"
                                             name="date"
                                             dateFormat="dd/MM/yyyy"
-                                            selected={worklog_date}
-                                            onChange={(date) => setWorklogDate(date)}
+                                            selected={formData.worklog_date}
+                                            onChange={(date) => setFormData({ ...formData, worklog_date: date })}
                                         />
 
                                     </div>
@@ -86,6 +90,8 @@ function WorklogModal({ setShowModal }) {
                                                 spellCheck="false"
                                                 className="border w-full outline-none px-2 py-1"
                                                 required={true}
+                                                value={formData.title}
+                                                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                             />
                                         </div>
 
