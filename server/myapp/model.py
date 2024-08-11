@@ -17,6 +17,11 @@ class Project(db.Model):
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255))
+    password = db.Column(db.String(255))
+    
+class Authtoken(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    auth_token = db.Column(db.String(255))
 
 class Priority(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -16,6 +16,35 @@ function Login() {
         async (e) => {
             e.preventDefault();
 
+            const form = e.target;
+            const formData = new FormData(form);
+            const formJson = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch(urlAPI + "auth/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formJson),
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log(data);
+                    if (data.success) {
+                        window.location.href = urlWEB;
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    const data = await response.json();
+                    alert(data.message);
+                }
+
+            } catch (error) {
+                console.error("Error:", error);
+            }
+
         }, []);
 
 
@@ -41,7 +70,7 @@ function Login() {
                                         </label>
                                         <input
                                             type="text"
-                                            name="user"
+                                            name="username"
                                             className="border w-full outline-none px-2 py-1"
                                             required={true}
                                             autoComplete='off'
@@ -54,8 +83,8 @@ function Login() {
                                         </label>
                                         <div className="relative">
                                         <input
-                                            type="password"
-                                            name="pwd"
+                                            type=" "
+                                            name="password"
                                             autoComplete="new-password"
                                             className="border w-full outline-none px-2 py-1"
                                             required={true}
