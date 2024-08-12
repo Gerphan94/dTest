@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request, make_response
 from .model import db, Project, Section, Testcase, Priority, Worklog, Worktask
 from sqlalchemy import desc
 from datetime import datetime
+from .routes_login import token_required
 
 worklog = Blueprint('worklog', __name__)
 
@@ -13,6 +14,7 @@ def handle_404_error(_error):
 
 # get worklog month
 @worklog.route('/api/get-worklog-month', methods=['GET'])
+@token_required
 def get_worklog_month():
     result = []
     try:

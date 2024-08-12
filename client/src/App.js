@@ -12,8 +12,13 @@ import WorkLog from './Component/WorkLog/WorkLog';
 import CaseForm from './Component/Case/CaseForm';
 import CaseDetail from './Component/Case/CaseDetail';
 import Dashboard from './Component/Dashboard/Dashboard';
+import { useState } from 'react';
 
 function App() {
+
+  const urlAPI = process.env.REACT_APP_API_URL;
+
+  const [token, setToken] = useState('');
 
   return (
     <div className="App">
