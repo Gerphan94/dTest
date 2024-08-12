@@ -21,7 +21,7 @@ function Login() {
             const formJson = Object.fromEntries(formData.entries());
 
             try {
-                const response = await fetch(urlAPI + "auth/login", {
+                const response = await fetch(urlAPI + "login", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

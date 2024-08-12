@@ -1,11 +1,10 @@
 import jwt
 from flask import Blueprint, jsonify, request, make_response, current_app
 from werkzeug.security import generate_password_hash, check_password_hash
-from .model import db, User, Authtoken
+from .model import db, User, Token
 
 import datetime
 from functools import wraps
-
 
 login = Blueprint('login', __name__)
 
@@ -18,8 +17,8 @@ def verify_password(stored_password, provided_password):
 def store_token_cookie(response, token):
     print(token)
     # response.set_cookie('access_token', 'YOUR_ACCESS_TOKEN')
-    response.set_cookie('access_token', token)
-    # response.set_cookie('auth_token', token, httponly=True, secure=True)
+    # response.set_cookie('access_token', token)
+    response.set_cookie('auth_token', token)
     return response
 
 def read_token_cookie(request):
@@ -69,31 +68,41 @@ def token_required(f):
             return jsonify({'message': 'Token is invalid!'}), 403
         return f(current_user, *args, **kwargs)
     return decorator
-        
 
-@login.route('/auth/login', methods=['GET', 'POST'])
+@login.route('/test-cookie')
+def test_cookie(response):
+    print(response)
+    response.set_cookie('test', 'This is a test cookie')
+    return response
+
+        
+@login.route('/login', methods=['GET', 'POST'])
 def log_in():
-    # Generate or retrieve your token (e.g., JWT, session token, etc.)
     data = request.get_json()
     username = data['username']
     password = data['password']
     print(username, password)
+
     user = User.query.filter_by(username=username).first()
 
     if user and verify_password(user.password, password):
         token = encode_auth_token(user.id)
-        new_token = Authtoken(auth_token=token)
+        new_token = Token(token=token)
         try:
             db.session.add(new_token)
             db.session.commit()
+            print("Generated Token:", token)
             response = make_response(jsonify({"message": "Success Login "}))
-            response.set_cookie('token', token)
-
-            # store_token_cookie(response, token)
+            test_cookie(response)
+            # response.set_cookie('token', token, path='/', domain='localhost', httponly=True)  # Adjust domain as needed
             return response
-        except:
+        except Exception as e:
             db.session.rollback()
-    return jsonify({"message": "Login Failed"})
+            print(f"Error: {e}")
+            return jsonify({"message": "Login Failed"}), 500
+
+    return jsonify({"message": "Login Failed"}), 401
+
 
 @login.route('/auth/logged_user', methods=['GET'])
 def logged_user():

@@ -19,9 +19,9 @@ class User(db.Model):
     username = db.Column(db.String(255))
     password = db.Column(db.String(255))
     
-class Authtoken(db.Model):
+class Token(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    auth_token = db.Column(db.String(255))
+    token = db.Column(db.String(255))
 
 class Priority(db.Model):
     id = db.Column(db.Integer, primary_key=True)
