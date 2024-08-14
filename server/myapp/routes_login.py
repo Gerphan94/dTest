@@ -14,22 +14,13 @@ def hash_password(password):
 def verify_password(stored_password, provided_password):
     return check_password_hash(stored_password, provided_password)
 
-def store_token_cookie(response, token):
-    print(token)
-    # response.set_cookie('access_token', 'YOUR_ACCESS_TOKEN')
-    # response.set_cookie('access_token', token)
-    response.set_cookie('auth_token', token)
-    return response
 
-def read_token_cookie(request):
-    return request.cookies.get('auth_token')
-
-def encode_auth_token(user_id):
+def encode_token(user_name):
     try:
         payload = {
             'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=5),
             'iat': datetime.datetime.utcnow(),
-            'sub': user_id
+            'sub': user_name
         }
         return jwt.encode(
             payload,
@@ -41,9 +32,15 @@ def encode_auth_token(user_id):
         return e
     
 @staticmethod
-def decode_auth_token(auth_token):
+def decode_token(token):
+ # Specify the list of allowed algorithms
+
     try:
-        payload = jwt.decode(auth_token, current_app.config.get('SECRET_KEY'))
+        payload = jwt.decode(
+            token,
+            current_app.config.get('SECRET_KEY'),
+            algorithms=['HS256']  # Specify the list of allowed algorithms
+        )
         return payload['sub']
     except jwt.ExpiredSignatureError:
         return 'Signature expired. Please log in again.'
@@ -63,19 +60,22 @@ def token_required(f):
         if not token:
             return jsonify({'message': 'Token is missing!'}), 403
         try:
-            current_user = decode_auth_token(token)
+            current_user = decode_token(token)
         except:
             return jsonify({'message': 'Token is invalid!'}), 403
         return f(current_user, *args, **kwargs)
     return decorator
 
-@login.route('/test-cookie')
-def test_cookie(response):
-    print(response)
-    response.set_cookie('test', 'This is a test cookie')
-    return response
+@login.route('/auth/check_token/<token>', methods=['GET'])
+def check_token(token):
+    check_token = Token.query.filter_by(token=token).first()
+    print((check_token))
+    if check_token:
+        user = decode_token(token)
+        return jsonify({'success': True, 'username': user}), 200 
+    return jsonify({'success': False, 'username': None}), 401
+    
 
-        
 @login.route('/login', methods=['GET', 'POST'])
 def log_in():
     data = request.get_json()
@@ -86,16 +86,13 @@ def log_in():
     user = User.query.filter_by(username=username).first()
 
     if user and verify_password(user.password, password):
-        token = encode_auth_token(user.id)
+        token = encode_token(user.username)
         new_token = Token(token=token)
         try:
             db.session.add(new_token)
             db.session.commit()
             print("Generated Token:", token)
-            response = make_response(jsonify({"message": "Success Login "}))
-            test_cookie(response)
-            # response.set_cookie('token', token, path='/', domain='localhost', httponly=True)  # Adjust domain as needed
-            return response
+            return jsonify({"token": token})
         except Exception as e:
             db.session.rollback()
             print(f"Error: {e}")
@@ -104,11 +101,11 @@ def log_in():
     return jsonify({"message": "Login Failed"}), 401
 
 
-@login.route('/auth/logged_user', methods=['GET'])
-def logged_user():
-    user_id = ''
-    user_id= decode_auth_token(read_token_cookie(request))
-    return user_id
+@login.route('/auth/logout', methods=['POST'])
+def log_out():
+    token = request.cookies.get('token')
+    print(token)
+    return jsonify({'success': False})
     
     
     

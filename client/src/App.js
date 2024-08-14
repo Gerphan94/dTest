@@ -12,81 +12,105 @@ import WorkLog from './Component/WorkLog/WorkLog';
 import CaseForm from './Component/Case/CaseForm';
 import CaseDetail from './Component/Case/CaseDetail';
 import Dashboard from './Component/Dashboard/Dashboard';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 
 function App() {
 
   const urlAPI = process.env.REACT_APP_API_URL;
+  const [cookies, setCookie, removeCookie] = useCookies(['token']);
+  console.log('cookies == ',cookies)
+  const [loggedIn, setLoggedIn] = useState(true);
+  const [usernameLogin, setUsernameLogin] = useState('');
 
-  const [token, setToken] = useState('');
+
+  useEffect(() => {
+    const checkToken = async () => {
+      const fetchUrl = urlAPI + 'auth/check_token/' + cookies.token;
+      const response = await fetch(fetchUrl);
+      const data = await response.json();
+      if (data.success) {
+        setLoggedIn(true);
+        setUsernameLogin(data.username);
+      } else {
+        setLoggedIn(false);
+      }
+
+    }
+
+    checkToken();
+
+
+  }, []);
 
   return (
     <div className="App">
-      <Router>
-        <HelmetProvider>
-          <Navbar />
-          <div className='PageBody'>
-          <Routes >
-            {/* LOGGIN */}
-            <Route path="/Login"
-              element={
-                <>
-                  <Helmet>
-                    <title>Login</title>
-                  </Helmet>
-                  <Login/>
-                </>
-              }
-            />
+      {!loggedIn ? <Login setCookie={setCookie} setLoggedIn={setLoggedIn} />
+        :
+        <Router>
+          <HelmetProvider>
+            <Navbar usernameLogin={usernameLogin} removeCookie={removeCookie} setLoggedIn={setLoggedIn} />
+            <div className='PageBody'>
+              <Routes >
+                {/* LOGGIN */}
+                <Route path="/Login"
+                  element={
+                    <>
+                      <Helmet>
+                        <title>Login</title>
+                      </Helmet>
+                      <Login setCookie={setCookie} />
+                    </>
+                  }
+                />
+                <Route path="/"
+                  element={
+                    <>
+                      <Helmet>
+                        <title>Dashboard</title>
+                      </Helmet>
+                      <Dashboard />
+                    </>
+                  }
+                />
+                <Route path="/cases/:projectId"
+                  element={
+                    <>
+                      <Helmet>
+                        <title>Case Page</title>
+                      </Helmet>
+                      <CasePage />
+                    </>
+                  }
+                />
+                <Route path="/work-log/:month?"
+                  element={
+                    <>
+                      <Helmet>
+                        <title>Work Log</title>
+                      </Helmet>
+                      <WorkLog />
+                    </>
+                  }
+                />
+                <Route path="/case/view/:case_id"
+                  element={
+                    <>
+                      <Helmet>
+                      </Helmet>
+                      <CaseDetail />
+                    </>
+                  }
+                />
 
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </div>
 
-          <Route path="/"
-              element={
-                <>
-                  <Helmet>
-                    <title>Dashboard</title>
-                  </Helmet>
-                  <Dashboard/>
-                </>
-              }
-            />
-            <Route path="/cases/:projectId"
-              element={
-                <>
-                  <Helmet>
-                    <title>Case Page</title>
-                  </Helmet>
-                  <CasePage/>
-                </>
-              }
-            />
-            <Route path="/work-log/:month?"
-              element={
-                <>
-                  <Helmet>
-                    <title>Work Log</title>
-                  </Helmet>
-                  <WorkLog/>
-                </>
-              }
-            />
-            <Route path="/case/view/:case_id"
-              element={
-                <>
-                  <Helmet>  
-                  </Helmet>
-                  <CaseDetail/>
-                </>
-              }
-            />
-           
-          <Route path="*" element={<NotFound />} />
-          </Routes>
-          </div>
-          
-        </HelmetProvider>
+          </HelmetProvider>
 
-      </Router>
+        </Router>
+      }
     </div>
   );
 }

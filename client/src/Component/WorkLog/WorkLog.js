@@ -53,7 +53,6 @@ function WorkLog() {
     }, [month])
 
 
-
     const onSubmitSection = (data) => {
         console.log(data)
     }
@@ -68,50 +67,42 @@ function WorkLog() {
                         <SideBar />
                     </div>
                     <div className={styles.MainPage}>
-                        <div className="p-4">
-                            <div className="flex py-2">
-                                {showNewDate ?
-                                    <div>
+                        <div className="h-full flex flex-col ">
+                            <div className="flex gap-4 p-2 h-14 border-b-2">
 
-                                    </div>
-                                    :
-                                    <button
-                                        className="border border-blue-400 px-2 py-1 text-blue-400"
-                                        onClick={() => setShowWLModal(true)}
-                                    >Thêm</button>
-                                }
+                                <button
+                                    className="border border-blue-400 px-2 py-1 text-blue-400"
+                                    onClick={() => setShowWLModal(true)}
+                                >Thêm</button>
+
                             </div>
-                            {worklogData.map((item) => (
-                                <div className="border rounded-lg p-3 mb-3">
-                                    <div className="bg-slate-300 flex gap-10 py-1 text-left px-2 rounded-lg">
-                                        <div>{item.date}</div>
-                                        {item.name}
-                                    </div>
-                                    <div className="flex gap-2 py-2">
-                                        <div className="w-full border rounded-lg p-3">
-                                            <div className="text-left pb-2 font-bold">TASK</div>
-                                            <WorkTask data={item.task} />
-                                            <div className="flex py-1">
-                                                <button
-                                                    className="hover:underline text-blue-400"
-                                                    onClick={() => setShowWTModal(true)}
-
-                                                >Thêm task</button>
+                            <div className={styles.casePage}>
+                                <div className="flex-grow p-4">
+                                    {worklogData.map((item) => (
+                                        <div className="border rounded-lg mb-3">
+                                            <div className="bg-gray-200 flex gap-10 py-1 text-left px-2 rounded-tl-lg">
+                                                <div>{item.date}</div>
+                                                {item.name}
                                             </div>
-                                        </div>
-                                        <div className="bg-slate-400 w-full">
-                                            <div>TEST AROUND</div>
+                                            <div className="flex gap-2 p-4">
+                                        
+                                                <WorkTask data={item.task} setShowWTModal={setShowWTModal}/>
+                                                <div className="bg-slate-400 w-full">
+                                                    <div>TEST AROUND</div>
 
-                                        </div>
+                                                </div>
 
-                                    </div>
-
-
+                                                    
+                                                </div>
+                                                
+                                            </div>
+                                    ))}
 
                                 </div>
 
+                            </div>
 
-                            ))}
+
                         </div>
                     </div>
 

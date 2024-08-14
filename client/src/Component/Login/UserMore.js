@@ -1,7 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { RiSearch2Line, RiAlignJustify } from "react-icons/ri";
 
-const UserMore = () => {
+const UserMore = ({ setLoggedIn, removeCookie }) => {
+
+    const urlAPI = process.env.REACT_APP_API_URL;
+
+
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -15,6 +19,13 @@ const UserMore = () => {
         setIsDropdownOpen(false);
 
     };
+
+    const handleLogout = () => {
+        removeCookie('token');
+        setLoggedIn(false);
+    }
+
+
 
     const handleClickOutside = (event) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -50,7 +61,7 @@ const UserMore = () => {
                             <li>
                                 <button
                                     className="w-full text-left block px-4 py-2 text-sm text-[#0C1844] hover:bg-gray-100 select-none"
-                                // onClick={() => handleClick(item.id, item.name)}
+                                    onClick={() => handleLogout()}
                                 >
                                     Logout
                                 </button>

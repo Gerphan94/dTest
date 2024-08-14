@@ -14,7 +14,6 @@ def handle_404_error(_error):
 
 # get worklog month
 @worklog.route('/api/get-worklog-month', methods=['GET'])
-@token_required
 def get_worklog_month():
     result = []
     try:

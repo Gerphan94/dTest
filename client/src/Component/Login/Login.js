@@ -2,24 +2,20 @@ import React, { useCallback, useState } from "react";
 import { PiEyeLight, PiEyeSlash  } from "react-icons/pi";
 import UserMore from "./UserMore";
 
-function Login() {
+function Login( { setCookie, setLoggedIn  } ) {
+
 
     const urlAPI = process.env.REACT_APP_API_URL;
     const urlWEB = process.env.REACT_APP_WEB_URL;
 
-
     const [hidePwd, setHidePwd] = useState(true);
-
-
 
     const handleSubmit = useCallback(
         async (e) => {
             e.preventDefault();
-
             const form = e.target;
             const formData = new FormData(form);
             const formJson = Object.fromEntries(formData.entries());
-
             try {
                 const response = await fetch(urlAPI + "login", {
                     method: "POST",
@@ -30,12 +26,10 @@ function Login() {
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    console.log(data);
-                    if (data.success) {
-                        window.location.href = urlWEB;
-                    } else {
-                        alert(data.message);
-                    }
+                    console.log('-------', data);
+                    setCookie('token', data.token, { path: '/' });
+                    setLoggedIn(true);
+                    
                 } else {
                     const data = await response.json();
                     alert(data.message);
@@ -44,16 +38,13 @@ function Login() {
             } catch (error) {
                 console.error("Error:", error);
             }
-
         }, []);
-
-
 
     return (
 
         <div>
             <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-[90] outline-none focus:outline-none">
-                <div className="relative lg:w-1/6 md:w-2/3 w-full my-6 mx-auto max-w-3xl p-4">
+                <div className="relative lg:w-[400px] md:w-[400px] w-full my-6 mx-auto max-w-3xl p-4">
                     <form method="post" onSubmit={(e) => handleSubmit(e)} autoComplete='none'>
                         {/*content*/}
                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none text-[#536493]">

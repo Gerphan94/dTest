@@ -23,10 +23,6 @@ function Dashboard() {
         fetchProject();
     }, []); 
 
-
-
-
-
     return  (
         <>
         <div>Project</div>
@@ -34,12 +30,10 @@ function Dashboard() {
             {projects.map((item) => (
                 <div key={item.id} className="w-full border rounded-md mb-4 text-left p-4">
                 <a className="text-left p-2 hover:underline" href={`${urlWEB}cases/${item.id}`}>{item.name}</a>
-                
                 </div>
             ))}
         </div>
         </>
     )
-
 }
 export default Dashboard;
