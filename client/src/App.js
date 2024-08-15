@@ -22,6 +22,7 @@ function App() {
   console.log('cookies == ',cookies)
   const [loggedIn, setLoggedIn] = useState(true);
   const [usernameLogin, setUsernameLogin] = useState('');
+  const [projectId, setProjectId] = useState(0);
 
 
   useEffect(() => {
@@ -49,8 +50,8 @@ function App() {
         :
         <Router>
           <HelmetProvider>
-            <Navbar usernameLogin={usernameLogin} removeCookie={removeCookie} setLoggedIn={setLoggedIn} />
-            <div className='PageBody'>
+            {/* <Navbar projectId={projectId}  usernameLogin={usernameLogin} removeCookie={removeCookie} setLoggedIn={setLoggedIn} /> */}
+            <div className='h-screen'>
               <Routes >
                 {/* LOGGIN */}
                 <Route path="/Login"
@@ -69,11 +70,11 @@ function App() {
                       <Helmet>
                         <title>Dashboard</title>
                       </Helmet>
-                      <Dashboard />
+                      <Dashboard setProjectId={setProjectId} />
                     </>
                   }
                 />
-                <Route path="/cases/:projectId"
+                <Route path="/project/overview/:projectId"
                   element={
                     <>
                       <Helmet>

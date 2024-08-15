@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-function Dashboard() {
+function Dashboard( { setProjectId }) {
 
     const urlAPI = process.env.REACT_APP_API_URL;
     const urlWEB = process.env.REACT_APP_WEB_URL;
@@ -21,7 +21,13 @@ function Dashboard() {
             }
         }
         fetchProject();
-    }, []); 
+    }, []);
+    
+    const handleClick = (id) => {
+        setProjectId(id);
+        window.location.href = urlWEB + 'project/overview/' + id
+        console.log('TÔI ĐÃ CLICK VÀ LẤY ID = ',id)
+    }
 
     return  (
         <>
@@ -29,7 +35,11 @@ function Dashboard() {
         <div className="p-4">
             {projects.map((item) => (
                 <div key={item.id} className="w-full border rounded-md mb-4 text-left p-4">
-                <a className="text-left p-2 hover:underline" href={`${urlWEB}cases/${item.id}`}>{item.name}</a>
+                <div 
+                className="text-left p-2 hover:underline" 
+                onClick={() => handleClick(item.id)}
+                
+                >{item.name}</div>
                 </div>
             ))}
         </div>

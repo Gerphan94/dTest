@@ -27,7 +27,9 @@ function Login( { setCookie, setLoggedIn  } ) {
                 if (response.ok) {
                     const data = await response.json();
                     console.log('-------', data);
-                    setCookie('token', data.token, { path: '/' });
+                    setCookie('token', data.token, { path: '/', expires: new Date(Date.now() + 86400 * 1000) });
+
+                    // setCookie('token', data.token, { path: '/' });
                     setLoggedIn(true);
                     
                 } else {

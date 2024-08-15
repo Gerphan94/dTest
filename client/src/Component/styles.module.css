@@ -1,5 +1,6 @@
 .MainPage {
     width: calc(100vw - 192px);
+    margin-top: 80px;
 
 
 }
@@ -9,10 +10,16 @@
     overflow-y: auto;
 }
 
+.bodyPage {
+    height: calc(100vh - 80px);
+    overflow-y: hide;
+}
+
 
 .SideBarHeight {
     height: 100%;
     overflow: hidden;
+    margin-top: 80px;
 }
 .field-title {
     font-size: 15px;
