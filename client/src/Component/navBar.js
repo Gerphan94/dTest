@@ -5,6 +5,8 @@ import { matchPath } from 'react-router'
 import { useLocation } from 'react-router-dom'
 import { useRouteMatch } from "react-router-dom";
 import { useState } from 'react';
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { useProject } from '../Store/ProjectProvider';
 
 //----
 
@@ -12,7 +14,9 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
 
   const urlWEB = process.env.REACT_APP_WEB_URL;
 
-  const { projectId } = useParams();
+  // const { projectId } = useParams();
+  const { projectId } = useProject();
+  console.log('project_id = ', projectId)
 
   const menuList = [
     { id: 1, name: 'Dashboard', url: urlWEB + 'project/overview/' + projectId },
@@ -30,7 +34,7 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
     { id: 'report', name: 'Report', url: urlWEB + 'report/view/' + projectId }
   ]
 
-  const [selectedMenu, setSelectedMenu] = useState('overview');
+  const [selectedMenu, setSelectedMenu] = useState('');
 
 
   const handleClickLink = (id) => {
@@ -52,17 +56,26 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
             </div>
             <div>
               {console.log(projectId)}
-              {projectId === 0 ?
+              {projectId ?
                 <>
-                  <div className='mb-0 mt-2 cursor-pointer select-none flex gap-1'>
-                    dTest QA
+                  <div className='mb-0 mt-2 cursor-pointer select-none'>
+                    <Link className='text-[12px] hover:underline' to={urlWEB} >
+                      <span className='flex gap-1 items-center'>
+                        <FaArrowLeftLong />
+                        back to Dashboard
+                      </span>
+
+                    </Link>
+                    <h2>{projectId}</h2>
+
                   </div>
                 </> :
                 <>
                   <div className='mb-0 mt-2 cursor-pointer select-none flex gap-1'>
-                    TÊN PROJECT
+                    dTest QA
                   </div>
                 </>
+
               }
             </div>
           </div>
@@ -70,20 +83,16 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
 
         <div className='w-full h-6 px-2'>
           <ul className="h-full flex gap-3 text-[12px] text-[#aecade] py-0.5 uppercase">
-            <Link className={menuClass} to="/">
-              Dashboard
-            </Link>
             <Link className={menuClass} to="/work-log">
               WorkLog
             </Link>
             {
-              projectId !== 0 && projectMenuList.map((item) => (
+              projectId && projectMenuList.map((item) => (
                 <Link
                   key={item.id}
-                  className={`${selectedMenu === item.id ? 'border-b-2 border-white':''} px-2 h-full text-gray-200 hover:text-white cursor-pointer hover:border-b-2 hover:border-white`}
+                  className={`${selectedMenu === item.id ? 'border-b-2 border-white' : ''} px-2 h-full text-gray-200 hover:text-white cursor-pointer hover:border-b-2 hover:border-white`}
                   to={item.url}
                   onClick={() => handleClickLink(item.id)}
-
                 >
                   {item.name}
                 </Link>

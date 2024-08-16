@@ -20,11 +20,10 @@ function App() {
 
   const urlAPI = process.env.REACT_APP_API_URL;
   const [cookies, setCookie, removeCookie] = useCookies(['token']);
-  console.log('cookies == ',cookies)
+  console.log('cookies == ', cookies)
   const [loggedIn, setLoggedIn] = useState(true);
   const [usernameLogin, setUsernameLogin] = useState('');
   const [projectId, setProjectId] = useState(0);
-
 
   useEffect(() => {
     const checkToken = async () => {
@@ -50,9 +49,9 @@ function App() {
       {!loggedIn ? <Login setCookie={setCookie} setLoggedIn={setLoggedIn} />
         :
         <Router>
+          <Navbar projectId={projectId} />
           <HelmetProvider>
-            {/* <Navbar projectId={projectId}  usernameLogin={usernameLogin} removeCookie={removeCookie} setLoggedIn={setLoggedIn} /> */}
-            <div className='h-screen'>
+            <div className=''>
               <Routes >
                 {/* LOGGIN */}
                 <Route path="/Login"
@@ -71,7 +70,7 @@ function App() {
                       <Helmet>
                         <title>Dashboard</title>
                       </Helmet>
-                      <Dashboard setProjectId={setProjectId} />
+                      <Dashboard  setProjectId={setProjectId} />
                     </>
                   }
                 />
@@ -91,7 +90,7 @@ function App() {
                       <Helmet>
                         <title>Case Page</title>
                       </Helmet>
-                      <CasePage />
+                      <CasePage setProjectId={setProjectId} />
                     </>
                   }
                 />

@@ -81,7 +81,6 @@ def log_in():
     data = request.get_json()
     username = data['username']
     password = data['password']
-    print(username, password)
 
     user = User.query.filter_by(username=username).first()
 

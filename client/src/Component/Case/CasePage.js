@@ -10,9 +10,14 @@ import SectionModalAdd from "./SectionAddModal";
 import Dropdown from "../Common/Dropdown";
 import Navbar from "../navBar";
 import { FaCheck, FaXmark } from "react-icons/fa6";
+import { useProject } from "../../Store/ProjectProvider";
 
-function CasePage() {
+
+function CasePage(  ) {
     const { projectId } = useParams()
+    const { setProjectId } = useProject();
+    
+    setProjectId(projectId)
     console.log("MainPage rending .....,", projectId)
 
     const urlAPI = process.env.REACT_APP_API_URL;
@@ -95,7 +100,7 @@ function CasePage() {
 
     return (
         <>
-                <Navbar />
+                {/* <Navbar /> */}
                 <div className={styles.bodyPage} >
                     <div className="h-full flex">
                         <div className={styles.SideBarHeight}>
