@@ -6,7 +6,7 @@ import SectionModalEdit from "./SectionModalEdit";
 import DeleteSectionConfirm from "../MessageBox/DeleteSectionConfirm";
 import SectionCaseTable from "./SectionCaseTable";
 
-function SectionCase({ data, curModule }) {
+function SectionCase({ data, curModule, projectId }) {
     console.log("-----------", data.cases)
     const urlAPI = process.env.REACT_APP_API_URL;
     const urlWEB = process.env.REACT_APP_WEB_URL;
@@ -17,20 +17,25 @@ function SectionCase({ data, curModule }) {
     const [caseTotal, setCaseTotal] = useState(data.case_count);
     const [caseData, setCaseData] = useState(data.cases);
     const [isShowCaseForm, setisShowCaseForm] = useState(false);
+
+    const [showSectionModal, setShowSectionModal] = useState(false);
+    const [typeSectionModal, setTypeSectionModal] = useState('insert');
+
     const [NewSectionModalShow, setNewSectionModalShow] = useState(false);
+
+    const [sectionFormData, setSectionFormData] = useState({
+        'name': '',
+        'description': '',
+        'project_id': projectId,
+        'level': 0
+    });
+
     const [EditSectionModalShow, setEditSectionModalShow] = useState(false);
     // delte info
     const [showDeleteSection, setShowDeleteSection] = useState(false);
     const [deleteType, setDeleteType] = useState('');
     const [deleteMessage, setDeleteMessage] = useState('');
 
-    const priorityOptions = [
-        { label: "Low", value: 1 },
-        { label: "Medium", value: 2 },
-        { label: "High", value: 3 },
-        { label: "Critical", value: 4 }
-    ]
-    // 
 
     const handleSubmit = useCallback(
         async (e) => {
@@ -78,9 +83,9 @@ function SectionCase({ data, curModule }) {
     };
 
     return (
-        <div className="mb-6">
+        <div className="mb-6 text-sm">
             <div className="flex mb-2">
-                <div className="text-left font-bold text-md">{sectionName}</div>
+                <div className="text-left font-bold">{sectionName}</div>
                 <div className="ml-2 flex items-center flex-wrap">
                     <span className="w-6 h-5 boder border-blue-50 bg-blue-300 rounded-xl text-white select-none">
                         {caseTotal}
@@ -130,12 +135,12 @@ function SectionCase({ data, curModule }) {
             </div>
 
             {NewSectionModalShow &&
-                <SectionModalAdd 
-                parentSectionId={section_id} 
-                level={data["section_level"] + 1} 
-                curModule={module_id} 
-                setNewSectionModalShow={setNewSectionModalShow} 
-                setCaseData={data.setCaseData} />
+                <SectionModalAdd
+                    parentSectionId={section_id}
+                    level={data["section_level"] + 1}
+                    curModule={module_id}
+                    setNewSectionModalShow={setNewSectionModalShow}
+                    setCaseData={data.setCaseData} />
             }
             {EditSectionModalShow &&
                 <SectionModalEdit

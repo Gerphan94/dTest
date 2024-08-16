@@ -1,12 +1,11 @@
 import React, { useCallback } from "react";
 
 
-function SectionAddModal({ parentSectionId, level, curModule, setNewSectionModalShow, setCaseData }) {
+function SectionModal({ setModalshow, sectionFormData, typeSectionModal }) {
 
     const urlAPI = process.env.REACT_APP_API_URL;
     const urlWEB = process.env.REACT_APP_WEB_URL;
 
-    console.log(level)
 
     const handleSubmit = useCallback(
         async (e) => {
@@ -15,11 +14,11 @@ function SectionAddModal({ parentSectionId, level, curModule, setNewSectionModal
             const formData = new FormData(form);
             const formJson = Object.fromEntries(formData.entries());
 
-            formJson['p_section_id'] = parentSectionId;
-            formJson['level'] = level;
+            formJson['p_section_id'] = sectionFormData['parent_id'];
+            formJson['level'] = sectionFormData['level'];
             // console.log(formJson);
             try {
-                const response = await fetch(urlAPI + '/api/add_section/' + curModule, {
+                const response = await fetch(urlAPI + '/api/add_section/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -35,8 +34,8 @@ function SectionAddModal({ parentSectionId, level, curModule, setNewSectionModal
                         "sub": []
 
                     }
-                    setCaseData(prevData => [...prevData, new_data]);
-                    setNewSectionModalShow(false);
+                    // setCaseData(prevData => [...prevData, new_data]);
+                    setModalshow(false);
 
                 }
             } catch (error) {
@@ -56,7 +55,13 @@ function SectionAddModal({ parentSectionId, level, curModule, setNewSectionModal
                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                             {/*header*/}
                             <div className="flex items-start justify-between p-3 bg-[#eaf1f7]">
-                                <div className="text-xl font-semibold select-none">Add Section</div>
+                                <div className="text-xl font-semibold select-none">
+
+                                    {typeSectionModal === 'insert' ? 'Add Section' : 'Edit Section'}
+
+
+
+                                </div>
                             </div>
                             {/*body*/}
                             <div className="relative p-6 text-left text-sm">
@@ -95,7 +100,7 @@ function SectionAddModal({ parentSectionId, level, curModule, setNewSectionModal
                                 <button
                                     className="text-red-500 background-transparent font-bold px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 border-red-500 border opacity-80 hover:opacity-100"
                                     type="button"
-                                    onClick={() => setNewSectionModalShow(false)}
+                                    onClick={() => setModalshow(false)}
                                 >
                                     Cancel
                                 </button>
@@ -120,4 +125,4 @@ function SectionAddModal({ parentSectionId, level, curModule, setNewSectionModal
 
 }
 
-export default SectionAddModal;
+export default SectionModal;

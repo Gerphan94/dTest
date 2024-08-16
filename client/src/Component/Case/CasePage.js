@@ -18,11 +18,17 @@ function CasePage() {
     const urlAPI = process.env.REACT_APP_API_URL;
 
     const [caseData, setCaseData] = useState([]);
-    const [SectionModalShow, setSectionModalShow] = useState(false);
+
+    const [showSectionModal, setShowSectionModal] = useState(false);
+    const [typeSectionModal, setTypeSectionModal] = useState('insert');
+    const [sectionFormData, setSectionFormData] = useState({
+        'name': '',
+        'description': '',
+        'project_id': projectId,
+        'level': 0
+    });
 
     const [showSectionAddForm, setShowSectionAddForm] = useState(false);
-
-
 
     useEffect(() => {
         const fetchCase = async () => {
@@ -41,33 +47,71 @@ function CasePage() {
         fetchCase();
     }, [projectId])
 
-
-    const onSubmitSection = (data) => {
-        console.log(data)
+    const onClickAddSection = () => {
+        setShowSectionModal(true);
+        setTypeSectionModal('insert');
+        setSectionFormData({
+            'name': '',
+            'description': '',
+            'project_id': projectId,
+            'level': 0
+        })
     }
 
-    return (
 
+
+
+
+
+
+    const handleSubmitSectionAdd = useCallback(
+        async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            const formJson = Object.fromEntries(formData.entries());
+            formJson['parent_id'] = 0
+            formJson['project_id'] = projectId
+            formJson['level'] = 0
+            formJson['description'] = ''
+            try {
+                const response = await fetch(urlAPI + 'api/create-section' ,{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formJson),
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setShowSectionAddForm(false);  
+                }
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        },
+        [urlAPI]
+    );
+
+    return (
         <>
-            <div className="flex flex-col">
                 <Navbar />
-                <div className={styles.bodyPage}>
-                    <div className="h-full flex bg-slate-50 ">
+                <div className={styles.bodyPage} >
+                    <div className="h-full flex">
                         <div className={styles.SideBarHeight}>
                             <SideBar projectId={projectId} />
                         </div>
                         <div className={styles.MainPage}>
                             <div className="flex gap-4 p-2 h-14 border-b-2">
-                                <div className="flex flex-wrap content-center font-bold text-lg uppercase w-40">TÊN PROJECT</div>
-                                <div className="flex flex-wrap content-center font-bold ml-10">Module</div>
+                                TestCase
                                 <Link className="bg-[#376789] w-40 flex items-center justify-center text-white opacity-80 hover:opacity-100 ml-auto mr-0"
                                     to={`/cases/add/${projectId}`}>Add Case</Link>
                             </div>
-                            <div className={styles.casePage}>
+                            <div className="">
                                 <div className="py-2 px-5 mb-40">
                                     {caseData.map((data) =>
                                         <div >
-                                            <SectionCase key={data.section_id} data={data} setCaseData={setCaseData} />
+                                            <SectionCase key={data.section_id} projectId={projectId} data={data} setCaseData={setCaseData} />
                                             {/* Level 1 */}
                                             <div className="border-l-2 border-gray-300 pl-5">
                                                 {data.sub.map((level1) =>
@@ -87,13 +131,13 @@ function CasePage() {
                                     <div className="flex gap-2 mt-4">
 
                                         {showSectionAddForm ?
-                                            <form method="post" onSubmit={(e) => onSubmitSection(e)} autoComplete='off'>
+                                            <form method="post" onSubmit={(e) => handleSubmitSectionAdd(e)} autoComplete='off'>
                                                 <div className="flex items-center gap-2">
-                                                    <div>Name</div>
+                                                    <div className="text-gray-400">Name</div>
                                                     <input
                                                         type="text"
-                                                        className="rounded-md border outline-none px-2 py-0.5 w-[600px]"
-                                                        name="case_title"
+                                                        className="border outline-none px-2 py-0.5 w-[600px]"
+                                                        name="section_name"
                                                         required={true}
                                                     />
                                                     <button type="submit">
@@ -113,7 +157,7 @@ function CasePage() {
                                             <div className="flex gap-2">
                                                 <button
                                                     className="text-[#5993bc] underline"
-                                                    onClick={() => setShowSectionAddForm(true)}
+                                                    onClick={() => onClickAddSection()}
                                                 >
                                                     Add section
                                                 </button>
@@ -128,14 +172,16 @@ function CasePage() {
                         </div>
                     </div>
                 </div >
-            </div>
+           
             {
-                SectionModalShow &&
+                showSectionModal &&
                 <SectionModalAdd
-                    parentSectionId={0} level={0}
-
-                    setNewSectionModalShow={setSectionModalShow}
-                    setCaseData={setCaseData} />
+                    typeSectionModal={typeSectionModal}
+                    setModalshow={setShowSectionModal}
+                    setCaseData={setCaseData}
+                    sectionFormData={sectionFormData}
+                    
+                    />
             }
 
         </>

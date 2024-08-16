@@ -39,9 +39,18 @@ table {
 }
 
 thead tr {
-  background-color: #EEEDEB;
+  background-color: #F5F9FD;
   
 }
+
+tbody tr:nth-child(odd) {
+  background-color: #F9F9F9; /* Background color for odd rows */
+}
+
+tbody tr:nth-child(even) {
+  background-color: #FFFFFF; /* Background color for even rows */
+}
+
 
   
 

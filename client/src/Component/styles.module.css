@@ -1,18 +1,19 @@
 .MainPage {
     width: calc(100vw - 192px);
     margin-top: 80px;
-
+    overflow: auto;
+    height: 100%;
+    background-color: #EAF1F7;
 
 }
 
-.casePage {
-    height: calc(100vh - 128px);
-    overflow-y: auto;
-}
+
 
 .bodyPage {
+    width: 100%;
     height: calc(100vh - 80px);
     overflow-y: hide;
+    
 }
 
 

@@ -94,9 +94,23 @@ def get_root_sections(projectId):
         result_ar.append(obj)
     return jsonify(result_ar), 200
 
-@main.route('/api/create-section/<int:module_id>', methods=['GET'])
+@main.route('/api/create-section', methods=['POST'])
+def create_section():
+    data = request.get_json()
 
-
+    section = Section(
+        name=data['section_name'],
+        description=data['description'],
+        level=data['level'],
+        project_id=data['project_id'],
+        parent_id=data['parent_id'],
+        created_date = datetime.now(),
+        updated_date = datetime.now()
+    )
+    db.session.add(section)
+    db.session.commit()
+    return jsonify({"id": section.id,"name": section.name}), 200
+    
 @main.route('/api/get_sections_of_module/<int:module_id>', methods=['GET'])
 def get_sections_of_module(module_id):
     result_ar = []

@@ -33,6 +33,8 @@ class Section(db.Model):
     parent_id = db.Column(db.Integer)
     level = db.Column(db.Integer)
     description = db.Column(db.String(1000))
+    created_date = db.Column(db.DateTime)
+    updated_date = db.Column(db.DateTime)
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
     project = db.relationship("Project", backref=backref("modules", uselist=True))
     

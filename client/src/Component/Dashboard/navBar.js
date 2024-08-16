@@ -4,46 +4,21 @@ import { useParams, } from 'react-router-dom';
 import { matchPath } from 'react-router'
 import { useLocation } from 'react-router-dom'
 import { useRouteMatch } from "react-router-dom";
-import { useState } from 'react';
 
 //----
 
-function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
+function Navbar({usernameLogin, setLoggedIn, removeCookie }) {
 
   const urlWEB = process.env.REACT_APP_WEB_URL;
 
   const { projectId } = useParams();
 
-  const menuList = [
-    { id: 1, name: 'Dashboard', url: urlWEB + 'project/overview/' + projectId },
-    { id: 2, name: 'Worklog', url: urlWEB + 'project/report/' + projectId },
-    { id: 3, name: 'Overview', url: urlWEB + 'project/setting/' + projectId },
-    { id: 4, name: 'User', url: urlWEB + 'project/user/' + projectId },
-    { id: 5, name: 'Log', url: urlWEB + 'project/log/' + projectId },
-    { id: 6, name: 'More', url: urlWEB + 'project/more/' + projectId }
-  ]
-
-  const projectMenuList = [
-    { id: 'overview', name: 'Overview', url: urlWEB + 'project/overview/' + projectId },
-    { id: 'testcases', name: 'Testcases', url: urlWEB + 'cases/view/' + projectId },
-    { id: 'issues', name: 'Issues', url: urlWEB + 'issues/view/' + projectId },
-    { id: 'report', name: 'Report', url: urlWEB + 'report/view/' + projectId }
-  ]
-
-  const [selectedMenu, setSelectedMenu] = useState('overview');
-
-
-  const handleClickLink = (id) => {
-    setSelectedMenu(id);
-  }
-
+  console.log("-----------------------------", projectId)
   //----
   const menuClass =
     'px-2 h-full text-gray-200 hover:text-white cursor-pointer hover:border-b-2 hover:border-white';
-
-
   return (
-    <div className="bg-[#0e3754] fixed top-0 w-full h-20 z-50">
+    <div className="bg-[#0e3754] w-full h-20 z-50">
       <nav className="w-full h-full">
         <div className='w-full h-14 flex'>
           <div className='flex gap-2 w-56 items-center text-white'>
@@ -77,19 +52,21 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
               WorkLog
             </Link>
             {
-              projectId !== 0 && projectMenuList.map((item) => (
-                <Link
-                  key={item.id}
-                  className={`${selectedMenu === item.id ? 'border-b-2 border-white':''} px-2 h-full text-gray-200 hover:text-white cursor-pointer hover:border-b-2 hover:border-white`}
-                  to={item.url}
-                  onClick={() => handleClickLink(item.id)}
-
-                >
-                  {item.name}
+              projectId !== 0 &&
+              <>
+                <Link className={menuClass} to="/cases/1">
+                  overview
                 </Link>
-              ))
-
+                <Link className={menuClass} to={`/cases/view/${projectId}`}>
+                  TestCases
+                </Link>
+                <Link className={menuClass} to="/cases/1">
+                  report
+                </Link>
+              </>
             }
+
+
           </ul>
         </div>
 

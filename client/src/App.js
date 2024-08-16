@@ -6,6 +6,7 @@ import Navbar from './Component/navBar';
 
 import Login from './Component/Login/Login';
 import NotFound from './Page/404';
+import Overview from './Component/Overview/Overview';
 import CasePage from './Component/Case/CasePage';
 import WorkLog from './Component/WorkLog/WorkLog';
 
@@ -75,6 +76,26 @@ function App() {
                   }
                 />
                 <Route path="/project/overview/:projectId"
+                  element={
+                    <>
+                      <Helmet>
+                        <title>Overview</title>
+                      </Helmet>
+                      <Overview />
+                    </>
+                  }
+                />
+                <Route path="/cases/view/:projectId"
+                  element={
+                    <>
+                      <Helmet>
+                        <title>Case Page</title>
+                      </Helmet>
+                      <CasePage />
+                    </>
+                  }
+                />
+                <Route path="/issues/view/:projectId"
                   element={
                     <>
                       <Helmet>

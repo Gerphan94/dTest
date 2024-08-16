@@ -8,9 +8,9 @@ function CaseTable( {data} ) {
     return(
         <>
             <div className="w-full">
-                <table className="w-full">
+                <table className="w-full font-thin text-sm">
                     <thead className="">
-                        <tr className="bg-gray-300 border border-gray-300">
+                        <tr>
                             <th className="w-20 text-center py-1">#</th>
                             <th className="text-left px-2">Title</th>
                             <th className="text-center w-36">Priority</th>
