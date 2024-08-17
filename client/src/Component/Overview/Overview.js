@@ -3,12 +3,16 @@ import React, { useState, useEffect, useCallback } from "react";
 
 import styles from "../styles.module.css"
 import { useParams } from 'react-router-dom';
-
+import { useProject } from "../../Store/ProjectProvider";
 
 import Navbar from "../navBar";
 
 function Overview() {
     const { projectId } = useParams()
+
+    const { setProjectId } = useProject();
+    setProjectId(projectId)
+
 
     console.log("MainPage rending .....,", projectId)
 

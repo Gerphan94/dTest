@@ -19,7 +19,7 @@ function CaseTable( {data} ) {
                     </thead>
                     <tbody>
                         {data.map((ele, index) =>
-                            <tr className="border border-gray-200 py-1 hover:bg-blue-100" key={ele.case_id}>
+                            <tr className="border border-gray-200 py-0.5 hover:bg-blue-100" key={ele.case_id}>
                                 <td>{index + 1}</td>
                                 <td>
                                     <div className="px-2 py-1 text-left">

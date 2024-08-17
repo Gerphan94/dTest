@@ -6,8 +6,6 @@ export const useProject = () => useContext(ProjectContext);
 
 export const ProjectProvider = ({ children }) => {
   const [projectId, setProjectId] = useState(null);
-  console.log('--------------', projectId)
-
   return (
     <ProjectContext.Provider value={{ projectId, setProjectId }}>
       {children}

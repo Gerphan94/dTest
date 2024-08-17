@@ -1,41 +1,28 @@
 import React, { useState, useCallback } from "react";
 import { FaCheck, FaXmark } from "react-icons/fa6";
 import { CiEdit } from "react-icons/ci";
-import SectionModalAdd from "./SectionAddModal";
+import SectionModalAdd from "./SectionModal";
 import SectionModalEdit from "./SectionModalEdit";
 import DeleteSectionConfirm from "../MessageBox/DeleteSectionConfirm";
 import SectionCaseTable from "./SectionCaseTable";
 
-function SectionCase({ data, curModule, projectId }) {
-    console.log("-----------", data.cases)
+function SectionCase(props) {
+
+    console.log("-----------", props.data.cases)
     const urlAPI = process.env.REACT_APP_API_URL;
     const urlWEB = process.env.REACT_APP_WEB_URL;
 
-    const section_id = data.section_id;
-    const module_id = curModule;
-    const [sectionName, setSectionName] = useState(data.section_name)
-    const [caseTotal, setCaseTotal] = useState(data.case_count);
-    const [caseData, setCaseData] = useState(data.cases);
+    const section_id = props.data.section_id;
+    const level = props.data.section_level;
+    const [sectionName, setSectionName] = useState(props.data.section_name)
+    const [caseTotal, setCaseTotal] = useState(props.data.case_count);
+    const [caseData, setCaseData] = useState(props.data.cases);
     const [isShowCaseForm, setisShowCaseForm] = useState(false);
 
-    const [showSectionModal, setShowSectionModal] = useState(false);
-    const [typeSectionModal, setTypeSectionModal] = useState('insert');
-
-    const [NewSectionModalShow, setNewSectionModalShow] = useState(false);
-
-    const [sectionFormData, setSectionFormData] = useState({
-        'name': '',
-        'description': '',
-        'project_id': projectId,
-        'level': 0
-    });
-
-    const [EditSectionModalShow, setEditSectionModalShow] = useState(false);
     // delte info
     const [showDeleteSection, setShowDeleteSection] = useState(false);
     const [deleteType, setDeleteType] = useState('');
     const [deleteMessage, setDeleteMessage] = useState('');
-
 
     const handleSubmit = useCallback(
         async (e) => {
@@ -71,6 +58,20 @@ function SectionCase({ data, curModule, projectId }) {
         [section_id] // Dependency array is empty because there are no dependencies
     );
 
+    const handleClickAddSection = () => {
+            props.setSectionModal({
+                'show': true,
+                'type': 'insert',
+                'formData': {
+                    'name': '',
+                    'description': '',
+                    'project_id': props.projectId,
+                    'level': level + 1,
+                    'parent_id': section_id
+                }
+            })
+        }
+
     const handleClickSectionDel = () => {
         setShowDeleteSection(true);
         setDeleteType("section_delete");
@@ -91,7 +92,8 @@ function SectionCase({ data, curModule, projectId }) {
                         {caseTotal}
                     </span>
                 </div>
-                <button className="ml-4 text-blue-600" onClick={() => setEditSectionModalShow(true)}>
+                <button className="ml-4 text-blue-600"
+                >
                     <CiEdit />
                 </button>
                 <button className="ml-1 text-red-500" onClick={() => handleClickSectionDel()}>
@@ -129,20 +131,22 @@ function SectionCase({ data, curModule, projectId }) {
                     <div className="flex gap-2">
                         <button className="text-[#5993bc] underline" onClick={() => setisShowCaseForm(true)}>Add Case</button>
                         <div>|</div>
-                        <button className="text-[#5993bc] underline" onClick={() => setNewSectionModalShow(true)}>Add Subsection</button>
+                        <button
+                            className="text-[#5993bc] underline"
+                            onClick={() => handleClickAddSection()}
+                        >Add Subsection</button>
                     </div>
                 }
             </div>
 
-            {NewSectionModalShow &&
+            {props.showSectionModal &&
                 <SectionModalAdd
                     parentSectionId={section_id}
-                    level={data["section_level"] + 1}
-                    curModule={module_id}
-                    setNewSectionModalShow={setNewSectionModalShow}
-                    setCaseData={data.setCaseData} />
+                    level={props.data["level"] + 1}
+                    // setNewSectionModalShow={setNewSectionModalShow}
+                    setCaseData={props.data.setCaseData} />
             }
-            {EditSectionModalShow &&
+            {/* {EditSectionModalShow &&
                 <SectionModalEdit
                     section_id={data.section_id}
                     section_name={sectionName}
@@ -151,7 +155,7 @@ function SectionCase({ data, curModule, projectId }) {
                     data={data}
                     setSectionName={setSectionName}
                 />
-            }
+            } */}
 
             {showDeleteSection &&
                 <DeleteSectionConfirm
