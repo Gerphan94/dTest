@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import styles from "../styles.module.css"
-import { useProject } from "../../Store/ProjectProvider";
 import { Link, useNavigate } from 'react-router-dom';
 import { FcBriefcase } from "react-icons/fc";
+import { useGlobalVariables } from "../../Store/AppContext";
 
 function Dashboard() {
 
     const urlAPI = process.env.REACT_APP_API_URL;
     const urlWEB = process.env.REACT_APP_WEB_URL;
     const navigate = useNavigate();
-    const { setProjectId } = useProject();
+    const { setProjectId } = useGlobalVariables();
     const [projects, setProjects] = useState([])
 
     useEffect(() => {

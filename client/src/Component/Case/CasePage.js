@@ -1,17 +1,15 @@
-import React, { useState, useEffect, useCallback } from "react";
-
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import SectionCase from "./SectionCase";
 import styles from "../styles.module.css"
 import { useParams, Link } from 'react-router-dom';
-
+import { useGlobalVariables } from "../../Store/AppContext";
 import SideBar from "./SideBar";
 import SectionModal from "./SectionModal";
 import { FaCheck, FaXmark } from "react-icons/fa6";
-import { useProject } from "../../Store/ProjectProvider";
 
 function CasePage() {
     const { projectId } = useParams()
-    const { setProjectId } = useProject();
+    const { setProjectId } = useGlobalVariables();
     useEffect(() => {
         setProjectId(projectId)
     })

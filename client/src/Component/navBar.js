@@ -1,21 +1,17 @@
 import { Link } from 'react-router-dom';
-import UserMore from './Login/UserMore';
-import { useParams, } from 'react-router-dom';
-import { matchPath } from 'react-router'
-import { useLocation } from 'react-router-dom'
-import { useRouteMatch } from "react-router-dom";
+
 import { useState } from 'react';
 import { FaArrowLeftLong } from "react-icons/fa6";
-import { useProject } from '../Store/ProjectProvider';
-
 //----
+
+import { useGlobalVariables } from "../Store/AppContext";
 
 function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
 
   const urlWEB = process.env.REACT_APP_WEB_URL;
 
   // const { projectId } = useParams();
-  const { projectId } = useProject();
+  const { projectId } = useGlobalVariables();
   console.log('project_id = ', projectId)
 
   const menuList = [

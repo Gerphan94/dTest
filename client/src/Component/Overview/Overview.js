@@ -1,18 +1,16 @@
-import React, { useState, useEffect, useCallback } from "react";
-
+import React, { useState, useEffect, useCallback, useContext } from "react";
 
 import styles from "../styles.module.css"
 import { useParams } from 'react-router-dom';
-import { useProject } from "../../Store/ProjectProvider";
+import { useGlobalVariables } from "../../Store/AppContext";
 
 import Navbar from "../navBar";
 
 function Overview() {
     const { projectId } = useParams()
 
-    const { setProjectId } = useProject();
+    const { setProjectId } = useGlobalVariables();
     setProjectId(projectId)
-
 
     console.log("MainPage rending .....,", projectId)
 
