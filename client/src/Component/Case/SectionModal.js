@@ -1,30 +1,34 @@
-import React, { useCallback } from "react";
+import React, { useState, useCallback } from "react";
 
 
-function SectionModal({ sectionModal, setSectionModal, setCaseData }) {
+function SectionModal({ sectionModal, setSectionModal, setData }) {
 
     const urlAPI = process.env.REACT_APP_API_URL;
 
-    const initFormData = sectionModal['formData'];
+    const [formData, setFormData] = useState(sectionModal['formData'])
 
-    console.log(initFormData)
-    
+
     // const urlWEB = process.env.REACT_APP_WEB_URL;
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prevState => ({...prevState, [name]: value}));
+    }
 
 
     const handleSubmit = useCallback(
         async (e) => {
             e.preventDefault();
             const form = e.target;
-            const formData = new FormData(form);
-            const formJson = Object.fromEntries(formData.entries());
-            formJson['parent_id'] = initFormData['parent_id'];
-            formJson['level'] = initFormData['level'];
-            formJson['project_id'] = initFormData['project_id'];
+            const submitData = new FormData(form);
+            const formJson = Object.fromEntries(submitData.entries());
+            formJson['parent_id'] = formData['parent_id'];
+            formJson['level'] = formData['level'];
+            formJson['project_id'] = formData['project_id'];
 
             console.log(formJson);
             try {
-                const response = await fetch(urlAPI + 'api/create-section', {
+                const response = await fetch(urlAPI + 'api/insert-section', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -40,13 +44,19 @@ function SectionModal({ sectionModal, setSectionModal, setCaseData }) {
                         "sub": []
                     }
                     setSectionModal(prevState => ({...prevState,show: false}));
-                    setCaseData(prevData => [...prevData, new_data]);
+                    if (sectionModal['type'] === 'insert') {
+                        if (formData['parent_id'] === 0) {
+                            setData(prevData => [...prevData, new_data]);
+                        } else {
+                            setData(prevData => [...prevData.filter(x => x.section_id !== formData['parent_id']), new_data]);
+                        }
+                    }
+                    
                 }
             } catch (error) {
                 console.error('Error:', error.message);
             }
         }, []);
-
 
     return (
         <div>
@@ -70,10 +80,12 @@ function SectionModal({ sectionModal, setSectionModal, setCaseData }) {
                                         </label>
                                         <input
                                             type="text"
-                                            name="section_name"
+                                            name="name"
                                             className="border w-full outline-none px-2 py-1"
                                             required={true}
+                                            value={formData['name']}
                                             autoComplete='off'
+                                            onChange={(e) => handleChange(e)}
                                         />
 
                                     </div>
@@ -85,7 +97,9 @@ function SectionModal({ sectionModal, setSectionModal, setCaseData }) {
                                             type="text"
                                             name="description"
                                             rows={5}
+                                            value={formData['description']}
                                             className="border w-full outline-none px-2 py-1"
+                                            onChange={(e) => handleChange(e)}
                                          
                                         />
                                     </div>

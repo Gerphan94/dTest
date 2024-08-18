@@ -31,7 +31,6 @@ class Section(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
     parent_id = db.Column(db.Integer)
-    level = db.Column(db.Integer)
     description = db.Column(db.String(1000))
     created_date = db.Column(db.DateTime)
     updated_date = db.Column(db.DateTime)

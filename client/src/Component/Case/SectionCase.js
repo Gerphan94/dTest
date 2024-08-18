@@ -12,8 +12,9 @@ function SectionCase(props) {
     const urlAPI = process.env.REACT_APP_API_URL;
     const urlWEB = process.env.REACT_APP_WEB_URL;
 
-    const section_id = props.data.section_id;
+    const sectionId = props.data.section_id;
     const level = props.data.section_level;
+
     const [sectionName, setSectionName] = useState(props.data.section_name)
     const [caseTotal, setCaseTotal] = useState(props.data.case_count);
     const [caseData, setCaseData] = useState(props.data.cases);
@@ -37,7 +38,7 @@ function SectionCase(props) {
             formJson['priority'] = 2
             formJson['estimate'] = 0
             try {
-                const response = await fetch(urlAPI + 'api/add-case/' + section_id, {
+                const response = await fetch(urlAPI + 'api/add-case/' + sectionId, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -55,22 +56,36 @@ function SectionCase(props) {
                 console.error('Error:', error.message);
             }
         },
-        [section_id] // Dependency array is empty because there are no dependencies
+        [sectionId] // Dependency array is empty because there are no dependencies
     );
 
     const handleClickAddSection = () => {
-            props.setSectionModal({
-                'show': true,
-                'type': 'insert',
-                'formData': {
-                    'name': '',
-                    'description': '',
-                    'project_id': props.projectId,
-                    'level': level + 1,
-                    'parent_id': section_id
-                }
-            })
-        }
+        props.setSectionModal({
+            'show': true,
+            'type': 'insert',
+            'formData': {
+                'name': '',
+                'description': '',
+                'project_id': props.projectId,
+                'level': level + 1,
+                'parent_id': sectionId
+            }
+        })
+    };
+
+    const handleClickEditSection = () => {
+        props.setSectionModal({
+            'show': true,
+            'type': 'edit',
+            'formData': {
+                'id': sectionId,
+                'name': sectionName,
+                'description': '',  
+            }
+        })
+    };
+
+
 
     const handleClickSectionDel = () => {
         setShowDeleteSection(true);
@@ -93,6 +108,7 @@ function SectionCase(props) {
                     </span>
                 </div>
                 <button className="ml-4 text-blue-600"
+                onClick={() => handleClickEditSection()}
                 >
                     <CiEdit />
                 </button>
@@ -139,30 +155,10 @@ function SectionCase(props) {
                 }
             </div>
 
-            {props.showSectionModal &&
-                <SectionModalAdd
-                    parentSectionId={section_id}
-                    level={props.data["level"] + 1}
-                    // setNewSectionModalShow={setNewSectionModalShow}
-                    setCaseData={props.data.setCaseData} />
-            }
-            {/* {EditSectionModalShow &&
-                <SectionModalEdit
-                    section_id={data.section_id}
-                    section_name={sectionName}
-                    section_des={data.section_des}
-                    setEditSectionModalShow={setEditSectionModalShow}
-                    data={data}
-                    setSectionName={setSectionName}
-                />
-            } */}
-
             {showDeleteSection &&
                 <DeleteSectionConfirm
                     setShowModal={setShowDeleteSection}
-                    section_id={section_id}
-
-
+                    section_id={sectionId}
                 />
             }
 

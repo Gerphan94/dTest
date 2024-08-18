@@ -83,25 +83,14 @@ def initSectionTree(project_id):
     return jsonify(result), 200
 
 # SECTION #######################################################################
-@main.route('/api/get-root-sections/<int:projectId>', methods=['GET'])
-def get_root_sections(projectId):
-    result_ar = []
-    sections = Section.query.filter_by(project_id=projectId, level= 0)
-    for section in sections:
-        obj = {}
-        obj['id'] = section.id
-        obj['name'] = section.name
-        result_ar.append(obj)
-    return jsonify(result_ar), 200
 
-@main.route('/api/create-section', methods=['POST'])
+
+@main.route('/api/insert-section', methods=['POST'])
 def create_section():
     data = request.get_json()
-
     section = Section(
-        name=data['section_name'],
+        name=data['name'],
         description=data['description'],
-        level=data['level'],
         project_id=data['project_id'],
         parent_id=data['parent_id'],
         created_date = datetime.now(),
@@ -111,41 +100,6 @@ def create_section():
     db.session.commit()
     return jsonify({"id": section.id,"name": section.name}), 200
     
-@main.route('/api/get_sections_of_module/<int:module_id>', methods=['GET'])
-def get_sections_of_module(module_id):
-    result_ar = []
-    sections = Section.query.filter_by(module_id=module_id, level= 0)
-    for section in sections:
-        obj = {}
-        obj['id'] = section.id
-        obj['name'] = section.name
-        obj['level'] = section.level
-        result_ar.append(obj)
-        # LEVEL 1
-        section_child1s = Section.query.filter_by(parent_id=section.id)
-        for child1 in section_child1s:
-            obj_child1 = {}
-            obj_child1['id'] = child1.id
-            obj_child1['name'] = child1.name
-            obj_child1['level'] = child1.level
-            result_ar.append(obj_child1)
-            # LEVEL 2
-            section_child2s = Section.query.filter_by(parent_id=child1.id)
-            for child2 in section_child2s:
-                obj_child2 = {}
-                obj_child2['id'] = child2.id
-                obj_child2['name'] = child2.name
-                obj_child2['level'] = child2.level
-                result_ar.append(obj_child2)
-                # LEVEL 3
-                section_chil3s = Section.query.filter_by(parent_id=child2.id)
-                for child3 in section_chil3s:
-                    obj_child3 = {}
-                    obj_child3['id'] = child3.id
-                    obj_child3['name'] = child3.name
-                    obj_child3['level'] = child3.level
-                    result_ar.append(obj_child3)
-    return jsonify(result_ar)
 
 @main.route('/api/get_child_section_count/<int:section_id>', methods=['GET'])
 def is_delete_section(section_id):
@@ -163,19 +117,6 @@ def get_cases(section_id):
         'title': case.title
         } for case in Testcase.query.filter_by(section_id=section_id)])
 
-
-# Fu8nction get case by sectionID
-# def get_cases_by_section(sectionId):
-#     cases = Testcase.query.join(Priority, Testcase.priority_id == Priority.id).filter_by(section_id = sectionId)
-#     case_ar = []
-#     for case in cases:
-#         case_obj = {}
-#         case_obj['case_id'] = case.id
-#         case_obj['case_title'] = case.title
-#         case_obj['priority_name'] = case.priority_id
-#         case_ar.append(case_obj)
-#     return case_ar
-
 def get_cases_by_section(section_id):
     cases = db.session.query(Testcase, Priority).join(Priority, Testcase.priority_id == Priority.id).filter(Testcase.section_id == section_id).all()
     case_ar = []
@@ -192,56 +133,31 @@ def init_case(section):
     obj = {}
     obj["section_id"] = section.id
     obj["section_name"] = section.name
-    obj["section_level"] = section.level
     obj["section_des"] = section.description
     obj['cases'] = get_cases_by_section(section.id)
     return obj
     
 @main.route('/api/get-case-by-project/<int:projectId>', methods=['GET'])
 def getCasesByProject(projectId):
-    result_ar = []
-    sections = Section.query.filter_by(project_id=projectId, level= 0)
-    for section in sections:
-        obj = init_case(section)
-        obj["case_count"] = Testcase.query.filter_by(section_id=section.id).count()
-        # LEVEL 1
-        level1_sections = Section.query.filter_by(parent_id = section.id)
-        child_ar = []
-        for sec in level1_sections:
-            child1_obj = init_case(sec)
-            child1_obj["case_count"] = Testcase.query.filter_by(section_id=sec.id).count()
-            level2_sections = Section.query.filter_by(parent_id = sec.id)
-            child2_ar = []
-            for sec2 in level2_sections:
-                child2_obj = init_case(sec2)
-                child2_obj["case_count"] = Testcase.query.filter_by(section_id=sec2.id).count()
-                child2_ar.append(child2_obj)
-            
-            child1_obj['sub'] = child2_ar
-            child_ar.append(child1_obj)
-        obj['sub'] = child_ar
-        result_ar.append(obj)
+    def init_case(section):
+        return {
+            "section_id": section.id,
+            "section_name": section.name,
+            "section_des": section.description,
+            "cases": get_cases_by_section(section.id),
+            "case_count": Testcase.query.filter_by(section_id=section.id).count(),
+            "sub": fetch_subsections(section.id)
+        }
+    def fetch_subsections(parent_id):
+        sections = Section.query.filter_by(parent_id=parent_id)
+        return [init_case(section) for section in sections]
+
+    root_sections = Section.query.filter_by(project_id=projectId, parent_id=0)
+    result_ar = [init_case(section) for section in root_sections]
+
     return jsonify(result_ar)
 
-@main.route('/api/add_section/<int:module_id>', methods=['POST'])
-def add_section(module_id):
-    data = request.get_json()
-    name = data['section_name']
-    des = data['section_des']
-    parent_id = data['p_section_id']
-    level = data['level']
-    if (name  != ''):
-        new_section = Section(
-            name = name,
-            parent_id = parent_id,
-            module_id = module_id,
-            level = level,
-            description = des
-        )
-        db.session.add(new_section)
-        db.session.commit()
-        return jsonify({"id": new_section.id,"name": name})
-    return jsonify({"Error": "Section name is Empty"})
+
 
 @main.route('/api/update_section/<int:section_id>', methods=['POST'])
 def update_section(section_id):
