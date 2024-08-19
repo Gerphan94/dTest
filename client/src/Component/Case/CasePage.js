@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import React, { useState, useEffect, useCallback, useContext, useRef, createRef } from "react";
 import SectionCase from "./SectionCase";
 import styles from "../styles.module.css"
 import { useParams, Link } from 'react-router-dom';
@@ -8,18 +8,16 @@ import SectionModal from "./SectionModal";
 import { FaCheck, FaXmark } from "react-icons/fa6";
 
 function CasePage() {
+
     const { projectId } = useParams()
     const { setProjectId } = useGlobalVariables();
     useEffect(() => {
         setProjectId(projectId)
     })
-    console.log("MainPage rending .....,", projectId)
-
+    console.log("CasePage rending with projectId is ", projectId)
     const urlAPI = process.env.REACT_APP_API_URL;
-
-    const [caseData, setCaseData] = useState([]);
+    const [data, setData] = useState([]);
     const [sideData, setSideData] = useState([]);
-
     const [sectionModal, setSectionModal] = useState({
         show: false,
         type: 'insert',
@@ -34,10 +32,11 @@ function CasePage() {
 
     const get_side_data = (array) => {
         let result = []
+        console.log(array)
         for (let i = 0; i < array.length; i++) {
-            result.push({ id: array[i]['section_id'], name: array[i]['section_name'] })
-            return result
+            result.push({ id: array[i]['section_id'], name: array[i]['section_name'] }) 
         }
+        return result
     }
 
     const [showSectionAddForm, setShowSectionAddForm] = useState(false);
@@ -46,12 +45,11 @@ function CasePage() {
         const fetchCase = async () => {
             try {
                 const fetchUrl = urlAPI + "api/get-case-by-project/" + projectId;
-                console.log('--------', fetchUrl)
                 const response = await fetch(fetchUrl);
-                const data = await response.json();
-                setCaseData(data);
-                setSideData(get_side_data(data))
-                console.log(data)
+                const responseData = await response.json();
+                setData(responseData);
+                setSideData(get_side_data(responseData))
+               
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -72,41 +70,33 @@ function CasePage() {
             }
         })
     }
-    const handleSubmitSectionAdd = useCallback(
-        async (e) => {
-            e.preventDefault();
-            const form = e.target;
-            const formData = new FormData(form);
-            const formJson = Object.fromEntries(formData.entries());
-            formJson['parent_id'] = 0
-            formJson['project_id'] = projectId
-            formJson['description'] = ''
-            try {
-                const response = await fetch(urlAPI + 'api/create-section', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formJson),
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    setShowSectionAddForm(false);
-                }
-            } catch (error) {
-                console.error('Error:', error.message);
-            }
-        },
-        [urlAPI]
-    );
+    const refs = useRef({});
+    if (!Object.keys(refs.current).length) {
+        sideData.forEach((item) => {
+          refs.current[item['id']] = React.createRef();
+        });
+      }
+
+    
+      const handleScroll = (id) => {
+        console.log('clicking on ', id, 'ref:', refs.current[id]);
+        if (refs.current[id] && refs.current[id].current) {
+            refs.current[id].current.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            console.warn('Ref not found for id:', id);
+        }
+    };
+
+    
 
     const renderSections = (sections) => {
         return sections.map((section) => (
             <div key={section.section_id}>
                 <SectionCase
+                    ref={refs.current[section['section_id']]}
                     projectId={projectId}
                     data={section}
-                    setCaseData={setCaseData}
+                    setData={setData}
                     sectionModal={sectionModal}
                     setSectionModal={setSectionModal}
                 />
@@ -124,7 +114,7 @@ function CasePage() {
             <div className={styles.bodyPage} >
                 <div className="h-full flex">
                     <div className={styles.SideBarHeight}>
-                        <SideBar  sideData={sideData} />
+                        <SideBar  sideData={sideData} handleScroll={handleScroll} />
                     </div>
                     <div className={styles.MainPage}>
                         <div className="flex gap-4 p-2 h-14 border-b-2">
@@ -134,27 +124,23 @@ function CasePage() {
                         </div>
                         <div className="">
                             <div className=" py-2 px-5 mb-40">
-                                {renderSections(caseData)}
-
+                                {renderSections(data)}
                                 <div className="text-left">
                                     <button
                                         className="text-[#5993bc] underline select-none"
                                         onClick={() => onClickAddSection()}
                                     >Add Section</button>
                                 </div>
-
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div >
-
             {sectionModal['show'] &&
                 <SectionModal
                     sectionModal={sectionModal}
                     setSectionModal={setSectionModal}
-                    setData={setCaseData}
+                    setData={setData}
                 />
             }
         </>

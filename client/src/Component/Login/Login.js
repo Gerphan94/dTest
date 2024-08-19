@@ -76,7 +76,7 @@ function Login( { setCookie, setLoggedIn  } ) {
                                         </label>
                                         <div className="relative">
                                         <input
-                                            type=" "
+                                            type="password"
                                             name="password"
                                             autoComplete="new-password"
                                             className="border w-full outline-none px-2 py-1"

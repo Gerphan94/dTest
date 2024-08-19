@@ -9,10 +9,7 @@ import { useGlobalVariables } from "../Store/AppContext";
 function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
 
   const urlWEB = process.env.REACT_APP_WEB_URL;
-
-  // const { projectId } = useParams();
   const { projectId } = useGlobalVariables();
-  console.log('project_id = ', projectId)
 
   const menuList = [
     { id: 1, name: 'Dashboard', url: urlWEB + 'project/overview/' + projectId },
@@ -25,6 +22,9 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
 
   const projectMenuList = [
     { id: 'overview', name: 'Overview', url: urlWEB + 'project/overview/' + projectId },
+    { id: 'todos', name: 'Todos', url: urlWEB + 'project/overview/' + projectId },
+    { id: 'milestones', name: 'Milestones', url: urlWEB + 'project/overview/' + projectId },
+    { id: 'testrun', name: 'Test Runs & Results', url: urlWEB + 'project/overview/' + projectId },
     { id: 'testcases', name: 'Testcases', url: urlWEB + 'cases/view/' + projectId },
     { id: 'issues', name: 'Issues', url: urlWEB + 'issues/view/' + projectId },
     { id: 'report', name: 'Report', url: urlWEB + 'report/view/' + projectId }
@@ -51,7 +51,6 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
               dTest |
             </div>
             <div>
-              {console.log(projectId)}
               {projectId ?
                 <>
                   <div className='mb-0 mt-2 cursor-pointer select-none'>
@@ -100,27 +99,7 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
 
 
         <div className='flex gap-2 items-center text-white w-full'>
-          {/* <div className='flex gap-2'>
-            <div className=" text-2xl font-semibold px-2">
-              dTest |
-            </div>
-            <div className='mb-0 mt-auto cursor-pointer select-none flex gap-1'>
-              TÊN PROJECT
-            </div>
-          </div> */}
-
-          {/* <div className='w-full'>
-            <div className='bg-white ml-auto mr-0 cursor-pointer select-none flex flex-end gap-1 w-40 '>
-              <div className='hover:underline font-bold' >{usernameLogin}</div>
-              <div className='size-6'>
-                <UserMore setLoggedIn={setLoggedIn} removeCookie={removeCookie} />
-              </div>
-
-            </div>
-
-          </div> */}
-
-
+         
         </div>
 
 

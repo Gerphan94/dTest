@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, make_response
-from .model import db, Project, Section, Testcase, Priority, Worklog, Worktask
+from .model import db, Project, Section, Testcase, Priority, Casetype, Worklog, Worktask
 from sqlalchemy import desc
 from datetime import datetime
 
@@ -149,10 +149,10 @@ def getCasesByProject(projectId):
             "sub": fetch_subsections(section.id)
         }
     def fetch_subsections(parent_id):
-        sections = Section.query.filter_by(parent_id=parent_id)
+        sections = Section.query.filter_by(parent_id=parent_id).order_by(Section.stt)
         return [init_case(section) for section in sections]
 
-    root_sections = Section.query.filter_by(project_id=projectId, parent_id=0)
+    root_sections = Section.query.filter_by(project_id=projectId, parent_id=0).order_by(Section.stt)
     result_ar = [init_case(section) for section in root_sections]
 
     return jsonify(result_ar)
@@ -183,7 +183,9 @@ def add_case(section_id):
             expectation = data['expectation'],
             priority_id = data['priority'],
             estimate = data['estimate'],
-            section_id =section_id
+            section_id =section_id,
+            created_date = datetime.now(),
+            updated_date = datetime.now()
         )
         db.session.add(new_case)
         db.session.commit()
@@ -194,20 +196,30 @@ def add_case(section_id):
         
     return jsonify({"error": "title is EMPTY"})
 
-@main.route('/api/get_case/<int:case_id>', methods=['GET'])
+@main.route('/api/get-case/<int:case_id>', methods=['GET'])
 def get_case(case_id):
-    
     try:
-        testcase = Testcase.query.get(case_id)
-        return jsonify({
-            'id': testcase.id,
-            'title': testcase.title
-        })
+        case_detail = db.session.query(Testcase, Priority, Casetype) \
+                                .join(Priority, Testcase.priority_id == Priority.id) \
+                                .join(Casetype, Testcase.case_type == Casetype.id) \
+                                .filter(Testcase.id == case_id) \
+                                .first()
         
+        if case_detail:
+            testcase, priority, casetype = case_detail
+            return jsonify({
+                'id': testcase.id,
+                'title': testcase.title,
+                'priority': priority.name,
+                'type': casetype.name
+            })
+        else:
+            return jsonify({'error': 'Case not found'}), 404
+            
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-    
-    
+
+
 # WORKLOG ROUTE
 
     

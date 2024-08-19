@@ -1,31 +1,33 @@
 import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
 
 
+function SideBar({ sideData , handleScroll}) {
 
 
-function SideBar({ sideData }) {
+    const [selected, setSelected] = useState(0);
 
-    console.log("sidedata is -------------",  sideData)
+    const handleClick = (id) => {
+        setSelected(id);
+        handleScroll(id);
+    };
+
 
     return (
         <>
             <div className="bg-[#d2e2ed] w-48 h-screen text-[#0e3754] overflow-hidden">
-                <div className="">
+                <div className="py-4">
                     {sideData.map((item) => (
-                        <Link
+                        <button
                             key={item.id}
-                            className={`w-full block text-left px-4 py-2 `}
+                            className={`w-full block text-left px-4 py-1 text-sm hover:bg-[#7FA1C3] ${selected === item.id ? 'bg-[#7FA1C3]' : ''}  `}
+                            onClick={() => handleClick(item.id)}
                         >
                             {item.name}
-                        </Link>
+                        </button>
                     ))}
                 </div>
             </div>
         </>
-
-
-
     )
 
 }

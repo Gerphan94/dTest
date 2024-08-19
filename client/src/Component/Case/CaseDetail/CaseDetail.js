@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import styles from "../styles.module.css"
+import styles from "../../styles.module.css"
 import Select from 'react-select'
 import { useParams, Link } from 'react-router-dom';
 import CaseDetailBox from "./CaseDetailBox";
@@ -15,7 +15,7 @@ function CaseDetail() {
     useEffect(() => {
         const fetchProject = async () => {
             try {
-                const response = await fetch(urlAPI + "api/get_case/" + case_id);
+                const response = await fetch(urlAPI + "api/get-case/" + case_id);
                 const data = await response.json();
                 setCaseDetail(data);
             } catch (error) {
@@ -27,6 +27,9 @@ function CaseDetail() {
 
     return (
         <>
+         <div className={styles.bodyPage} >
+
+         
             <div className="flex">
                 <div className={`${styles.MainPage} bg-[#eaf1f7]`}>
                     <div className="border-b border-gray-300 p-2 flex">
@@ -43,21 +46,15 @@ function CaseDetail() {
                         <div className="grid grid-cols-4 bg-[#f6fbff] p-3">
                             <div className="text-left text-sm">
                                 <div className="font-bold">Type</div>
-                                <div>Compatibility</div>
+                                <div>{caseDetail.type}</div>
                             </div>
                             <div className="text-left text-sm">
-                                <div>Type</div>
-                                <div>Compatibility</div>
+                                <div className="font-bold">Priority</div>
+                                <div>{caseDetail.priority}</div>
                             </div>
-                            <div className="text-left text-sm">
-                                <div>Type</div>
-                                <div>Compatibility</div>
-                            </div>
-                            <div className="text-left text-sm">
-                                <div>Type</div>
-                                <div>Compatibility</div>
-                            </div>
+                            
                         </div>
+
                         
                         <CaseDetailBox title={"Step"} />
                         <CaseDetailBox title={"Step"} />
@@ -70,7 +67,7 @@ function CaseDetail() {
 
                 <div className="bg-[#d2e2ed] w-48 h-screen text-white"></div>
             </div>
-
+            </div>
         </>
     )
 }

@@ -26,12 +26,17 @@ class Token(db.Model):
 class Priority(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
-    
+
+class Casetype(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+  
 class Section(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
     parent_id = db.Column(db.Integer)
     description = db.Column(db.String(1000))
+    stt = db.Column(db.Integer)
     created_date = db.Column(db.DateTime)
     updated_date = db.Column(db.DateTime)
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
@@ -47,10 +52,14 @@ class Testcase(db.Model):
     priority_id = db.Column(db.Integer, db.ForeignKey('priority.id'), nullable=False)
     priority = db.relationship("Priority", backref=backref("testcases", uselist=True))
     estimate = db.Column(db.Integer)
+    is_uat = db.Column(db.Integer, default=0)
     section_id = db.Column(db.Integer, db.ForeignKey('section.id'), nullable=False)
     section = db.relationship("Section", backref=backref("testcases", uselist=True))
+    case_type = db.Column(db.Integer, db.ForeignKey('casetype.id'), nullable=False)
+    casetype = db.relationship("Casetype", backref=backref("testcases", uselist=True))
+    created_date = db.Column(db.DateTime)
+    updated_date = db.Column(db.DateTime)
     
-
 
 class Worklog(db.Model):
     id = db.Column(db.Integer, primary_key=True)

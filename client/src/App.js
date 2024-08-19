@@ -11,7 +11,7 @@ import CasePage from './Component/Case/CasePage';
 import WorkLog from './Component/WorkLog/WorkLog';
 
 import CaseForm from './Component/Case/CaseForm';
-import CaseDetail from './Component/Case/CaseDetail';
+import CaseDetail from './Component/Case/CaseDetail/CaseDetail';
 import Dashboard from './Component/Dashboard/Dashboard';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
@@ -20,7 +20,7 @@ function App() {
 
   const urlAPI = process.env.REACT_APP_API_URL;
   const [cookies, setCookie, removeCookie] = useCookies(['token']);
-  console.log('cookies == ', cookies)
+  // console.log('cookies == ', cookies)
   const [loggedIn, setLoggedIn] = useState(true);
   const [usernameLogin, setUsernameLogin] = useState('');
   const [projectId, setProjectId] = useState(0);
@@ -36,13 +36,9 @@ function App() {
       } else {
         setLoggedIn(false);
       }
-
     }
-
     checkToken();
-
-
-  }, []);
+  }, [cookies.token, urlAPI]);
 
   return (
     <div className="App">

@@ -6,20 +6,18 @@ import SectionModalEdit from "./SectionModalEdit";
 import DeleteSectionConfirm from "../MessageBox/DeleteSectionConfirm";
 import SectionCaseTable from "./SectionCaseTable";
 
-function SectionCase(props) {
+const SectionCase = React.forwardRef((props, ref) => {
 
-    console.log("-----------", props.data.cases)
     const urlAPI = process.env.REACT_APP_API_URL;
     const urlWEB = process.env.REACT_APP_WEB_URL;
 
     const sectionId = props.data.section_id;
-    const level = props.data.section_level;
 
     const [sectionName, setSectionName] = useState(props.data.section_name)
     const [caseTotal, setCaseTotal] = useState(props.data.case_count);
     const [caseData, setCaseData] = useState(props.data.cases);
     const [isShowCaseForm, setisShowCaseForm] = useState(false);
-
+    console.log('caseTotol', caseTotal)
     // delte info
     const [showDeleteSection, setShowDeleteSection] = useState(false);
     const [deleteType, setDeleteType] = useState('');
@@ -50,7 +48,6 @@ function SectionCase(props) {
                     setisShowCaseForm(false);
                     setCaseTotal(caseTotal + 1);
                     setCaseData(prevData => [...prevData, { "case_id": data.id, "case_title": data.title, "priority_name": "Medium" }]);
-
                 }
             } catch (error) {
                 console.error('Error:', error.message);
@@ -67,7 +64,6 @@ function SectionCase(props) {
                 'name': '',
                 'description': '',
                 'project_id': props.projectId,
-                'level': level + 1,
                 'parent_id': sectionId
             }
         })
@@ -99,7 +95,7 @@ function SectionCase(props) {
     };
 
     return (
-        <div className="mb-6 text-sm">
+        <div className="mb-6 text-sm " ref={ref}>
             <div className="flex mb-2">
                 <div className="text-left font-bold">{sectionName}</div>
                 <div className="ml-2 flex items-center flex-wrap">
@@ -121,12 +117,12 @@ function SectionCase(props) {
             </div>
             <div className="flex gap-2 mt-4">
                 {isShowCaseForm ?
-                    <form method="post" onSubmit={(e) => handleSubmit(e)} autoComplete='off'>
+                    <form method="post" onSubmit={(e) => handleSubmit(e)} autoComplete='off' spellCheck='false'>
                         <div className="flex items-center gap-2">
-                            <div>Title</div>
+                            <div className="text-gray-400">Case Title:</div>
                             <input
                                 type="text"
-                                className="rounded-md border outline-none px-2 py-1 w-[600px]"
+                                className="border outline-none px-2 py-0.5 w-[600px]"
                                 name="case_title"
                                 required={true}
                             />
@@ -170,5 +166,5 @@ function SectionCase(props) {
 
 
 
-}
+});
 export default SectionCase;
