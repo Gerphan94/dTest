@@ -61,7 +61,7 @@ function CaseForm({ caseType, formData }) {
                         selectedOption={selectedPriority}
                         setSelectedOption={setSelectedPriority}
                         
-                         />
+                         
                         />
                     </div>
                     <div className="text-left">

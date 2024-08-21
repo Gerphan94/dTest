@@ -124,7 +124,8 @@ def get_cases_by_section(section_id):
         case_obj = {}
         case_obj['case_id'] = testcase.id
         case_obj['case_title'] = testcase.title
-        case_obj['priority_name'] = priority.name  # Assuming Priority has a 'name' attribute
+        case_obj['priority_name'] = priority.name
+        case_obj['expectation'] = testcase.expectation
         case_ar.append(case_obj)
     return case_ar
 

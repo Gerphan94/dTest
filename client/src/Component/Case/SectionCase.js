@@ -18,7 +18,6 @@ const SectionCase = React.forwardRef((props, ref) => {
     const [caseTotal, setCaseTotal] = useState(props.data.case_count);
     const [caseData, setCaseData] = useState(props.data.cases);
     const [isShowCaseForm, setisShowCaseForm] = useState(false);
-    console.log('caseTotol', caseTotal)
     // delte info
     const [showDeleteSection, setShowDeleteSection] = useState(false);
     const [deleteType, setDeleteType] = useState('');
@@ -39,6 +38,7 @@ const SectionCase = React.forwardRef((props, ref) => {
             formJson['priority'] = 2
             formJson['estimate'] = 0
             formJson['case_type'] = 1
+            
             try {
                 const response = await fetch(urlAPI + 'api/add-case/' + sectionId, {
                     method: 'POST',

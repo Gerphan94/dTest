@@ -1,6 +1,7 @@
 import React from "react";
 import { FaCheck, FaXmark, FaRegCopy } from "react-icons/fa6";
 import { CiEdit } from "react-icons/ci";
+import { BsFillExplicitFill } from "react-icons/bs";
 
 function CaseTable({ data, handleCopy }) {
 
@@ -39,13 +40,17 @@ function CaseTable({ data, handleCopy }) {
                                 </td>
                                 <td className="">
                                     <div name="action" className="flex gap-0 opacity-0 group-hover:opacity-100 transition-opacity duration-100 ease-in-out">
+                                        <button className="mr-2">
+    
+                                            <BsFillExplicitFill className={`${ele.expectation=== '' ? 'text-red-500' : 'text-green-500'}`} />
+                                        </button>
                                         <button className="mr-2"
                                             onClick={() => handleCopy(ele.case_id)}
                                         
                                         >
                                             <FaRegCopy className="text-blue-500"
 
-                                            
+                                        
                                             />
                                         </button>
                                         <button className="mr-2">

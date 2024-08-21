@@ -6,8 +6,10 @@ export const useGlobalVariables = () => useContext(AppContext);
 
 export const AppProvider = ({ children }) => {
   const [projectId, setProjectId] = useState(null);
+  const [logginUser, setLogginUser] = useState({id: null, username: null});
+
   return (
-    <AppContext.Provider value={{ projectId, setProjectId }}>
+    <AppContext.Provider value={{ projectId, setProjectId, logginUser, setLogginUser }}>
       {children}
     </AppContext.Provider>
   );

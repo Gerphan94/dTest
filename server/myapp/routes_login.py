@@ -15,12 +15,13 @@ def verify_password(stored_password, provided_password):
     return check_password_hash(stored_password, provided_password)
 
 
-def encode_token(user_name):
+
+def encode_token(user_id):
     try:
         payload = {
             'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=5),
             'iat': datetime.datetime.utcnow(),
-            'sub': user_name
+            'sub': user_id
         }
         return jwt.encode(
             payload,
@@ -34,7 +35,6 @@ def encode_token(user_name):
 @staticmethod
 def decode_token(token):
  # Specify the list of allowed algorithms
-
     try:
         payload = jwt.decode(
             token,
@@ -66,16 +66,21 @@ def token_required(f):
         return f(current_user, *args, **kwargs)
     return decorator
 
-@login.route('/auth/check_token/<token>', methods=['GET'])
+@login.route('/auth/gereate-password/<string:pwd>', methods=['GET'])
+def gereate_password(pwd):
+    return hash_password(pwd)
+
+@login.route('/auth/check-token/<token>', methods=['GET'])
 def check_token(token):
     check_token = Token.query.filter_by(token=token).first()
-    print((check_token))
     if check_token:
-        user = decode_token(token)
-        return jsonify({'success': True, 'username': user}), 200 
+        user_iid = decode_token(token)  #User_id
+        user = User.query.get(user_iid)
+        print('check --------------------', user.username)
+        
+        return jsonify({'success': True, 'id': user.id, 'username': user.username}), 200 
     return jsonify({'success': False, 'username': None}), 401
     
-
 @login.route('/login', methods=['GET', 'POST'])
 def log_in():
     data = request.get_json()
@@ -83,18 +88,17 @@ def log_in():
     password = data['password']
 
     user = User.query.filter_by(username=username).first()
+    print(user)
 
     if user and verify_password(user.password, password):
-        token = encode_token(user.username)
+        token = encode_token(user.id)
         new_token = Token(token=token)
         try:
             db.session.add(new_token)
             db.session.commit()
-            print("Generated Token:", token)
             return jsonify({"token": token})
         except Exception as e:
             db.session.rollback()
-            print(f"Error: {e}")
             return jsonify({"message": "Login Failed"}), 500
 
     return jsonify({"message": "Login Failed"}), 401
@@ -105,6 +109,9 @@ def log_out():
     token = request.cookies.get('token')
     print(token)
     return jsonify({'success': False})
+
+
+
     
     
     

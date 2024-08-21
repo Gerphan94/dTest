@@ -10,7 +10,9 @@ import UserMore from './Login/UserMore';
 function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
 
   const urlWEB = process.env.REACT_APP_WEB_URL;
-  const { projectId } = useGlobalVariables();
+  const { projectId, logginUser } = useGlobalVariables();
+
+  console.log('logginUser:', logginUser)
 
   const menuList = [
     { id: 1, name: 'Dashboard', url: urlWEB + 'project/overview/' + projectId },
@@ -74,7 +76,7 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
             </div>
           </div>
           <div className='relative bg-[#376789] w-64 h-6 flex items-center gap-1 px-4 text-[#e0e3f4] hover:underline cursor-pointer'>
-            LOGIN
+            {logginUser.username}
            <div>
              <UserMore usernameLogin={usernameLogin} setLoggedIn={setLoggedIn} removeCookie={removeCookie} />
            </div>

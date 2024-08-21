@@ -17,6 +17,7 @@ import CaseDetail from './Component/Case/CaseDetail/CaseDetail';
 import Dashboard from './Component/Dashboard/Dashboard';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
+import { useGlobalVariables } from './Store/AppContext';
 
 function App() {
 
@@ -24,17 +25,18 @@ function App() {
   const [cookies, setCookie, removeCookie] = useCookies(['token']);
   // console.log('cookies == ', cookies)
   const [loggedIn, setLoggedIn] = useState(true);
-  const [usernameLogin, setUsernameLogin] = useState('');
-  const [projectId, setProjectId] = useState(0);
+
+  const { setLogginUser } = useGlobalVariables();
 
   useEffect(() => {
     const checkToken = async () => {
-      const fetchUrl = urlAPI + 'auth/check_token/' + cookies.token;
+      const fetchUrl = urlAPI + 'auth/check-token/' + cookies.token;
       const response = await fetch(fetchUrl);
       const data = await response.json();
+      console.log(data)
       if (data.success) {
         setLoggedIn(true);
-        setUsernameLogin(data.username);
+        setLogginUser({id: data.id, username:data.username});
       } else {
         setLoggedIn(false);
       }
@@ -47,7 +49,7 @@ function App() {
       {!loggedIn ? <Login setCookie={setCookie} setLoggedIn={setLoggedIn} />
         :
         <Router>
-          <Navbar projectId={projectId} />
+          <Navbar setLoggedIn={setLoggedIn}  removeCookie={removeCookie} />
           <HelmetProvider>
             <div className=''>
               <Routes >
@@ -68,7 +70,7 @@ function App() {
                       <Helmet>
                         <title>Dashboard</title>
                       </Helmet>
-                      <Dashboard  setProjectId={setProjectId} />
+                      <Dashboard  />
                     </>
                   }
                 />
@@ -88,7 +90,7 @@ function App() {
                       <Helmet>
                         <title>Case Page</title>
                       </Helmet>
-                      <CasePage setProjectId={setProjectId} />
+                      <CasePage  />
                     </>
                   }
                 />

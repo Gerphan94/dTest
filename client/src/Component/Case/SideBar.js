@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { FaPlus } from "react-icons/fa";
 
 
 function SideBar({ sideData , handleScroll}) {
@@ -14,7 +16,16 @@ function SideBar({ sideData , handleScroll}) {
 
     return (
         <>
-            <div className="bg-[#d2e2ed] w-48 h-screen text-[#0e3754] overflow-hidden">
+            <div className="bg-[#d2e2ed] w-64 h-screen text-[#0e3754] overflow-hidden">
+                <div className="p-3 w-full">
+                <Link className="w-40 text-white px-4 py-1 flex gap-2 items-center justify-center bg-[#376789]" to="/dashboard">
+                    <FaPlus />
+
+                Add Test Case
+
+                </Link>
+                </div>
+                
                 <div className="py-4">
                     {sideData.map((item) => (
                         <button
