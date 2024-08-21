@@ -13,6 +13,7 @@ const SectionCase = React.forwardRef((props, ref) => {
     const urlWEB = process.env.REACT_APP_WEB_URL;
 
     const sectionId = props.data.section_id;
+    const logginUser_id = props.logginUser.id
 
     const [sectionName, setSectionName] = useState(props.data.section_name)
     const [caseTotal, setCaseTotal] = useState(props.data.case_count);
@@ -38,6 +39,7 @@ const SectionCase = React.forwardRef((props, ref) => {
             formJson['priority'] = 2
             formJson['estimate'] = 0
             formJson['case_type'] = 1
+            formJson['user_id'] = logginUser_id
             
             try {
                 const response = await fetch(urlAPI + 'api/add-case/' + sectionId, {

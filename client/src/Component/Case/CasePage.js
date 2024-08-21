@@ -10,7 +10,7 @@ import { FaCheck, FaXmark } from "react-icons/fa6";
 function CasePage() {
 
     const { projectId } = useParams()
-    const { setProjectId } = useGlobalVariables();
+    const { setProjectId, logginUser } = useGlobalVariables();
     useEffect(() => {
         setProjectId(projectId)
     })
@@ -99,6 +99,7 @@ function CasePage() {
                     setData={setData}
                     sectionModal={sectionModal}
                     setSectionModal={setSectionModal}
+                    logginUser={logginUser}
                 />
                 {section.sub && section.sub.length > 0 && (
                     <div className="border-l-2 border-gray-300 pl-5">
