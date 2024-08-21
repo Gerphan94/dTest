@@ -60,7 +60,6 @@ class Testcase(db.Model):
     created_date = db.Column(db.DateTime)
     updated_date = db.Column(db.DateTime)
     
-
 class Worklog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))

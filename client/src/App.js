@@ -8,6 +8,8 @@ import Login from './Component/Login/Login';
 import NotFound from './Page/404';
 import Overview from './Component/Overview/Overview';
 import CasePage from './Component/Case/CasePage';
+import CaseAdd from './Component/Case/CaseAdd';
+
 import WorkLog from './Component/WorkLog/WorkLog';
 
 import CaseForm from './Component/Case/CaseForm';
@@ -90,6 +92,21 @@ function App() {
                     </>
                   }
                 />
+                <Route path="/cases/add/:projectId"
+                  element={
+                    <>
+                      <Helmet>
+                        <title>Case Page</title>
+                      </Helmet>
+                      <CaseAdd  />
+                    </>
+                  }
+                />
+
+
+
+
+
                 <Route path="/issues/view/:projectId"
                   element={
                     <>

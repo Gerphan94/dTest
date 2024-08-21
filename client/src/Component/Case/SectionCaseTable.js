@@ -2,9 +2,11 @@ import React from "react";
 import { FaCheck, FaXmark, FaRegCopy } from "react-icons/fa6";
 import { CiEdit } from "react-icons/ci";
 
-function CaseTable({ data }) {
+function CaseTable({ data, handleCopy }) {
 
     const urlWEB = process.env.REACT_APP_WEB_URL;
+
+  
 
     return (
         <>
@@ -25,10 +27,11 @@ function CaseTable({ data }) {
                                 <td>{index + 1}</td>
                                 <td>C{ele.case_id}</td>
                                 <td>
-                                    <div className="px-2 py-1 text-left">
+                                    <div className="px-2 py-1 text-left flex items-center">
                                         <a className="text-[#5993bc] hover:underline" href={`${urlWEB}case/view/${ele.case_id}`}>
                                             {ele.case_title}
                                         </a>
+                                        <button className="opacity-0 group-hover:opacity-100"><CiEdit /></button>
                                     </div>
                                 </td>
                                 <td><div>{ele.priority_name}</div>
@@ -36,8 +39,14 @@ function CaseTable({ data }) {
                                 </td>
                                 <td className="">
                                     <div name="action" className="flex gap-0 opacity-0 group-hover:opacity-100 transition-opacity duration-100 ease-in-out">
-                                        <button className="mr-2">
-                                            <FaRegCopy className="text-blue-500" />
+                                        <button className="mr-2"
+                                            onClick={() => handleCopy(ele.case_id)}
+                                        
+                                        >
+                                            <FaRegCopy className="text-blue-500"
+
+                                            
+                                            />
                                         </button>
                                         <button className="mr-2">
                                             <CiEdit />

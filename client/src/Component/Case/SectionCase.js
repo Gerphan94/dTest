@@ -5,6 +5,7 @@ import SectionModalAdd from "./SectionModal";
 import SectionModalEdit from "./SectionModalEdit";
 import DeleteSectionConfirm from "../MessageBox/DeleteSectionConfirm";
 import SectionCaseTable from "./SectionCaseTable";
+import CaseTitleModal from "./CaseTitleModal";
 
 const SectionCase = React.forwardRef((props, ref) => {
 
@@ -23,6 +24,8 @@ const SectionCase = React.forwardRef((props, ref) => {
     const [deleteType, setDeleteType] = useState('');
     const [deleteMessage, setDeleteMessage] = useState('');
 
+    const [showCaseTitleModal, setShowCaseTitleModal] = useState(false);
+
     const handleSubmit = useCallback(
         async (e) => {
             e.preventDefault();
@@ -35,6 +38,7 @@ const SectionCase = React.forwardRef((props, ref) => {
             formJson['expectation'] = ''
             formJson['priority'] = 2
             formJson['estimate'] = 0
+            formJson['case_type'] = 1
             try {
                 const response = await fetch(urlAPI + 'api/add-case/' + sectionId, {
                     method: 'POST',
@@ -76,10 +80,30 @@ const SectionCase = React.forwardRef((props, ref) => {
             'formData': {
                 'id': sectionId,
                 'name': sectionName,
-                'description': '',  
+                'description': '',
             }
         })
     };
+
+    const handleCopyCase = async (case_id) => {
+        try {
+            const response = await fetch(urlAPI + 'api/copy-case', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 'case_id': case_id }),
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setCaseTotal(caseTotal + 1);
+                setCaseData(prevData => [...prevData, { "case_id": data.id, "case_title": data.title, "priority_name": "Medium" }]);
+            }
+        }
+        catch (error) {
+            console.error('Error:', error.message);
+        }
+    }
 
 
 
@@ -104,7 +128,7 @@ const SectionCase = React.forwardRef((props, ref) => {
                     </span>
                 </div>
                 <button className="ml-4 text-blue-600"
-                onClick={() => handleClickEditSection()}
+                    onClick={() => handleClickEditSection()}
                 >
                     <CiEdit />
                 </button>
@@ -113,7 +137,11 @@ const SectionCase = React.forwardRef((props, ref) => {
                 </button>
             </div>
             <div>
-                <SectionCaseTable data={caseData} />
+                <SectionCaseTable 
+                data={caseData} 
+                handleCopy={handleCopyCase}
+                setShowCaseTitleModal={setShowCaseTitleModal}
+                 />
             </div>
             <div className="flex gap-2 mt-4">
                 {isShowCaseForm ?
@@ -155,6 +183,12 @@ const SectionCase = React.forwardRef((props, ref) => {
                 <DeleteSectionConfirm
                     setShowModal={setShowDeleteSection}
                     section_id={sectionId}
+                />
+            }
+
+            {showCaseTitleModal &&
+                <CaseTitleModal
+                    setShowModal={setShowCaseTitleModal}
                 />
             }
 

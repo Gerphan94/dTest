@@ -183,6 +183,7 @@ def add_case(section_id):
             expectation = data['expectation'],
             priority_id = data['priority'],
             estimate = data['estimate'],
+            case_type = data['case_type'],
             section_id =section_id,
             created_date = datetime.now(),
             updated_date = datetime.now()
@@ -195,6 +196,33 @@ def add_case(section_id):
         })
         
     return jsonify({"error": "title is EMPTY"})
+
+
+@main.route('/api/copy-case', methods=['POST'])
+def copy_case():
+    case_id = request.get_json()["case_id"]
+    copied_case = Testcase.query.get(case_id)
+    if (copied_case):
+        new_case = Testcase(
+            title = copied_case.title,
+            description = copied_case.description,
+            precondition = copied_case.precondition,
+            step = copied_case.step,
+            expectation = copied_case.expectation,
+            priority_id = copied_case.priority_id,
+            estimate = copied_case.estimate,
+            case_type = copied_case.case_type,
+            section_id = copied_case.section_id,
+            created_date = datetime.now(),
+            updated_date = datetime.now()
+        )
+        db.session.add(new_case)
+        db.session.commit()
+        return jsonify({
+            "id" : new_case.id,
+            "title": new_case.title
+        })
+    return jsonify({"error": "Case not found"})
 
 @main.route('/api/get-case/<int:case_id>', methods=['GET'])
 def get_case(case_id):

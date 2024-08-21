@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
 
 import { useState } from 'react';
-import { FaArrowLeftLong } from "react-icons/fa6";
+import { FaArrowLeftLong, FaChevronDown  } from "react-icons/fa6";
 //----
 
 import { useGlobalVariables } from "../Store/AppContext";
+import UserMore from './Login/UserMore';
 
 function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
 
@@ -41,11 +42,10 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
   const menuClass =
     'px-2 h-full text-gray-200 hover:text-white cursor-pointer hover:border-b-2 hover:border-white';
 
-
   return (
     <div className="bg-[#0e3754] fixed top-0 w-full h-20 z-50">
       <nav className="w-full h-full">
-        <div className='w-full h-14 flex'>
+        <div className='w-full h-14 flex justify-between'>
           <div className='flex gap-2 w-56 items-center text-white'>
             <div className=" text-2xl font-semibold px-2">
               dTest |
@@ -62,7 +62,6 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
 
                     </Link>
                     <h2>{projectId}</h2>
-
                   </div>
                 </> :
                 <>
@@ -74,8 +73,13 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
               }
             </div>
           </div>
+          <div className='relative bg-[#376789] w-64 h-6 flex items-center gap-1 px-4 text-[#e0e3f4] hover:underline cursor-pointer'>
+            LOGIN
+           <div>
+             <UserMore usernameLogin={usernameLogin} setLoggedIn={setLoggedIn} removeCookie={removeCookie} />
+           </div>
+            </div>
         </div>
-
         <div className='w-full h-6 px-2'>
           <ul className="h-full flex gap-3 text-[12px] text-[#aecade] py-0.5 uppercase">
             <Link className={menuClass} to="/work-log">
