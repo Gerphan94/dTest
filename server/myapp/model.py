@@ -7,21 +7,17 @@ class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
     
-# class Module(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(255))
-#     project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
-#     project = db.relationship("Project", backref=backref("modules", uselist=True))
-
-
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(255))
-    password = db.Column(db.String(255))
+    username = db.Column(db.String(100))
+    password = db.Column(db.String(1000))
     
 class Token(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    token = db.Column(db.String(255))
+    token = db.Column(db.String(1000))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship("User", backref=backref("tokens", uselist=True))
+    
 
 class Priority(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -36,9 +32,7 @@ class Section(db.Model):
     name = db.Column(db.String(255))
     parent_id = db.Column(db.Integer)
     description = db.Column(db.String(1000))
-    stt = db.Column(db.Integer)
-    created_date = db.Column(db.DateTime)
-    updated_date = db.Column(db.DateTime)
+    sort = db.Column(db.Integer)
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
     project = db.relationship("Project", backref=backref("modules", uselist=True))
     
@@ -52,13 +46,20 @@ class Testcase(db.Model):
     priority_id = db.Column(db.Integer, db.ForeignKey('priority.id'), nullable=False)
     priority = db.relationship("Priority", backref=backref("testcases", uselist=True))
     estimate = db.Column(db.Integer)
-    is_uat = db.Column(db.Integer, default=0)
+    uat = db.Column(db.Integer, default = 0)
+    active = db.Column(db.Integer, default = 1)
     section_id = db.Column(db.Integer, db.ForeignKey('section.id'), nullable=False)
     section = db.relationship("Section", backref=backref("testcases", uselist=True))
-    case_type = db.Column(db.Integer, db.ForeignKey('casetype.id'), nullable=False)
+    casetype_id = db.Column(db.Integer, db.ForeignKey('casetype.id'), nullable=False)
     casetype = db.relationship("Casetype", backref=backref("testcases", uselist=True))
     created_date = db.Column(db.DateTime)
     updated_date = db.Column(db.DateTime)
+    created_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    updated_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    created_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    updated_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    created_by_user = db.relationship("User", foreign_keys=[created_by], backref=backref("created_testcases", uselist=True))
+    updated_by_user = db.relationship("User", foreign_keys=[updated_by], backref=backref("updated_testcases", uselist=True))
     
 class Worklog(db.Model):
     id = db.Column(db.Integer, primary_key=True)

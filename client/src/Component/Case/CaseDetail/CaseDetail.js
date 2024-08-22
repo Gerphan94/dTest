@@ -28,10 +28,8 @@ function CaseDetail() {
     return (
         <>
          <div className={styles.bodyPage} >
-
-         
-            <div className="flex">
-                <div className={`${styles.MainPage} bg-[#eaf1f7]`}>
+            <div className="flex h-full bg-[#aef1f7]">
+                <div className={`${styles.MainPage} `}>
                     <div className="border-b border-gray-300 p-2 flex">
                         <div className="ml-3 font-bold">
                             <span className=" bg-purple-600 p-1 rounded-xl text-white select-none">C{caseDetail.id}</span>
@@ -39,11 +37,11 @@ function CaseDetail() {
 
                         </div>
 
-
-
                     </div>
-                    <div className="p-3">
-                        <div className="grid grid-cols-4 bg-[#f6fbff] p-3">
+                    <div className="p-3 h-full">
+                        <div className="text-left border-b px-4 py-2 font-medium">Section name</div>
+                        
+                        <div className="grid grid-cols-4 bg-[#F6FBFF] p-3 border border-[#aecade]">
                             <div className="text-left text-sm">
                                 <div className="font-bold">Type</div>
                                 <div>{caseDetail.type}</div>
@@ -56,8 +54,8 @@ function CaseDetail() {
                         </div>
 
                         
-                        <CaseDetailBox title={"Step"} />
-                        <CaseDetailBox title={"Step"} />
+                        <CaseDetailBox title={"Step"} data={caseDetail.step} />
+                        <CaseDetailBox title={"Expectation"} data={caseDetail.expectation} />
                         <CaseDetailBox title={"Step"} />
 
                     </div>

@@ -92,14 +92,14 @@ def log_in():
 
     if user and verify_password(user.password, password):
         token = encode_token(user.id)
-        new_token = Token(token=token)
+        new_token = Token(token=token, user_id=user.id)
         try:
             db.session.add(new_token)
             db.session.commit()
             return jsonify({"token": token})
         except Exception as e:
             db.session.rollback()
-            return jsonify({"message": "Login Failed"}), 500
+            return jsonify({"message": str(e)}), 500
 
     return jsonify({"message": "Login Failed"}), 401
 

@@ -52,6 +52,10 @@ tbody tr:nth-child(even) {
 }
 
 
+.case-detail-box a {
+  text-decoration: underline;
+}
+
   
 
 @keyframes App-logo-spin {

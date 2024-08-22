@@ -21,9 +21,14 @@ else:
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = SECRET_KEY
-    
+    username = 'api'
+    pwd = 'api123'
+    database = 'dTest'
+    connection_string = f"mysql+mysqlconnector://{username}:{pwd}@localhost:3306/{database}"
+
     # app.secret_key = SECRET_KEY
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(os.getcwd(), "database.db")
+    # app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(os.getcwd(), "database.db")
+    app.config["SQLALCHEMY_DATABASE_URI"] = connection_string
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
     db.init_app(app)

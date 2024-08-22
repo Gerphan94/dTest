@@ -7,7 +7,6 @@ function Login({ setCookie, setLoggedIn }) {
     const urlAPI = process.env.REACT_APP_API_URL;
     const urlWEB = process.env.REACT_APP_WEB_URL;
 
-
     const [hidePwd, setHidePwd] = useState(true);
 
     const handleSubmit = useCallback(
@@ -74,7 +73,7 @@ function Login({ setCookie, setLoggedIn }) {
                                         </label>
                                         <div className="relative">
                                             <input
-                                                type="password"
+                                                type={`${hidePwd ? "password" : "text`"}`}
                                                 name="password"
                                                 autoComplete="new-password"
                                                 className="border w-full outline-none px-2 py-1"
@@ -82,7 +81,7 @@ function Login({ setCookie, setLoggedIn }) {
                                             />
                                             <span
                                                 className="absolute inset-y-0 right-0 pr-2  p-1 group-hover:border-blue-200 "
-                                            // onClick={toggleDropdown}
+                                                onClick={() => setHidePwd(!hidePwd)}
                                             >
                                                 <PiEyeLight className="h-5 w-5 text-blue-400 hover:text-blue-700 cursor-pointer hover:font-bold" />
                                             </span>
@@ -93,6 +92,8 @@ function Login({ setCookie, setLoggedIn }) {
                                     <div className="py-2">
                                         <input
                                             className="bg-blue-500 w-full rounded-md text-white active:bg-emerald-600 font-bold text-sm px-6 py-2 shadow opacity-80 hover:opacity-100 hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 cursor-pointer"
+                                            autoComplete="off"
+                                            spellCheck="false"
                                             type="submit"
                                             value="Login"
                                         >

@@ -2,8 +2,11 @@ from flask import Blueprint, jsonify, request, make_response
 from .model import db, Project, Section, Testcase, Priority, Casetype, Worklog, Worktask
 from sqlalchemy import desc
 from datetime import datetime
+import base64
 
 main = Blueprint('main', __name__)
+
+
 
 @main.errorhandler(404)
 def handle_404_error(_error):
@@ -43,13 +46,7 @@ def get_project_by_id(project_id):
 
 # MODULE #######################################################################
 
-@main.route('/api/modules/<int:project_id>', methods=['GET'])
-def get_modules(project_id):
-    return jsonify([{
-        'id': module.id, 
-        'name': module.name,
-        'project_id': module.project_id
-        } for module in Module.query.filter_by(project_id=project_id)])
+
     
 # SECTION #######################################################################
 
@@ -61,26 +58,7 @@ def getSectionMainByModule(module_id):
         'name': section.name,
         } for section in Section.query.filter_by(module_id=module_id, parent_id=0)])
 
-@main.route('/c', methods=['GET'])
-def initSectionTree(project_id):
-    result = []
-    lvl0Sections = Section.query.filter_by(project_id = project_id, level= 0)
-    for lvl0 in lvl0Sections:
-        sub0 = []
-        lvl1Sections = Section.query.filter_by(parent_id = lvl0.id, level= 1)
-        for lvl1 in lvl1Sections:
-            sub1 = []
-            lvl2Sections = Section.query.filter_by(parent_id = lvl1.id, level= 2)
-            for lvl2 in lvl2Sections:
-                sub2 = []
-                lvl3Sections = Section.query.filter_by(parent_id = lvl2.id, level= 3)
-                for lvl3 in lvl3Sections:
-                    sub3 = []
-                    sub2.append({'id': lvl3.id, 'name':lvl3.name, 'sub': sub3})
-                sub1.append({'id': lvl2.id, 'name':lvl2.name, 'sub': sub2})
-            sub0.append({'id': lvl1.id, 'name':lvl1.name, 'sub': sub1})
-        result.append({'id': lvl0.id, 'name':lvl0.name, 'sub': sub0})
-    return jsonify(result), 200
+
 
 # SECTION #######################################################################
 
@@ -89,12 +67,10 @@ def initSectionTree(project_id):
 def create_section():
     data = request.get_json()
     section = Section(
-        name=data['name'],
-        description=data['description'],
-        project_id=data['project_id'],
-        parent_id=data['parent_id'],
-        created_date = datetime.now(),
-        updated_date = datetime.now()
+        name = data['name'],
+        description = data['description'],
+        project_id = data['project_id'],
+        parent_id = data['parent_id']
     )
     db.session.add(section)
     db.session.commit()
@@ -125,7 +101,7 @@ def get_cases_by_section(section_id):
         case_obj['case_id'] = testcase.id
         case_obj['case_title'] = testcase.title
         case_obj['priority_name'] = priority.name
-        case_obj['expectation'] = testcase.expectation
+        # case_obj['expectation'] = testcase.expectation
         case_ar.append(case_obj)
     return case_ar
 
@@ -145,15 +121,17 @@ def getCasesByProject(projectId):
             "section_id": section.id,
             "section_name": section.name,
             "section_des": section.description,
+
             "cases": get_cases_by_section(section.id),
             "case_count": Testcase.query.filter_by(section_id=section.id).count(),
             "sub": fetch_subsections(section.id)
         }
+        
     def fetch_subsections(parent_id):
-        sections = Section.query.filter_by(parent_id=parent_id).order_by(Section.stt)
+        sections = Section.query.filter_by(parent_id=parent_id).order_by(Section.sort)
         return [init_case(section) for section in sections]
 
-    root_sections = Section.query.filter_by(project_id=projectId, parent_id=0).order_by(Section.stt)
+    root_sections = Section.query.filter_by(project_id=projectId, parent_id=0).order_by(Section.sort)
     result_ar = [init_case(section) for section in root_sections]
 
     return jsonify(result_ar)
@@ -184,10 +162,12 @@ def add_case(section_id):
             expectation = data['expectation'],
             priority_id = data['priority'],
             estimate = data['estimate'],
-            case_type = data['case_type'],
-            section_id =section_id,
+            casetype_id = data['case_type'],
+            section_id = section_id,
             created_date = datetime.now(),
-            updated_date = datetime.now()
+            created_by = data['user_id'],
+            updated_date = datetime.now(),
+            updated_by = data['user_id']
         )
         db.session.add(new_case)
         db.session.commit()
@@ -230,7 +210,7 @@ def get_case(case_id):
     try:
         case_detail = db.session.query(Testcase, Priority, Casetype) \
                                 .join(Priority, Testcase.priority_id == Priority.id) \
-                                .join(Casetype, Testcase.case_type == Casetype.id) \
+                                .join(Casetype, Testcase.casetype_id == Casetype.id) \
                                 .filter(Testcase.id == case_id) \
                                 .first()
         
@@ -240,7 +220,8 @@ def get_case(case_id):
                 'id': testcase.id,
                 'title': testcase.title,
                 'priority': priority.name,
-                'type': casetype.name
+                'type': casetype.name,
+                'expectation': testcase.expectation
             })
         else:
             return jsonify({'error': 'Case not found'}), 404

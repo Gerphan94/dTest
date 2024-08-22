@@ -12,7 +12,7 @@ function SectionModal({ sectionModal, setSectionModal, setData }) {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prevState => ({...prevState, [name]: value}));
+        setFormData(prevState => ({ ...prevState, [name]: value }));
     }
 
 
@@ -43,7 +43,7 @@ function SectionModal({ sectionModal, setSectionModal, setData }) {
                         "cases": [],
                         "sub": []
                     }
-                    setSectionModal(prevState => ({...prevState,show: false}));
+                    setSectionModal(prevState => ({ ...prevState, show: false }));
                     if (sectionModal['type'] === 'insert') {
                         if (formData['parent_id'] === 0) {
                             setData(prevData => [...prevData, new_data]);
@@ -51,7 +51,7 @@ function SectionModal({ sectionModal, setSectionModal, setData }) {
                             setData(prevData => [...prevData.filter(x => x.section_id !== formData['parent_id']), new_data]);
                         }
                     }
-                    
+
                 }
             } catch (error) {
                 console.error('Error:', error.message);
@@ -74,21 +74,24 @@ function SectionModal({ sectionModal, setSectionModal, setData }) {
                             {/*body*/}
                             <div className="relative p-6 text-left text-sm">
                                 <div>
-                                    <div className="py-2">
-                                        <label htmlFor="section_name" className="block font-bold">
-                                            Name*
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="name"
-                                            className="border w-full outline-none px-2 py-1"
-                                            required={true}
-                                            value={formData['name']}
-                                            autoComplete='off'
-                                            onChange={(e) => handleChange(e)}
-                                        />
+                                        <div className="w-full py-2">
+                                            <label htmlFor="section_name" className="block font-bold">
+                                                Name*
+                                            </label>
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                className="border w-full outline-none px-2 py-1"
+                                                required={true}
+                                                value={formData['name']}
+                                                autoComplete='off'
+                                                onChange={(e) => handleChange(e)}
+                                            />
 
-                                    </div>
+                                        </div>
+                                       
+
+
                                     <div className="py-2">
                                         <label htmlFor="section_des" className="block font-bold">
                                             Description
@@ -100,7 +103,7 @@ function SectionModal({ sectionModal, setSectionModal, setData }) {
                                             value={formData['description']}
                                             className="border w-full outline-none px-2 py-1"
                                             onChange={(e) => handleChange(e)}
-                                         
+
                                         />
                                     </div>
                                 </div>
@@ -110,7 +113,7 @@ function SectionModal({ sectionModal, setSectionModal, setData }) {
                                 <button
                                     className="text-red-500 background-transparent font-bold px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 border-red-500 border opacity-80 hover:opacity-100"
                                     type="button"
-                                    onClick={() => setSectionModal(prevState => ({...prevState,show: false}))}
+                                    onClick={() => setSectionModal(prevState => ({ ...prevState, show: false }))}
                                 >
                                     Cancel
                                 </button>
