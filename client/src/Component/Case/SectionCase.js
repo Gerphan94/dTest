@@ -40,7 +40,7 @@ const SectionCase = React.forwardRef((props, ref) => {
             formJson['estimate'] = 0
             formJson['case_type'] = 1
             formJson['user_id'] = logginUser_id
-            
+
             try {
                 const response = await fetch(urlAPI + 'api/add-case/' + sectionId, {
                     method: 'POST',
@@ -139,11 +139,12 @@ const SectionCase = React.forwardRef((props, ref) => {
                 </button>
             </div>
             <div>
-                <SectionCaseTable 
-                data={caseData} 
-                handleCopy={handleCopyCase}
-                setShowCaseTitleModal={setShowCaseTitleModal}
-                 />
+                <SectionCaseTable
+                    projectId={props.projectId}
+                    data={caseData}
+                    handleCopy={handleCopyCase}
+                    setShowCaseTitleModal={setShowCaseTitleModal}
+                />
             </div>
             <div className="flex gap-2 mt-4">
                 {isShowCaseForm ?

@@ -12,8 +12,6 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
   const urlWEB = process.env.REACT_APP_WEB_URL;
   const { projectId, logginUser } = useGlobalVariables();
 
-  console.log('logginUser:', logginUser)
-
   const menuList = [
     { id: 1, name: 'Dashboard', url: urlWEB + 'project/overview/' + projectId },
     { id: 2, name: 'Worklog', url: urlWEB + 'project/report/' + projectId },

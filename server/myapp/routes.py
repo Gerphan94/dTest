@@ -62,6 +62,22 @@ def getSectionMainByModule(module_id):
 
 # SECTION #######################################################################
 
+@main.route('/api/get-section-list/<project_id>', methods=['GET'])
+def get_section_list(project_id):
+    def init_section(section):
+        return {
+            "id": section.id,
+            "name": section.name,
+            "sub": fetch_subsections(section.id)
+        }
+    def fetch_subsections(parent_id):
+        sections = Section.query.filter_by(parent_id=parent_id).order_by(Section.sort)
+        return [init_section(section) for section in sections]
+
+    root_sections = Section.query.filter_by(project_id=project_id, parent_id=0).order_by(Section.sort)
+    result_ar = [init_section(section) for section in root_sections]
+    return jsonify(result_ar)
+
 
 @main.route('/api/insert-section', methods=['POST'])
 def create_section():
@@ -204,6 +220,47 @@ def copy_case():
             "title": new_case.title
         })
     return jsonify({"error": "Case not found"})
+
+@main.route('/api/get-case-by-id/<int:case_id>', methods=['GET'])
+def get_caseDetail(case_id):
+    try:
+        # Query to fetch the Testcase along with its related Priority and Casetype
+        case_detail = db.session.query(Testcase)\
+                                .join(Section, Testcase.section_id == Section.id) \
+                                .join(Priority, Testcase.priority_id == Priority.id) \
+                                .join(Casetype, Testcase.casetype_id == Casetype.id) \
+                                .filter(Testcase.id == case_id)\
+                                .first()
+                                
+        if case_detail:
+            return jsonify({
+                'id': case_detail.id,
+                'title': case_detail.title,
+                'description': case_detail.description,
+                'precondition': case_detail.precondition,
+                'step': case_detail.step,
+                'expectation': case_detail.expectation,
+                'estimate': case_detail.estimate,
+                'priority': {
+                    'id': case_detail.priority.id, 
+                    'name': case_detail.priority.name
+                },
+                'type': {
+                    'id': case_detail.casetype.id, 
+                    'name': case_detail.casetype.name
+                },
+                'section': {
+                    'id': case_detail.section.id,
+                    'name': case_detail.section.name
+                }
+                
+            })
+        else:
+            return jsonify({'error': 'Case not found'}), 404
+            
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 
 @main.route('/api/get-case/<int:case_id>', methods=['GET'])
 def get_case(case_id):

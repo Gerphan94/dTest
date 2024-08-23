@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
-import styles from "../../styles.module.css"
-import Select from 'react-select'
 import { useParams, Link } from 'react-router-dom';
 import CaseDetailBox from "./CaseDetailBox";
+import { CiEdit } from "react-icons/ci";
 
 function CaseDetail() {
 
-    const { case_id } = useParams();
+    const { projectId, caseId } = useParams()
+
+    console.log('caseID is ',caseId, projectId)
 
     const urlAPI = process.env.REACT_APP_API_URL;
 
@@ -15,7 +16,7 @@ function CaseDetail() {
     useEffect(() => {
         const fetchProject = async () => {
             try {
-                const response = await fetch(urlAPI + "api/get-case/" + case_id);
+                const response = await fetch(urlAPI + "api/get-case/" + caseId);
                 const data = await response.json();
                 setCaseDetail(data);
             } catch (error) {
@@ -23,22 +24,28 @@ function CaseDetail() {
             }
         }
         fetchProject();
-    }, [case_id])
+    }, [caseId])
 
     return (
         <>
-         <div className={styles.bodyPage} >
-            <div className="flex h-full bg-[#aef1f7]">
-                <div className={`${styles.MainPage} `}>
-                    <div className="border-b border-gray-300 p-2 flex">
-                        <div className="ml-3 font-bold">
-                            <span className=" bg-purple-600 p-1 rounded-xl text-white select-none">C{caseDetail.id}</span>
-                            <div className="ml-2 inline-block  text-lg">{caseDetail.title}</div>
-
+         
+            <div className="flex w-full h-body-page mt-20">
+                <div className='w-full'>
+                    <div className="border-b border-gray-300 p-2 flex justify-between">
+                        <div className="ml-3 font-bold text-md">
+                            <span className=" bg-purple-600 px-1 py-0.5  rounded-xl text-white select-none">C{caseDetail.id}</span>
+                            <div className="ml-2 inline-block">{caseDetail.title}</div>
+                        </div>
+                        <div>
+                            <Link 
+                                to={`/case/edit/${projectId}/${caseId}`}
+                                className="flex gap-1 items-center text-sm border border-[#aecade] px-3 py-0.5">
+                                <CiEdit className="text-[#aecade]" />
+                                Edit</Link>
                         </div>
 
                     </div>
-                    <div className="p-3 h-full">
+                    <div className="p-3 w-full">
                         <div className="text-left border-b px-4 py-2 font-medium">Section name</div>
                         
                         <div className="grid grid-cols-4 bg-[#F6FBFF] p-3 border border-[#aecade]">
@@ -50,22 +57,25 @@ function CaseDetail() {
                                 <div className="font-bold">Priority</div>
                                 <div>{caseDetail.priority}</div>
                             </div>
+                            <div className="text-left text-sm">
+                                <div className="font-bold">Estimate</div>
+                                <div>{caseDetail.estimate}</div>
+                            </div>
                             
                         </div>
-
-                        
+                        <div>
                         <CaseDetailBox title={"Step"} data={caseDetail.step} />
                         <CaseDetailBox title={"Expectation"} data={caseDetail.expectation} />
                         <CaseDetailBox title={"Step"} />
-
+                        </div>
                     </div>
 
 
                 </div>
 
-                <div className="bg-[#d2e2ed] w-48 h-screen text-white"></div>
+                <div className="bg-[#d2e2ed] w-64 text-white"></div>
             </div>
-            </div>
+            
         </>
     )
 }

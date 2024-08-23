@@ -100,6 +100,7 @@ function CasePage() {
                     sectionModal={sectionModal}
                     setSectionModal={setSectionModal}
                     logginUser={logginUser}
+             
                 />
                 {section.sub && section.sub.length > 0 && (
                     <div className="border-l-2 border-gray-300 pl-5">

@@ -1,13 +1,11 @@
-import React from "react";
+import React, { useParams, Link } from "react";
 import { FaCheck, FaXmark, FaRegCopy } from "react-icons/fa6";
 import { CiEdit } from "react-icons/ci";
 import { BsFillExplicitFill } from "react-icons/bs";
 
-function CaseTable({ data, handleCopy }) {
+function CaseTable({ projectId, data, handleCopy }) {
 
     const urlWEB = process.env.REACT_APP_WEB_URL;
-
-  
 
     return (
         <>
@@ -29,7 +27,7 @@ function CaseTable({ data, handleCopy }) {
                                 <td>C{ele.case_id}</td>
                                 <td>
                                     <div className="px-2 py-1 text-left flex items-center">
-                                        <a className="text-[#5993bc] hover:underline" href={`${urlWEB}case/view/${ele.case_id}`}>
+                                        <a className="text-[#5993bc] hover:underline" href={`${urlWEB}case/view/${projectId}/${ele.case_id}`}>
                                             {ele.case_title}
                                         </a>
                                         <button className="opacity-0 group-hover:opacity-100"><CiEdit /></button>
@@ -50,7 +48,7 @@ function CaseTable({ data, handleCopy }) {
                                         >
                                             <FaRegCopy className="text-blue-500"
 
-                                        
+                                    
                                             />
                                         </button>
                                         <button className="mr-2">

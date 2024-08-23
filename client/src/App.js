@@ -9,10 +9,9 @@ import NotFound from './Page/404';
 import Overview from './Component/Overview/Overview';
 import CasePage from './Component/Case/CasePage';
 import CaseAdd from './Component/Case/CaseAdd';
-
+import CaseEdit from './Component/Case/CaseForm/CaseEdit';
 import WorkLog from './Component/WorkLog/WorkLog';
 
-import CaseForm from './Component/Case/CaseForm';
 import CaseDetail from './Component/Case/CaseDetail/CaseDetail';
 import Dashboard from './Component/Dashboard/Dashboard';
 import { useEffect, useState } from 'react';
@@ -94,31 +93,38 @@ function App() {
                     </>
                   }
                 />
-                <Route path="/cases/add/:projectId"
+
+                <Route path="/case/view/:projectId/:caseId"
                   element={
                     <>
                       <Helmet>
                         <title>Case Page</title>
+                      </Helmet>
+                      <CaseDetail  />
+                    </>
+                  }
+                />
+                <Route path="/cases/add/:projectId"
+                  element={
+                    <>
+                      <Helmet>
+                        <title>Add Test Case</title>
                       </Helmet>
                       <CaseAdd  />
                     </>
                   }
                 />
-
-
-
-
-
-                <Route path="/issues/view/:projectId"
+                <Route path="/case/edit/:projectId/:caseId"
                   element={
                     <>
                       <Helmet>
-                        <title>Case Page</title>
+                        <title>Edit Test Case</title>
                       </Helmet>
-                      <CasePage />
+                      <CaseEdit  />
                     </>
                   }
                 />
+              
                 <Route path="/work-log/:month?"
                   element={
                     <>
@@ -129,15 +135,7 @@ function App() {
                     </>
                   }
                 />
-                <Route path="/case/view/:case_id"
-                  element={
-                    <>
-                      <Helmet>
-                      </Helmet>
-                      <CaseDetail />
-                    </>
-                  }
-                />
+               
 
                 <Route path="*" element={<NotFound />} />
               </Routes>
