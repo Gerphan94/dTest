@@ -45,7 +45,7 @@ class Testcase(db.Model):
     expectation = db.Column(db.String(1000))
     priority_id = db.Column(db.Integer, db.ForeignKey('priority.id'), nullable=False)
     priority = db.relationship("Priority", backref=backref("testcases", uselist=True))
-    estimate = db.Column(db.Integer)
+    estimate = db.Column(db.String(255))
     uat = db.Column(db.Integer, default = 0)
     active = db.Column(db.Integer, default = 1)
     section_id = db.Column(db.Integer, db.ForeignKey('section.id'), nullable=False)

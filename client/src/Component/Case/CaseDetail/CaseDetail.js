@@ -64,6 +64,8 @@ function CaseDetail() {
                             
                         </div>
                         <div>
+                        <CaseDetailBox title={"Description"} data={caseDetail.description} />
+                        <CaseDetailBox title={"Precondition"} data={caseDetail.precondition} />
                         <CaseDetailBox title={"Step"} data={caseDetail.step} />
                         <CaseDetailBox title={"Expectation"} data={caseDetail.expectation} />
                         <CaseDetailBox title={"Step"} />

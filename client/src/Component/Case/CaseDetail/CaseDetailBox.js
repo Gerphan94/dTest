@@ -1,12 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import ReactMarkdown from 'react-markdown'
-// import remarkGfm from 'remark-gfm'
+import remarkGfm from 'remark-gfm'
 
 function CaseDetailBox({ title, data }) {
-
-
-
-
     return (
         <>
             <div name='case-detail-box' className=" mt-5 w-full">
@@ -20,6 +16,7 @@ function CaseDetailBox({ title, data }) {
                 <div className="w-full text-left">
                     <ReactMarkdown
                         children={data}
+                        remarkPlugins={[remarkGfm]}
                     />
                 </div>
             </div>

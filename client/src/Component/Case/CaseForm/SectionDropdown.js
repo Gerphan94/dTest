@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, memo } from 'react'
 import { FaAngleDown } from "react-icons/fa6";
 
-const SectionDropdown = ({ data, selectedOption, setSelectedOption }) => {
+const SectionDropdown = memo(function SectionDropdown({ data, selectedOption, setSelectedOption }) {
 
 
-    console.log(data)
+    console.log('Render SectionDropdown')
 
     const [viewData, setViewData] = useState([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -135,6 +135,6 @@ const SectionDropdown = ({ data, selectedOption, setSelectedOption }) => {
             </div>
         </div>
     )
-}
+});
 
 export default SectionDropdown;
