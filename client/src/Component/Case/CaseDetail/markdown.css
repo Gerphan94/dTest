@@ -1,0 +1,64 @@
+div[name="case-detail"] h1 {
+    font-size: 16pt;
+    font-weight: 600;
+    margin: 1.5rem 0;
+    padding: 0;
+}
+
+div[name="case-detail"] h2 {
+
+    font-size: 14pt;
+    font-weight: 600;
+    margin: 1.5rem 0;
+    padding: 0;
+}
+
+
+div[name="case-detail"] h3 {
+
+    font-size: 13pt;
+    font-weight: 600;
+    margin: 12px 0;
+    padding: 0;
+}
+
+div[name="case-detail"] p {
+
+    font-size: 10pt;
+    margin: 2px 0;
+    padding: 0;
+}
+
+div[name="case-detail"] a {
+    text-decoration: underline;
+    color: blue;
+}
+
+
+div[name="case-detail"] ul li {
+    list-style-type: circle;
+    font-size: 10pt;
+    margin: 4px 0;
+    padding: 0;
+    margin-left: 40px; 
+}
+div[name="case-detail"] ol li {
+    list-style-type: decimal;
+    font-size: 10pt;
+    margin: 4px 0;
+    padding: 0;
+    margin-left: 40px; 
+ }
+
+ div[name="case-detail"] blockquote {
+
+    font-size: 10pt;
+    font-style: italic;
+    margin-left: 10px;
+    border-left: 1px solid gray;
+    padding-left: 10px;
+}
+
+div[name="case-detail"] pre {
+    font-size: 10pt;
+}

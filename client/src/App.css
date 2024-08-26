@@ -39,7 +39,7 @@ table {
 }
 
 thead tr {
-  background-color: #F5F9FD;
+  background-color: #f5f9fd;
   
 }
 
@@ -51,6 +51,9 @@ tbody tr:nth-child(even) {
   background-color: #FFFFFF; /* Background color for even rows */
 }
 
+tr td {
+  border-bottom: 1px solid #d2e2ed
+}
 
 .case-detail-box a {
   text-decoration: underline;

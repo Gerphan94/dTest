@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useGlobalVariables } from "../../../Store/AppContext";
 import { useParams } from "react-router-dom";
 import SectionDropdown from "./SectionDropdown";
 import Dropdown from "../../Common/Dropdown";
+import { Link, useNavigate } from 'react-router-dom';
 
 function CaseEdit(props) {
 
     console.log('rending editpage')
     const urlAPI = process.env.REACT_APP_API_URL;
+    const navigate = useNavigate();
 
     const { projectId, caseId } = useParams();
     const [sections, setSections] = useState([]);
@@ -23,15 +24,6 @@ function CaseEdit(props) {
     const [selectedSection, setSelectedSection] = useState({ id: null, name: '' });
     const [selectedType, setSelectedType] = useState({ id: 1, name: 'Other' });
 
-    // const [formData, setFormData] = useState({
-    //     'title': '',
-    //     'description': '',
-    //     'precondition': '',
-    //     'step': '',
-    //     'expectation': '',
-    //     'estimate': '',
-    // })
-
     useEffect(() => {
         const fetchSections = async () => {
             try {
@@ -42,6 +34,7 @@ function CaseEdit(props) {
                 console.error('Error fetching data:', error);
             }
         };
+        
         const fetchCase = async () => {
             try {
                 const response = await fetch(urlAPI + "api/get-case-by-id/" + caseId);
@@ -62,11 +55,6 @@ function CaseEdit(props) {
         fetchSections();
         fetchCase();
     }, [projectId, urlAPI, caseId]);
-
-
-    // const onChange = (e) => {
-    //     setFormData({ ...formData, [e.target.name]: e.target.value })
-    // }
 
     const handleSectionChange = useCallback((newSection) => {
         setSelectedSection(newSection);
@@ -92,7 +80,9 @@ function CaseEdit(props) {
             });
             if (response.ok) {
                 const data = await response.json();
-                console.log(data)
+                navigate('/case/view/' + projectId + '/' + caseId)
+
+
                 }
         }
         catch (error) {
@@ -179,7 +169,7 @@ function CaseEdit(props) {
                                     <textarea
                                         name="description"
                                         type="text"
-                                        rows={4}
+                                        rows={6}
                                         value={description}
                                         onChange={(e) => setDescription(e.target.value)}
                                         className="border border-[#d2e2ed] rounded-sm outline-none w-full px-2 py-1 text-xs"
@@ -194,7 +184,7 @@ function CaseEdit(props) {
                                     <textarea
                                         name="precondition"
                                         type="text"
-                                        rows={4}
+                                        rows={6}
                                         value={precondition}
                                         onChange={(e) => setPrecondition(e.target.value)}
                                         className="border border-[#d2e2ed] rounded-sm outline-none w-full p-1"
@@ -209,7 +199,7 @@ function CaseEdit(props) {
                                     <textarea
                                         name="step"
                                         type="text"
-                                        rows={4}
+                                        rows={6}
                                         value={step}
                                         onChange={(e) => setStep(e.target.value)}
                                         className="border border-[#d2e2ed] rounded-sm outline-none w-full p-1"
@@ -223,7 +213,7 @@ function CaseEdit(props) {
                                     <textarea
                                         name="expectation"
                                         type="text"
-                                        rows={4}
+                                        rows={6}
                                         value={expectation}
                                         onChange={(e) => setExpectation(e.target.value)}
                                         className="border border-[#d2e2ed] rounded-sm outline-none w-full p-1"

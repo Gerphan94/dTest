@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaArrowLeftLong, FaChevronDown  } from "react-icons/fa6";
 //----
 
@@ -12,21 +12,25 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
   const urlWEB = process.env.REACT_APP_WEB_URL;
   const { projectId, logginUser } = useGlobalVariables();
 
-  const menuList = [
-    { id: 1, name: 'Dashboard', url: urlWEB + 'project/overview/' + projectId },
-    { id: 2, name: 'Worklog', url: urlWEB + 'project/report/' + projectId },
-    { id: 3, name: 'Overview', url: urlWEB + 'project/setting/' + projectId },
-    { id: 4, name: 'User', url: urlWEB + 'project/user/' + projectId },
-    { id: 5, name: 'Log', url: urlWEB + 'project/log/' + projectId },
-    { id: 6, name: 'More', url: urlWEB + 'project/more/' + projectId }
-  ]
+  const [projectName, setProjectName] = useState('');
+
+  useEffect(() => {
+    if (projectId) {
+      const urlAPI = process.env.REACT_APP_API_URL;
+      fetch(urlAPI + 'api/get-project-by-id/' + projectId)
+        .then((res) => res.json())
+        .then((data) => {
+          setProjectName(data.name)
+        })
+    }
+  }, [projectId])
 
   const projectMenuList = [
     { id: 'overview', name: 'Overview', url: urlWEB + 'project/overview/' + projectId },
     { id: 'todos', name: 'Todos', url: urlWEB + 'project/overview/' + projectId },
     { id: 'milestones', name: 'Milestones', url: urlWEB + 'project/overview/' + projectId },
     { id: 'testrun', name: 'Test Runs & Results', url: urlWEB + 'project/overview/' + projectId },
-    { id: 'testcases', name: 'Testcases', url: urlWEB + 'cases/view/' + projectId },
+    { id: 'testcases', name: 'Test Cases', url: urlWEB + 'cases/view/' + projectId },
     { id: 'issues', name: 'Issues', url: urlWEB + 'issues/view/' + projectId },
     { id: 'report', name: 'Report', url: urlWEB + 'report/view/' + projectId }
   ]
@@ -53,7 +57,7 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
             <div>
               {projectId ?
                 <>
-                  <div className='mb-0 mt-2 cursor-pointer select-none'>
+                  <div className='mb-0 mt-2 cursor-pointer select-none text-left '>
                     <Link className='text-[12px] hover:underline' to={urlWEB} >
                       <span className='flex gap-1 items-center'>
                         <FaArrowLeftLong />
@@ -61,7 +65,10 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
                       </span>
 
                     </Link>
-                    <h2>{projectId}</h2>
+                    <Link 
+                      className='font-bold hover:underline text-left'
+                      to={urlWEB + 'project/overview/' + projectId}
+                    >{projectName}</Link>
                   </div>
                 </> :
                 <>

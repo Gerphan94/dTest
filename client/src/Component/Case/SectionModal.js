@@ -1,11 +1,13 @@
 import React, { useState, useCallback } from "react";
-
+import SectionDropdown from "./SectionDropdown";
 
 function SectionModal({ sectionModal, setSectionModal, setData }) {
 
     const urlAPI = process.env.REACT_APP_API_URL;
 
     const [formData, setFormData] = useState(sectionModal['formData'])
+
+    const [selectedParent, setSelectedParent] = useState({id: null, name: 'null'});
 
 
     // const urlWEB = process.env.REACT_APP_WEB_URL;
@@ -14,7 +16,6 @@ function SectionModal({ sectionModal, setSectionModal, setData }) {
         const { name, value } = e.target;
         setFormData(prevState => ({ ...prevState, [name]: value }));
     }
-
 
     const handleSubmit = useCallback(
         async (e) => {
@@ -74,22 +75,33 @@ function SectionModal({ sectionModal, setSectionModal, setData }) {
                             {/*body*/}
                             <div className="relative p-6 text-left text-sm">
                                 <div>
-                                        <div className="w-full py-2">
-                                            <label htmlFor="section_name" className="block font-bold">
-                                                Name*
-                                            </label>
-                                            <input
-                                                type="text"
-                                                name="name"
-                                                className="border w-full outline-none px-2 py-1"
-                                                required={true}
-                                                value={formData['name']}
-                                                autoComplete='off'
-                                                onChange={(e) => handleChange(e)}
-                                            />
-
-                                        </div>
+                                    <div className="w-full py-2">
+                                        <label htmlFor="section_name" className="block font-bold">
+                                            Name*
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            className="border w-full outline-none px-2 py-1"
+                                            required={true}
+                                            value={formData['name']}
+                                            autoComplete='off'
+                                            onChange={(e) => handleChange(e)}
+                                        />
+                                    </div>
+                                    <div className="w-full py-2">
+                                        <label htmlFor="section_name" className="block font-bold">
+                                            Section *
+                                        </label>
+                                        <SectionDropdown
+                                            selectedOption={selectedParent}
+                                            setSelectedOption={setSelectedParent}
+                                           
+                                        
+                                        />
                                        
+                                    </div>
+
 
 
                                     <div className="py-2">

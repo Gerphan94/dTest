@@ -10,7 +10,7 @@
 .bodyPage {
     width: 100%;
     height: calc(100vh - 80px);
-    overflow-y: hidden;
+    overflow-y: auto;
     margin-top: 80px;
 }
 
@@ -18,6 +18,7 @@
 .SideBarHeight {
     height: 100%;
     overflow: hidden;
+    width: 250px;
     
 }
 .field-title {

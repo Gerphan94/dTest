@@ -123,7 +123,7 @@ const SectionCase = React.forwardRef((props, ref) => {
     return (
         <div className="mb-6 text-sm " ref={ref}>
             <div className="flex mb-2">
-                <div className="text-left font-bold">{sectionName}</div>
+                <div className="text-left font-medium">{sectionName}</div>
                 <div className="ml-2 flex items-center flex-wrap">
                     <span className="w-6 h-5 boder border-blue-50 bg-blue-300 rounded-xl text-white select-none">
                         {caseTotal}

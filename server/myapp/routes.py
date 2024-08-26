@@ -28,7 +28,7 @@ def getProjects():
         'name': project.name 
         } for project in Project.query.all()])
     
-@main.route('/api/project_by_id/<int:project_id>', methods=['GET'])
+@main.route('/api/get-project-by-id/<int:project_id>', methods=['GET'])
 def get_project_by_id(project_id):
     try:
         # Query the database to get the project by ID
