@@ -108,6 +108,20 @@ function CaseDetail() {
                             <p className="inline-block w-full font-medium">People & Status</p>
                             <span className="w-full h-px border-b border-[#aecade]"></span>
                         </div>
+                        <div className="bg-white table w-full">
+                            <div className="table-row w-full">
+                                <div className="table-cell">Created</div>
+                                <div className="table-cell">Created</div>
+
+                            </div>
+                            <div className="table-row">
+                                <div className="table-cell">Created</div>
+                                <div className="table-cell">Created</div>
+
+                            </div>
+                            
+
+                        </div>
                     </div>
 
 
