@@ -5,6 +5,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useGlobalVariables } from "../../Store/AppContext";
 import SideBar from "./SideBar";
 import SectionModal from "./SectionModal";
+import ExpCaseModal from "./Modal/ExpCaseModal"
 import { FaCheck, FaXmark } from "react-icons/fa6";
 
 function CasePage() {
@@ -22,6 +23,12 @@ function CasePage() {
     
     const [data, setData] = useState([]);
     const [sideData, setSideData] = useState([]);
+    const [expCaseModal, setExpCaseModal] = useState({
+        show: false,
+        caseId: null,
+        exp :''
+    });
+
     const [sectionModal, setSectionModal] = useState({
         show: false,
         type: 'insert',
@@ -107,7 +114,7 @@ function CasePage() {
 
                 />
                 {section.sub && section.sub.length > 0 && (
-                    <div className="border-l-2 border-gray-300 pl-5">
+                    <div className="border-l-[1px] border-[#aecade] pl-5">
                         {renderSections(section.sub)}
                     </div>
                 )}
@@ -120,7 +127,7 @@ function CasePage() {
             <div className='mt-20'>
                 <div className="flex">
                     <div className="w-full h-full bg-[#EAF1F7]">
-                        <div className="flex gap-4 p-2 h-14 border-b-2 font-medium">
+                        <div className="flex p-2 border-b-2 font-medium">
                             Test Cases
                         </div>
                         <div className="">

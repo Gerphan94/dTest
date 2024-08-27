@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import SectionDropdown from "./SectionDropdown";
 
-function SectionModal({ sectionModal, setSectionModal, setData }) {
+function SectionModal({ projectId, sectionModal, setSectionModal, setData }) {
 
     const urlAPI = process.env.REACT_APP_API_URL;
 
@@ -96,7 +96,7 @@ function SectionModal({ sectionModal, setSectionModal, setData }) {
                                         <SectionDropdown
                                             selectedOption={selectedParent}
                                             setSelectedOption={setSelectedParent}
-                                           
+                                            projectId={projectId}
                                         
                                         />
                                        
@@ -142,7 +142,7 @@ function SectionModal({ sectionModal, setSectionModal, setData }) {
 
                 </div>
             </div>
-            <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+            <div className="opacity-25 fixed inset-0 z-40 bg-black overflow-hidden"></div>
         </div>
 
     )

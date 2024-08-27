@@ -8,13 +8,20 @@ const SectionDropdown = memo(function SectionDropdown({ projectId, selectedOptio
     const urlAPI = process.env.REACT_APP_API_URL;
 
     const [sections, setSections] = useState([]);
+    const [viewData, setViewData] = useState([]);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+    const dropdownRef = useRef(null);
 
 
     useEffect(() => {
         const fetchSections = async () => {
             try {
-                const response = await fetch(urlAPI + "api/get-section-list/" + projectId);
+                const fetchUrl = urlAPI + "api/get-section-list/" + projectId;
+                console.log(fetchUrl)
+                const response = await fetch(fetchUrl);
                 const data = await response.json();
+                
                 setSections(data);
                 setViewData(data);
             } catch (error) {
@@ -23,14 +30,11 @@ const SectionDropdown = memo(function SectionDropdown({ projectId, selectedOptio
         };
         fetchSections();
 
-    }, []);
+    }, [projectId, urlAPI]);
 
 
 
-    const [viewData, setViewData] = useState([]);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
-    const dropdownRef = useRef(null);
+    
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);

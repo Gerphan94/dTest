@@ -3,12 +3,15 @@ import { useParams } from "react-router-dom";
 import SectionDropdown from "./SectionDropdown";
 import Dropdown from "../../Common/Dropdown";
 import { Link, useNavigate } from 'react-router-dom';
+import { useGlobalVariables } from "../../../Store/AppContext";
 
 function CaseEdit(props) {
 
     console.log('rending editpage')
     const urlAPI = process.env.REACT_APP_API_URL;
     const navigate = useNavigate();
+    const { setProjectId, logginUser } = useGlobalVariables();
+
 
     const { projectId, caseId } = useParams();
     const [sections, setSections] = useState([]);
@@ -54,6 +57,7 @@ function CaseEdit(props) {
         };
         fetchSections();
         fetchCase();
+        setProjectId(projectId);
     }, [projectId, urlAPI, caseId]);
 
     const handleSectionChange = useCallback((newSection) => {
@@ -68,6 +72,7 @@ function CaseEdit(props) {
         formJson['section_id'] = selectedSection.id
         formJson['priority_id'] = selectedPriority.id
         formJson['casetype_id'] = selectedType.id
+        formJson['user_id'] = logginUser.id
 
         console.log(formJson)
         try {
@@ -232,9 +237,6 @@ function CaseEdit(props) {
                                     <button className="border border-red-500 w-28 py-1 text-red-500">Cancel</button>
                                 </div>
                             </form>
-
-
-
                         </div>
                     </div>
                     <div className="w-64 bg-[#D2E2ED]">

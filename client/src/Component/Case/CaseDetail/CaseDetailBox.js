@@ -14,15 +14,15 @@ function CaseDetailBox({ title, data }) {
     return (
         <>
 
-            <div name='case-detail-box' className=" mt-5 w-full">
-                <div className="p-2 w-full">
+            <div name='case-detail-box' className=" mt-5 w-full p-2">
+                <div className="w-full py-2">
                     <div className="flex gap-3 items-center font-medium">
                         {title}
                         <span className="w-full h-px border-b border-[#aecade]"></span>
                     </div>
                 </div>
 
-                <div name="case-detail" className="w-full text-left px-4 text-sm">
+                <div name="case-detail" className="w-full text-left text-sm">
                 <ReactMarkdown
                     children={data}
                     remarkPlugins={[remarkGfm, remarkBreaks]}

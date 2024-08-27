@@ -29,7 +29,7 @@ function SideBar({ projectId, sideData, handleScroll }) {
         return sections.map((section) => (
             <div className="border-l">
                 <button
-                    className="w-full text-left block px-2 py-1 text-sm text-[#0C1844] hover:bg-[#667BC6] select-none"
+                    className="w-full text-left block px-2 py-0.5 text-sm text-[#0C1844] hover:bg-[#667BC6] select-none"
                     onClick={() => handleClick(section.id, section.name)}
                 >
                     {section.name}
@@ -67,11 +67,9 @@ function SideBar({ projectId, sideData, handleScroll }) {
                 </div>
 
                 <div className="p-2 sticky top-2">
-                    <div className=" bg-white sticky mt-20">
+                    <div className=" bg-white mt-20 overflow-y-auto h-[600px]">
                         <div className="flex justify-center">
-                           
                             <button>Add Section</button>
-
                         </div>
                         {renderSections(sections)}
 

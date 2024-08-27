@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 
 import { useEffect, useState } from 'react';
 import { FaArrowLeftLong, FaChevronDown  } from "react-icons/fa6";
@@ -13,6 +13,12 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
   const { projectId, logginUser } = useGlobalVariables();
 
   const [projectName, setProjectName] = useState('');
+
+  const location = useLocation();
+  const firstPath = location.pathname.split('/')[1];
+
+
+
 
   useEffect(() => {
     if (projectId) {
@@ -30,13 +36,12 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
     { id: 'todos', name: 'Todos', url: urlWEB + 'project/overview/' + projectId },
     { id: 'milestones', name: 'Milestones', url: urlWEB + 'project/overview/' + projectId },
     { id: 'testrun', name: 'Test Runs & Results', url: urlWEB + 'project/overview/' + projectId },
-    { id: 'testcases', name: 'Test Cases', url: urlWEB + 'cases/view/' + projectId },
+    { id: 'cases', name: 'Test Cases', url: urlWEB + 'cases/view/' + projectId },
     { id: 'issues', name: 'Issues', url: urlWEB + 'issues/view/' + projectId },
     { id: 'report', name: 'Report', url: urlWEB + 'report/view/' + projectId }
   ]
 
   const [selectedMenu, setSelectedMenu] = useState('');
-
 
   const handleClickLink = (id) => {
     setSelectedMenu(id);

@@ -42,6 +42,10 @@ thead tr {
   background-color: #f5f9fd;
   
 }
+thead tr th {
+  font-weight: 500;
+  
+}
 
 tbody tr:nth-child(odd) {
   background-color: #F9F9F9; /* Background color for odd rows */

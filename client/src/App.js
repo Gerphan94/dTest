@@ -87,7 +87,7 @@ function App() {
                   element={
                     <>
                       <Helmet>
-                        <title>Case Page</title>
+                        <title>Test Cases - dTest</title>
                       </Helmet>
                       <CasePage  />
                     </>
@@ -118,7 +118,7 @@ function App() {
                   element={
                     <>
                       <Helmet>
-                        <title>Edit Test Case</title>
+                        <title>Edit Test Case - dTest</title>
                       </Helmet>
                       <CaseEdit  />
                     </>

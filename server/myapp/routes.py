@@ -1,6 +1,8 @@
 from flask import Blueprint, jsonify, request, make_response
-from .model import db, Project, Section, Testcase, Priority, Casetype, Worklog, Worktask
-from sqlalchemy import desc
+from .model import db, Project, Section, Testcase, Priority, Casetype, Worklog, Worktask, User
+from sqlalchemy import case, asc, desc
+from sqlalchemy.orm import aliased
+
 from datetime import datetime
 import base64
 
@@ -117,7 +119,7 @@ def get_cases_by_section(section_id):
         case_obj['case_id'] = testcase.id
         case_obj['case_title'] = testcase.title
         case_obj['priority_name'] = priority.name
-        # case_obj['expectation'] = testcase.expectation
+        case_obj['expectation'] = testcase.expectation
         case_ar.append(case_obj)
     return case_ar
 
@@ -147,9 +149,15 @@ def getCasesByProject(projectId):
         sections = Section.query.filter_by(parent_id=parent_id).order_by(Section.sort)
         return [init_case(section) for section in sections]
 
-    root_sections = Section.query.filter_by(project_id=projectId, parent_id=0).order_by(Section.sort)
+    root_sections = Section.query.filter_by(project_id=projectId, parent_id=0).order_by(
+        case(
+            (Section.sort == None, 1),
+            else_=0
+        ),
+        Section.sort.asc()
+    ).all()
+    
     result_ar = [init_case(section) for section in root_sections]
-
     return jsonify(result_ar)
 
 
@@ -208,6 +216,8 @@ def update_case(case_id):
         case.estimate = data["estimate"]
         case.casetype_id = data["casetype_id"]
         case.section_id = data["section_id"]
+        case.updated_date = datetime.now()
+        case.updated_by = data["user_id"]
         
         db.session.commit()
         return jsonify({"message": "Case updated successfully"}), 200
@@ -242,12 +252,16 @@ def copy_case():
 
 @main.route('/api/get-case-by-id/<int:case_id>', methods=['GET'])
 def get_caseDetail(case_id):
+    CreatedByUser = aliased(User)
+    UpdatedByUser = aliased(User)
     try:
         # Query to fetch the Testcase along with its related Priority and Casetype
         case_detail = db.session.query(Testcase)\
                                 .join(Section, Testcase.section_id == Section.id) \
                                 .join(Priority, Testcase.priority_id == Priority.id) \
                                 .join(Casetype, Testcase.casetype_id == Casetype.id) \
+                                .join(CreatedByUser, Testcase.created_by == CreatedByUser.id) \
+                                .join(UpdatedByUser, Testcase.updated_by == UpdatedByUser.id) \
                                 .filter(Testcase.id == case_id)\
                                 .first()
                               
@@ -271,6 +285,16 @@ def get_caseDetail(case_id):
                 'section': {
                     'id': case_detail.section.id,
                     'name': case_detail.section.name
+                },
+                'created_date': case_detail.created_date,
+                'created_by': {
+                    'id': case_detail.created_by_user.id,
+                    'username': case_detail.created_by_user.username
+                },                    
+                'updated_date': case_detail.updated_date,
+                'updated_by': {
+                    'id': case_detail.updated_by_user.id,
+                    'username': case_detail.updated_by_user.username
                 }
                 
             })
