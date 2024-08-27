@@ -50,7 +50,6 @@ function CasePage() {
         return result
     }
 
-    const [showSectionAddForm, setShowSectionAddForm] = useState(false);
 
     useEffect(() => {
         const fetchCase = async () => {
@@ -97,9 +96,6 @@ function CasePage() {
             console.warn('Ref not found for id:', id);
         }
     };
-
-
-
     const renderSections = (sections) => {
         return sections.map((section) => (
             <div key={section.section_id}>
@@ -111,7 +107,6 @@ function CasePage() {
                     sectionModal={sectionModal}
                     setSectionModal={setSectionModal}
                     logginUser={logginUser}
-
                 />
                 {section.sub && section.sub.length > 0 && (
                     <div className="border-l-[1px] border-[#aecade] pl-5">
