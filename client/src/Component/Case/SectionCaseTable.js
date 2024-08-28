@@ -4,20 +4,30 @@ import { CiEdit } from "react-icons/ci";
 import { BsFillExplicitFill } from "react-icons/bs";
 
 import ExpCaseModal from "./Modal/ExpCaseModal";
+import TitleCaseModal from "./Modal/TitleCaseModal";
 
 function CaseTable({ projectId, data, handleCopy }) {
 
     const urlWEB = process.env.REACT_APP_WEB_URL;
 
     const [showExpCaseModal, setShowExpCaseModal] = useState(false);
+    const [showTitleCaseModal, setShowTitleCaseModal] = useState(false);
     const [selectedCaseId, setSelectedCaseId] = useState(0);
     const [selectedExp, setSelectedExp] = useState('');
+    const [selectedTitle, setSelectedTitle] = useState('');
+
+
     const [isCheckAll, setIsCheckAll] = useState(false);
 
     const handleClickExp = (caseId, exp) => {
         setSelectedCaseId(caseId);
         setShowExpCaseModal(true);
         setSelectedExp(exp)
+    }
+    const handleClickEditTitle = (caseId, title) => {
+        setSelectedCaseId(caseId);
+        setShowTitleCaseModal(true);
+        setSelectedTitle(title)
     }
 
     return (
@@ -60,7 +70,11 @@ function CaseTable({ projectId, data, handleCopy }) {
                                         <a className="text-[#5993bc] hover:underline hover:text-[#1E201E] " href={`${urlWEB}case/view/${projectId}/${ele.case_id}`}>
                                             {ele.case_title}
                                         </a>
-                                        <button className="opacity-0 group-hover:opacity-100"><CiEdit /></button>
+                                        <button 
+                                        className="opacity-0 group-hover:opacity-100"
+                                        onClick={() => handleClickEditTitle(ele.case_id, ele.case_title)}
+                                        
+                                        ><CiEdit /></button>
                                     </div>
                                 </td>
                                 <td>
@@ -116,6 +130,13 @@ function CaseTable({ projectId, data, handleCopy }) {
                     setShowModal={setShowExpCaseModal}
                     expectation={selectedExp}
                 />}
+
+
+                {showTitleCaseModal &&
+                <TitleCaseModal
+                    caseId={selectedCaseId}
+                    setShowModal={setShowTitleCaseModal}
+                    title={selectedTitle} />}
         </>
     )
 
