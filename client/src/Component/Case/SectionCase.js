@@ -7,6 +7,7 @@ import DeleteSectionConfirm from "../MessageBox/DeleteSectionConfirm";
 import SectionCaseTable from "./SectionCaseTable";
 import CaseTitleModal from "./CaseTitleModal";
 import { MdContentCopy } from "react-icons/md";
+import { TiDelete } from "react-icons/ti";
 
 const SectionCase = React.forwardRef((props, ref) => {
 
@@ -114,7 +115,7 @@ const SectionCase = React.forwardRef((props, ref) => {
             copied_data = copied_data + data.case_title + '\t' + data.expectation + '\n';
         })
         navigator.clipboard.writeText(copied_data);
-        
+
     }
 
 
@@ -132,24 +133,28 @@ const SectionCase = React.forwardRef((props, ref) => {
 
     return (
         <div className="mb-6 text-sm " ref={ref}>
-            <div className="flex mb-2">
+            <div className="flex mb-2 w-full group ">
                 <div className="text-left font-medium">{sectionName}</div>
                 <div className="ml-2 flex items-center flex-wrap">
                     <span className="w-6 h-5 boder border-blue-50 bg-blue-300 rounded-xl text-white select-none">
                         {caseTotal}
                     </span>
                 </div>
-                <button className="ml-4 text-blue-600"
-                    onClick={() => handleClickEditSection()}
-                >
-                    <CiEdit />
-                </button>
-                <button className="ml-1 text-red-500" onClick={() => handleClickSectionDel()}>
-                    <FaXmark />
-                </button>
-                <button className="ml-1 text-blue-500" onClick={() => handleCopy2Clipboard()}>
-                    <MdContentCopy />
-                </button>
+                <div className="flex items-center opacity-0 group-hover:opacity-100">
+                    <button className="ml-4 text-blue-600"
+                        onClick={() => handleClickEditSection()}
+                    >
+                        <CiEdit />
+                    </button>
+                    <button className="ml-1 text-red-500" onClick={() => handleClickSectionDel()}>
+                        <TiDelete />
+                    </button>
+                    <button className="ml-1 text-blue-500" onClick={() => handleCopy2Clipboard()}>
+                        <MdContentCopy />
+                    </button>
+
+                </div>
+
             </div>
             <div>
                 <SectionCaseTable
