@@ -12,7 +12,6 @@ function CaseEdit(props) {
     const navigate = useNavigate();
     const { setProjectId, logginUser } = useGlobalVariables();
 
-
     const { projectId, caseId } = useParams();
     const [sections, setSections] = useState([]);
 
