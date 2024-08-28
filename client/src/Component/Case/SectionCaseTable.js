@@ -1,4 +1,4 @@
-import React, { useParams, Link, useState } from "react";
+import React, { useParams, Link, useState, useEffect } from "react";
 import { FaCheck, FaXmark, FaRegCopy } from "react-icons/fa6";
 import { CiEdit } from "react-icons/ci";
 import { BsFillExplicitFill } from "react-icons/bs";
@@ -11,11 +11,13 @@ function CaseTable({ projectId, data, handleCopy }) {
 
     const [showExpCaseModal, setShowExpCaseModal] = useState(false);
     const [selectedCaseId, setSelectedCaseId] = useState(0);
+    const [selectedExp, setSelectedExp] = useState('');
+    const [isCheckAll, setIsCheckAll] = useState(false);
 
-
-    const handleClickExp = (caseId) => {
+    const handleClickExp = (caseId, exp) => {
         setSelectedCaseId(caseId);
         setShowExpCaseModal(true);
+        setSelectedExp(exp)
     }
 
     return (
@@ -27,11 +29,14 @@ function CaseTable({ projectId, data, handleCopy }) {
                             <th className="w-10">
                                 <input
                                     type="checkbox"
+                                    checked={isCheckAll}
+                                    onChange={() => setIsCheckAll(!isCheckAll)}
                                 />
                             </th>
                             <th className="w-10 text-center py-1">#</th>
                             <th className="w-14 text-center py-1">ID</th>
                             <th className="text-left px-2">Title</th>
+                            <th className="text-center w-32 px-2">Expectation</th>
                             <th className="text-center w-36">Priority</th>
                             <th className="text-center w-20">...</th>
                         </tr>
@@ -42,11 +47,14 @@ function CaseTable({ projectId, data, handleCopy }) {
                                 <td>
                                     <input
                                         type="checkbox"
-
                                     />
                                 </td>
                                 <td>{index + 1}</td>
-                                <td>C{ele.case_id}</td>
+                                <td>
+                                <a className="text-[#5993bc] hover:underline hover:text-[#1E201E] " href={`${urlWEB}case/view/${projectId}/${ele.case_id}`}>
+                                C{ele.case_id}
+                                        </a>
+                                    </td>
                                 <td>
                                     <div className="px-2 py-1 text-left flex items-center">
                                         <a className="text-[#5993bc] hover:underline hover:text-[#1E201E] " href={`${urlWEB}case/view/${projectId}/${ele.case_id}`}>
@@ -55,19 +63,28 @@ function CaseTable({ projectId, data, handleCopy }) {
                                         <button className="opacity-0 group-hover:opacity-100"><CiEdit /></button>
                                     </div>
                                 </td>
+                                <td>
+                                    {ele.expectation === '' ? 
+                                    <div 
+                                    className="hover:underline cursor-pointer"
+                                    onClick={() => handleClickExp(ele.case_id, ele.expectation)}
+                                    >No expectation</div>
+                                    :
+                                    <div 
+                                    className="text-[#5993bc] hover:underline cursor-pointer"
+                                    onClick={() => handleClickExp(ele.case_id, ele.expectation)}
+                                    >Has expectation</div>
+                                   }
+                                    
+        
+                                </td>
                                 <td><div>{ele.priority_name}</div>
 
                                 </td>
                                 <td className="">
                                     <div name="action"
                                         className="flex gap-0 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-100 ease-in-out">
-                                        <button className="mr-2">
-                                            <BsFillExplicitFill 
-                                            className={`${ele.expectation === '' ? 'text-red-500' : 'text-green-500'}`}
-                                            onClick={() => handleClickExp(ele.case_id)}
-                                            
-                                             />
-                                        </button>
+                                       
                                         <button className="mr-2"
                                             onClick={() => handleCopy(ele.case_id)}
                                         >
@@ -96,7 +113,8 @@ function CaseTable({ projectId, data, handleCopy }) {
             {showExpCaseModal &&
                 <ExpCaseModal
                     caseId={selectedCaseId}
-                    setShowModal={showExpCaseModal}
+                    setShowModal={setShowExpCaseModal}
+                    expectation={selectedExp}
                 />}
         </>
     )

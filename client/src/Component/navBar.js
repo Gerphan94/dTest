@@ -98,7 +98,7 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
               WorkLog
             </Link>
             {
-              projectId && projectMenuList.map((item) => (
+              projectId !== 0 && projectMenuList.map((item) => (
                 <Link
                   key={item.id}
                   className={`${selectedMenu === item.id ? 'border-b-2 border-white' : ''} px-2 h-full text-gray-200 hover:text-white cursor-pointer hover:border-b-2 hover:border-white`}

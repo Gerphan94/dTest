@@ -60,10 +60,21 @@ def getSectionMainByModule(module_id):
         'name': section.name,
         } for section in Section.query.filter_by(module_id=module_id, parent_id=0)])
 
+# SUMMARY
+@main.route('/api/get-total-section-and-case-by-project/<int:project_id>', methods=['GET'])
+def get_total_section_and_case_by_project(project_id):
+    
+    case_count = Testcase.query.filter_by(project_id=project_id).count()
+    
+    return jsonify({
+        'section_count': Section.query.filter_by(project_id=project_id).count(),
+        'case_count': Testcase.query.filter_by(project_id=project_id).count()
+    })
+
+
 
 
 # SECTION #######################################################################
-
 @main.route('/api/get-section-list/<project_id>', methods=['GET'])
 def get_section_list(project_id):
     def init_section(section):
@@ -76,10 +87,16 @@ def get_section_list(project_id):
         sections = Section.query.filter_by(parent_id=parent_id).order_by(Section.sort)
         return [init_section(section) for section in sections]
 
-    root_sections = Section.query.filter_by(project_id=project_id, parent_id=0).order_by(Section.sort)
+    # root_sections = Section.query.filter_by(project_id=project_id, parent_id=0).order_by(Section.sort)
+    root_sections = Section.query.filter_by(project_id=project_id, parent_id=0).order_by(
+        case(
+            (Section.sort == None, 1),
+            else_=0
+        ),
+        Section.sort.asc()
+    ).all()
     result_ar = [init_section(section) for section in root_sections]
     return jsonify(result_ar)
-
 
 @main.route('/api/insert-section', methods=['POST'])
 def create_section():
@@ -100,10 +117,8 @@ def is_delete_section(section_id):
     child_section = Section.query.filter_by(parent_id = section_id).count()
     return jsonify({"total": child_section})
 
-
 # TESTCASE  
 #######################################################################   
-    
 @main.route('/api/cases_by_section/<int:section_id>', methods=['GET'])
 def get_cases(section_id):
     return jsonify([{
@@ -219,6 +234,18 @@ def update_case(case_id):
         case.updated_date = datetime.now()
         case.updated_by = data["user_id"]
         
+        db.session.commit()
+        return jsonify({"message": "Case updated successfully"}), 200
+    return jsonify({"error": "Case not found"}), 404
+
+@main.route('/api/update-case-expect/<int:case_id>', methods=['POST'])
+def update_case_expect(case_id):
+    case = Testcase.query.get(case_id)
+    if (case):
+        data = request.get_json()
+        case.expectation = data["expectation"]
+        case.updated_date = datetime.now()
+        case.updated_by = data["user_id"]
         db.session.commit()
         return jsonify({"message": "Case updated successfully"}), 200
     return jsonify({"error": "Case not found"}), 404

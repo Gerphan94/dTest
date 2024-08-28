@@ -59,7 +59,7 @@ function WorkLog() {
 
     return (
         <>
-            {showNotice && <Notice message={noticeMsg} setModalshow={setShowNotice} type="success" />}
+            {/* {showNotice && <Notice message={noticeMsg} setModalshow={setShowNotice} type="success" />} */}
 
             <div className="h-full overflow-y-hidden text-sm">
                 <div className="flex bg-slate-50 ">

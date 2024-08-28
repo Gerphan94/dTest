@@ -6,6 +6,7 @@ import SectionModalEdit from "./SectionModalEdit";
 import DeleteSectionConfirm from "../MessageBox/DeleteSectionConfirm";
 import SectionCaseTable from "./SectionCaseTable";
 import CaseTitleModal from "./CaseTitleModal";
+import { MdContentCopy } from "react-icons/md";
 
 const SectionCase = React.forwardRef((props, ref) => {
 
@@ -107,6 +108,15 @@ const SectionCase = React.forwardRef((props, ref) => {
         }
     }
 
+    const handleCopy2Clipboard = () => {
+        let copied_data = '';
+        caseData.forEach((data) => {
+            copied_data = copied_data + data.case_title + '\t' + data.expectation + '\n';
+        })
+        navigator.clipboard.writeText(copied_data);
+        
+    }
+
 
 
     const handleClickSectionDel = () => {
@@ -136,6 +146,9 @@ const SectionCase = React.forwardRef((props, ref) => {
                 </button>
                 <button className="ml-1 text-red-500" onClick={() => handleClickSectionDel()}>
                     <FaXmark />
+                </button>
+                <button className="ml-1 text-blue-500" onClick={() => handleCopy2Clipboard()}>
+                    <MdContentCopy />
                 </button>
             </div>
             <div>

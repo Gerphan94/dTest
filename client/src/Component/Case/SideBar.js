@@ -27,7 +27,7 @@ function SideBar({ projectId, sideData, handleScroll }) {
 
     const renderSections = (sections) => {
         return sections.map((section) => (
-            <div className="border-l">
+            <div key={section.id} className="border-l">
                 <button
                     className="w-full text-left block px-2 py-0.5 text-sm text-[#0C1844] hover:bg-[#667BC6] select-none"
                     onClick={() => handleClick(section.id, section.name)}
@@ -55,7 +55,7 @@ function SideBar({ projectId, sideData, handleScroll }) {
 
     return (
         <>
-            <div className="bg-[#d2e2ed] w-64  text-[#0e3754]">
+            <div className="bg-[#d2e2ed] w-80  text-[#0e3754]">
                 <div className="p-3 w-full flex justify-center">
                     <Link className="w-40 text-white px-4 py-1 flex gap-2 items-center justify-center bg-[#376789]" to="/dashboard">
                         {/* <FaPlus /> */}

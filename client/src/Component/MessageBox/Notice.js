@@ -1,17 +1,17 @@
 import React, { useEffect } from "react";
 
-function Notice({ message, setModalshow, type }) {
+
+
+export const Notice = ( {message, setShowModal }) => {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setModalshow(false);
+            setShowModal(false);
         }, 3000);
 
         // Cleanup the timer if the component is unmounted before the time is up
         return () => clearTimeout(timer);
     }, []);
-
-    
 
     return (
         <div className="relative">
@@ -31,4 +31,13 @@ function Notice({ message, setModalshow, type }) {
 
 
 }
-export default Notice;
+
+
+
+
+
+
+
+
+
+
