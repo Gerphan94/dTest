@@ -6,6 +6,8 @@ import { BsFillExplicitFill } from "react-icons/bs";
 import ExpCaseModal from "./Modal/ExpCaseModal";
 import TitleCaseModal from "./Modal/TitleCaseModal";
 
+import { IconBtnEdit } from "../Common/IconButton";
+
 function CaseTable({ projectId, data, handleCopy }) {
 
     const urlWEB = process.env.REACT_APP_WEB_URL;

@@ -238,6 +238,19 @@ def update_case(case_id):
         return jsonify({"message": "Case updated successfully"}), 200
     return jsonify({"error": "Case not found"}), 404
 
+@main.route('/api/update-case-title/<int:case_id>', methods=['POST'])
+def update_case_title(case_id):
+    case = Testcase.query.get(case_id)
+    if (case):
+        data = request.get_json()
+        case.title = data["title"]
+        case.updated_by = data["user_id"]
+        case.updated_date = datetime.now()
+        
+        db.session.commit()
+        return jsonify({"message": "Case updated successfully"}), 200
+    return jsonify({"error": "Case not found"}), 404
+
 @main.route('/api/update-case-expect/<int:case_id>', methods=['POST'])
 def update_case_expect(case_id):
     case = Testcase.query.get(case_id)
@@ -254,27 +267,34 @@ def update_case_expect(case_id):
 @main.route('/api/copy-case', methods=['POST'])
 def copy_case():
     case_id = request.get_json()["case_id"]
+    user_id = request.get_json()["user_id"]
     copied_case = Testcase.query.get(case_id)
     if (copied_case):
-        new_case = Testcase(
-            title = copied_case.title,
-            description = copied_case.description,
-            precondition = copied_case.precondition,
-            step = copied_case.step,
-            expectation = copied_case.expectation,
-            priority_id = copied_case.priority_id,
-            estimate = copied_case.estimate,
-            case_type = copied_case.case_type,
-            section_id = copied_case.section_id,
-            created_date = datetime.now(),
-            updated_date = datetime.now()
-        )
-        db.session.add(new_case)
-        db.session.commit()
-        return jsonify({
-            "id" : new_case.id,
-            "title": new_case.title
-        })
+        try:
+            new_case = Testcase(
+                title = copied_case.title,
+                description = copied_case.description,
+                precondition = copied_case.precondition,
+                step = copied_case.step,
+                expectation = copied_case.expectation,
+                priority_id = copied_case.priority_id,
+                estimate = copied_case.estimate,
+                casetype_id = copied_case.casetype_id,
+                section_id = copied_case.section_id,
+                created_by = user_id,
+                created_date = datetime.now(),
+                updated_date = datetime.now(),
+                updated_by = user_id
+            )
+            db.session.add(new_case)
+            db.session.commit()
+            return jsonify({
+                "id" : new_case.id,
+                "title": new_case.title
+            })
+        except Exception as e:
+            print(str(e))
+            return jsonify({"error": str(e)}), 500
     return jsonify({"error": "Case not found"})
 
 @main.route('/api/get-case-by-id/<int:case_id>', methods=['GET'])

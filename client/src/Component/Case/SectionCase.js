@@ -8,6 +8,11 @@ import SectionCaseTable from "./SectionCaseTable";
 import CaseTitleModal from "./CaseTitleModal";
 import { MdContentCopy } from "react-icons/md";
 import { TiDelete } from "react-icons/ti";
+import { PiClipboardTextLight } from "react-icons/pi";
+import { Tooltip } from 'react-tooltip'
+
+import { IconBtnEdit, IconBtnCopy } from "../Common/IconButton";
+
 
 const SectionCase = React.forwardRef((props, ref) => {
 
@@ -15,7 +20,7 @@ const SectionCase = React.forwardRef((props, ref) => {
     const urlWEB = process.env.REACT_APP_WEB_URL;
 
     const sectionId = props.data.section_id;
-    const logginUser_id = props.logginUser.id
+    const loggin_id = props.logginUser.id
 
     const [sectionName, setSectionName] = useState(props.data.section_name)
     const [caseTotal, setCaseTotal] = useState(props.data.case_count);
@@ -41,7 +46,7 @@ const SectionCase = React.forwardRef((props, ref) => {
             formJson['priority'] = 2
             formJson['estimate'] = 0
             formJson['case_type'] = 1
-            formJson['user_id'] = logginUser_id
+            formJson['user_id'] = loggin_id
 
             try {
                 const response = await fetch(urlAPI + 'api/add-case/' + sectionId, {
@@ -96,12 +101,15 @@ const SectionCase = React.forwardRef((props, ref) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ 'case_id': case_id }),
+                body: JSON.stringify({ 'case_id': case_id, 'user_id':loggin_id }),
             });
             if (response.ok) {
                 const data = await response.json();
                 setCaseTotal(caseTotal + 1);
                 setCaseData(prevData => [...prevData, { "case_id": data.id, "case_title": data.title, "priority_name": "Medium" }]);
+            }
+            else {
+                console.error('Error:', response.json());
             }
         }
         catch (error) {
@@ -112,8 +120,10 @@ const SectionCase = React.forwardRef((props, ref) => {
     const handleCopy2Clipboard = () => {
         let copied_data = '';
         caseData.forEach((data) => {
+            console.log(data)
             copied_data = copied_data + data.case_title + '\t' + data.expectation + '\n';
         })
+        console.log(copied_data)
         navigator.clipboard.writeText(copied_data);
 
     }
@@ -141,7 +151,7 @@ const SectionCase = React.forwardRef((props, ref) => {
                     </span>
                 </div>
                 <div className="flex items-center opacity-0 group-hover:opacity-100">
-                    <button className="ml-4 text-blue-600"
+                    <button data-tip="Edit" className="ml-4 text-blue-600"
                         onClick={() => handleClickEditSection()}
                     >
                         <CiEdit />
@@ -150,8 +160,10 @@ const SectionCase = React.forwardRef((props, ref) => {
                         <TiDelete />
                     </button>
                     <button className="ml-1 text-blue-500" onClick={() => handleCopy2Clipboard()}>
-                        <MdContentCopy />
+                        <PiClipboardTextLight />
                     </button>
+
+                   
 
                 </div>
 

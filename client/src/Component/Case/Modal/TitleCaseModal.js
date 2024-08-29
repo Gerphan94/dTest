@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { CancelButton, ButtonOkDisable, ButtonOk } from "../../Common/CustomButton";
+import { BtnCancel, BtnOKDisabled, BtnOK } from "../../Common/CustomButton";
 
 import { useGlobalVariables } from "../../../Store/AppContext";
  
@@ -17,7 +17,14 @@ function TitleCaseModal({ caseId, title, setShowModal }) {
         setShowModal(false)
     }
 
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+        }
+    };
+
     const handeChange = (e) => {
+       
         setTitleForm(e.target.value)
         if (e.target.value === title) {
             setAvailableSave(false)
@@ -36,7 +43,7 @@ function TitleCaseModal({ caseId, title, setShowModal }) {
             const formJson = Object.fromEntries(formData.entries());
             formJson['user_id'] = logginUser.id
             try {
-                const response = await fetch(urlAPI + 'api/update-case-expect/' + caseId, {
+                const response = await fetch(urlAPI + 'api/update-case-title/' + caseId, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -76,11 +83,12 @@ function TitleCaseModal({ caseId, title, setShowModal }) {
                                         </label>
                                         <textarea
                                             type="text"
-                                            name="expectation"
+                                            name="title"
                                             rows={5}
                                             value={titleForm}
                                             className="border w-full outline-none px-2 py-1"
                                             onChange={(e) => handeChange(e)}
+                                            onKeyDown={handleKeyPress}
 
                                         />
                                         <p className="text-gray-400">Edit the title of the test case.</p>
@@ -90,8 +98,8 @@ function TitleCaseModal({ caseId, title, setShowModal }) {
                             </div>
                             {/*footer*/}
                             <div className="flex gap-2 items-center justify-start p-2 bg-[#f5f5f5]">
-                                {availableSave ? <ButtonOk /> : <ButtonOkDisable /> }
-                                <CancelButton onClick={handleCancel} />
+                                {availableSave ? <BtnOK /> : <BtnOKDisabled /> }
+                                <BtnCancel onClick={handleCancel} />
                             </div>
                         </div>
                     </form>

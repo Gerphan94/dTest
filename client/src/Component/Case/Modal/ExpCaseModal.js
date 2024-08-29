@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { CancelButton, ButtonOkDisable, ButtonOk } from "../../Common/CustomButton";
+import { BtnCancel, BtnOKDisabled, BtnOK } from "../../Common/CustomButton";
 
 import { useGlobalVariables } from "../../../Store/AppContext";
  
@@ -90,8 +90,8 @@ function ExpCaseModal({ caseId, expectation, setShowModal }) {
                             </div>
                             {/*footer*/}
                             <div className="flex gap-2 items-center justify-start p-2 bg-[#f5f5f5]">
-                                {availableSave ? <ButtonOk /> : <ButtonOkDisable /> }
-                                <CancelButton onClick={handleCancel} />
+                                {availableSave ? <BtnOK /> : <BtnOKDisabled /> }
+                                <BtnCancel onClick={handleCancel} />
                             </div>
                         </div>
                     </form>

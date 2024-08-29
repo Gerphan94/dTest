@@ -1,3 +1,10 @@
+.bodyPage {
+    width: 100%;
+    height: calc(100vh - 80px);
+    overflow-y: auto;
+    margin-top: 80px;
+}
+
 .MainPage {
     width: calc(100vw - 192px);
     /* margin-top: 80px; */
@@ -7,12 +14,7 @@
 
 }
 
-.bodyPage {
-    width: 100%;
-    height: calc(100vh - 80px);
-    overflow-y: auto;
-    margin-top: 80px;
-}
+
 
 
 .SideBarHeight {

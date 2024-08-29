@@ -14,6 +14,9 @@ import WorkLog from './Component/WorkLog/WorkLog';
 
 import CaseDetail from './Component/Case/CaseDetail/CaseDetail';
 import Dashboard from './Component/Dashboard/Dashboard';
+import RunOverview from './Component/Run/RunOverview';
+
+
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useGlobalVariables } from './Store/AppContext';
@@ -83,6 +86,18 @@ function App() {
                     </>
                   }
                 />
+                <Route path="/runs/overview/:projectId"
+                  element={
+                    <>
+                      <Helmet>
+                        <title>Test Runs & Results</title>
+                      </Helmet>
+                      <RunOverview />
+                    </>
+                  }
+                />
+
+
                 <Route path="/cases/view/:projectId"
                   element={
                     <>

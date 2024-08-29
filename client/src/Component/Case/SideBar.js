@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FaPlus } from "react-icons/fa";
+import { FcExpand } from "react-icons/fc";
 
 
 function SideBar({ projectId, sideData, handleScroll }) {
@@ -27,16 +27,20 @@ function SideBar({ projectId, sideData, handleScroll }) {
 
     const renderSections = (sections) => {
         return sections.map((section) => (
-            <div key={section.id} className="border-l">
+            <div key={section.id} className="">
+                <div className="flex items-center">
+                    {section.sub && section.sub.length > 0  && <FcExpand className="text-xs" />}
+                
                 <button
                     className="w-full text-left block px-2 py-0.5 text-sm text-[#0C1844] hover:bg-[#667BC6] select-none"
                     onClick={() => handleClick(section.id, section.name)}
                 >
                     {section.name}
                 </button>
+                </div>
                 {
                     section.sub && section.sub.length > 0 && (
-                        <div className=" border-gray-300 ml-2">
+                        <div className=" border-gray-300 ml-3">
                             {renderSections(section.sub)}
                         </div>
                     )

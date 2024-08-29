@@ -35,7 +35,7 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
     { id: 'overview', name: 'Overview', url: urlWEB + 'project/overview/' + projectId },
     { id: 'todos', name: 'Todos', url: urlWEB + 'project/overview/' + projectId },
     { id: 'milestones', name: 'Milestones', url: urlWEB + 'project/overview/' + projectId },
-    { id: 'testrun', name: 'Test Runs & Results', url: urlWEB + 'project/overview/' + projectId },
+    { id: 'testrun', name: 'Test Runs & Results', url: urlWEB + 'runs/overview/' + projectId },
     { id: 'cases', name: 'Test Cases', url: urlWEB + 'cases/view/' + projectId },
     { id: 'issues', name: 'Issues', url: urlWEB + 'issues/view/' + projectId },
     { id: 'report', name: 'Report', url: urlWEB + 'report/view/' + projectId }

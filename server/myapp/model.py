@@ -34,7 +34,7 @@ class Section(db.Model):
     description = db.Column(db.String(1000))
     sort = db.Column(db.Integer)
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
-    project = db.relationship("Project", backref=backref("modules", uselist=True))
+    project = db.relationship("Project", backref=backref("section", uselist=True))
     
 class Testcase(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -56,11 +56,24 @@ class Testcase(db.Model):
     updated_date = db.Column(db.DateTime)
     created_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     updated_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    created_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    updated_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     created_by_user = db.relationship("User", foreign_keys=[created_by], backref=backref("created_testcases", uselist=True))
     updated_by_user = db.relationship("User", foreign_keys=[updated_by], backref=backref("updated_testcases", uselist=True))
-    
+
+class Run(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    description = db.Column(db.String(1000))
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
+    project = db.relationship("Project", backref=backref("modules", uselist=True))
+    created_date = db.Column(db.DateTime)
+    created_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    created_by_user = db.relationship("User", foreign_keys=[created_by], backref=backref("created_testcases", uselist=True))
+    assigned_to = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    assigned_to_user = db.relationship("User", foreign_keys=[assigned_to], backref=backref("assigned_to", uselist=True))
+    completed_date = db.Column(db.DateTime)
+    is_actived = db.Column(db.Integer)
+    is_completed = db.Column(db.Integer)
+
 class Worklog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
