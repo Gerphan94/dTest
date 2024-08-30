@@ -4,11 +4,11 @@ import { CiEdit } from "react-icons/ci";
 import { BsFillExplicitFill } from "react-icons/bs";
 
 import ExpCaseModal from "./Modal/ExpCaseModal";
-import TitleCaseModal from "./Modal/TitleCaseModal";
+import TitleCaseModal from "./Modal/CaseTitleModal";
 
 import { IconBtnEdit } from "../Common/IconButton";
 
-function CaseTable({ projectId, data, handleCopy }) {
+function CaseTable({ projectId, data, handleCopy, setCaseTitleModal }) {
 
     const urlWEB = process.env.REACT_APP_WEB_URL;
 
@@ -18,7 +18,6 @@ function CaseTable({ projectId, data, handleCopy }) {
     const [selectedExp, setSelectedExp] = useState('');
     const [selectedTitle, setSelectedTitle] = useState('');
 
-
     const [isCheckAll, setIsCheckAll] = useState(false);
 
     const handleClickExp = (caseId, exp) => {
@@ -27,9 +26,11 @@ function CaseTable({ projectId, data, handleCopy }) {
         setSelectedExp(exp)
     }
     const handleClickEditTitle = (caseId, title) => {
-        setSelectedCaseId(caseId);
-        setShowTitleCaseModal(true);
-        setSelectedTitle(title)
+        setCaseTitleModal({
+            'showModal': true,
+            'title': title,
+            'caseId': caseId
+        })
     }
 
     return (
@@ -132,13 +133,6 @@ function CaseTable({ projectId, data, handleCopy }) {
                     setShowModal={setShowExpCaseModal}
                     expectation={selectedExp}
                 />}
-
-
-                {showTitleCaseModal &&
-                <TitleCaseModal
-                    caseId={selectedCaseId}
-                    setShowModal={setShowTitleCaseModal}
-                    title={selectedTitle} />}
         </>
     )
 

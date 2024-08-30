@@ -18,8 +18,6 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
   const firstPath = location.pathname.split('/')[1];
 
 
-
-
   useEffect(() => {
     if (projectId) {
       const urlAPI = process.env.REACT_APP_API_URL;

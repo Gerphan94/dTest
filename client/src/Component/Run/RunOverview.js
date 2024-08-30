@@ -1,7 +1,13 @@
 import React from "react";
 import styles from "../styles.module.css";
 import { LinkNew } from "../Common/CustomButton";
+
+import { useParams } from "react-router-dom";
 function RunOverview() {
+
+    const { projectId } = useParams();
+
+
     return (
         <div className={styles.bodyPage}>
             <div className="flex h-full">
@@ -24,9 +30,9 @@ function RunOverview() {
                     </div>
                 </div>
                 <div className="w-80">
-                    <div className="mt-4">
+                    <div className="p-4">
 
-                        <LinkNew name="Add Test Run" href={"/run/create"} />
+                        <LinkNew name="Add Test Run" href={"/runs/add/" + projectId} />
                     </div>
 
                 </div>

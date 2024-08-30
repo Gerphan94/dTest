@@ -67,12 +67,12 @@ class Run(db.Model):
     project = db.relationship("Project", backref=backref("modules", uselist=True))
     created_date = db.Column(db.DateTime)
     created_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    created_by_user = db.relationship("User", foreign_keys=[created_by], backref=backref("created_testcases", uselist=True))
+    created_by_user = db.relationship("User", foreign_keys=[created_by], backref=backref("created_runs", uselist=True))
     assigned_to = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    assigned_to_user = db.relationship("User", foreign_keys=[assigned_to], backref=backref("assigned_to", uselist=True))
+    assigned_to_user = db.relationship("User", foreign_keys=[assigned_to], backref=backref("assignedto_runs", uselist=True))
     completed_date = db.Column(db.DateTime)
-    is_actived = db.Column(db.Integer)
-    is_completed = db.Column(db.Integer)
+    is_actived = db.Column(db.Integer, default = 1)
+    is_completed = db.Column(db.Integer, default = 0)
 
 class Worklog(db.Model):
     id = db.Column(db.Integer, primary_key=True)

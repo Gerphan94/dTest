@@ -12,13 +12,9 @@ import TagModal from "./Modal/TagModal";
 
 function CasePage() {
 
-    const { projectId } = useParams()
-
+    const { projectId } = useParams();
     const { setProjectId, logginUser } = useGlobalVariables();
-    useEffect(() => {
-        setProjectId(projectId)
-    })
-
+    
     console.log("CasePage rending with projectId is ", projectId)
 
     const urlAPI = process.env.REACT_APP_API_URL;
@@ -65,8 +61,8 @@ function CasePage() {
                 console.error('Error fetching data:', error);
             }
         };
-
         fetchCase();
+        setProjectId(projectId)
     }, [projectId])
 
     const onClickAddSection = () => {

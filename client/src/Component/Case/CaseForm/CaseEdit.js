@@ -7,12 +7,12 @@ import { useGlobalVariables } from "../../../Store/AppContext";
 
 function CaseEdit(props) {
 
-    console.log('rending editpage')
     const urlAPI = process.env.REACT_APP_API_URL;
-    const navigate = useNavigate();
-    const { setProjectId, logginUser } = useGlobalVariables();
 
-    const { projectId, caseId } = useParams();
+    const navigate = useNavigate();
+    const { projectId, logginUser } = useGlobalVariables();
+    const { caseId } = useParams()
+
     const [sections, setSections] = useState([]);
 
     const [title, setTitle] = useState('');
@@ -56,7 +56,6 @@ function CaseEdit(props) {
         };
         fetchSections();
         fetchCase();
-        setProjectId(projectId);
     }, [projectId, urlAPI, caseId]);
 
     const handleSectionChange = useCallback((newSection) => {

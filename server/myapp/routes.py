@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, make_response
-from .model import db, Project, Section, Testcase, Priority, Casetype, Worklog, Worktask, User
+from .model import db, Project, Section, Testcase, Priority, Casetype, Worklog, Worktask, User, Run
 from sqlalchemy import case, asc, desc
 from sqlalchemy.orm import aliased
 
@@ -297,6 +297,22 @@ def copy_case():
             return jsonify({"error": str(e)}), 500
     return jsonify({"error": "Case not found"})
 
+@main.route('/api/get-cases-by-section/<int:section_id>', methods=['GET'])
+def get_cases_by_section(section_id):
+    cases = db.session.query(Testcase, Priority)\
+                        .join(Priority, Testcase.priority_id == Priority.id)\
+                        .filter(Testcase.section_id == section_id).all()
+
+    case_ar = []
+    for testcase, priority in cases:
+        case_obj = {}
+        case_obj['case_id'] = testcase.id
+        case_obj['case_title'] = testcase.title
+        case_obj['priority_name'] = priority.name
+        case_obj['expectation'] = testcase.expectation
+        case_ar.append(case_obj)
+    return case_ar
+
 @main.route('/api/get-case-by-id/<int:case_id>', methods=['GET'])
 def get_caseDetail(case_id):
     CreatedByUser = aliased(User)
@@ -380,6 +396,32 @@ def get_case(case_id):
             
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+@main.route('/api/get-runs-by-project-id/<int:project_id>', methods=['GET'])
+
+@main.route('/api/insert-run/<int:project_id>', methods=['POST'])
+def insert_run(project_id):
+    data = request.get_json()
+    name = data['run_name']
+    if (name == ''):
+        return jsonify({"error": "title is EMPTY"}), 500
+    new_run = Run(
+        name = name,
+        description = data['description'],
+        project_id = project_id,
+        created_date = datetime.now(),
+        created_by = data['created_by'],
+        assigned_to = data['assigned_to'] 
+    )
+    try:
+        db.session.add(new_run)
+        db.session.commit()
+        return jsonify({'message':'run created'}), 200
+    except Exception as e:
+        print(str(e))
+        return jsonify({'error': str(e)}), 500
+    
+    
 
 
 # WORKLOG ROUTE

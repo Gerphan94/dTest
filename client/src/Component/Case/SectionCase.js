@@ -1,17 +1,18 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, createContext, useContext } from "react";
 import { FaCheck, FaXmark } from "react-icons/fa6";
 import { CiEdit } from "react-icons/ci";
-import SectionModalAdd from "./SectionModal";
-import SectionModalEdit from "./SectionModalEdit";
 import DeleteSectionConfirm from "../MessageBox/DeleteSectionConfirm";
 import SectionCaseTable from "./SectionCaseTable";
-import CaseTitleModal from "./CaseTitleModal";
-import { MdContentCopy } from "react-icons/md";
+import CaseTitleModal from "./Modal/CaseTitleModal";
 import { TiDelete } from "react-icons/ti";
 import { PiClipboardTextLight } from "react-icons/pi";
-import { Tooltip } from 'react-tooltip'
+import { CaseProvider } from "../../Store/CaseContext";
 
-import { IconBtnEdit, IconBtnCopy } from "../Common/IconButton";
+const CaseContext = createContext({});
+
+const useCase = () => {
+    return useContext(CaseContext);
+};
 
 
 const SectionCase = React.forwardRef((props, ref) => {
@@ -32,6 +33,26 @@ const SectionCase = React.forwardRef((props, ref) => {
     const [deleteMessage, setDeleteMessage] = useState('');
 
     const [showCaseTitleModal, setShowCaseTitleModal] = useState(false);
+
+    const [caseTitleModal, setCaseTitleModal] = useState({
+        'showModal': false,
+        'title': '',
+        'caseId': null
+    })
+
+    const fetchGetCaseDataBySection = async (section_Id) => {
+        try {
+            const response = await fetch(urlAPI + '/api/get-cases-by-section/' + section_Id);
+            if (response.ok) {
+                const data = await response.json();
+                setCaseTotal(data.length);
+                setCaseData(data);
+            }
+        } catch (error) {
+            console.error('Error:', error.message);
+        }
+    };
+
 
     const handleSubmit = useCallback(
         async (e) => {
@@ -59,8 +80,7 @@ const SectionCase = React.forwardRef((props, ref) => {
                 if (response.ok) {
                     const data = await response.json();
                     setisShowCaseForm(false);
-                    setCaseTotal(caseTotal + 1);
-                    setCaseData(prevData => [...prevData, { "case_id": data.id, "case_title": data.title, "priority_name": "Medium" }]);
+                    fetchGetCaseDataBySection(sectionId);
                 }
             } catch (error) {
                 console.error('Error:', error.message);
@@ -101,7 +121,7 @@ const SectionCase = React.forwardRef((props, ref) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ 'case_id': case_id, 'user_id':loggin_id }),
+                body: JSON.stringify({ 'case_id': case_id, 'user_id': loggin_id }),
             });
             if (response.ok) {
                 const data = await response.json();
@@ -125,10 +145,7 @@ const SectionCase = React.forwardRef((props, ref) => {
         })
         console.log(copied_data)
         navigator.clipboard.writeText(copied_data);
-
     }
-
-
 
     const handleClickSectionDel = () => {
         setShowDeleteSection(true);
@@ -162,19 +179,18 @@ const SectionCase = React.forwardRef((props, ref) => {
                     <button className="ml-1 text-blue-500" onClick={() => handleCopy2Clipboard()}>
                         <PiClipboardTextLight />
                     </button>
-
-                   
-
                 </div>
-
             </div>
             <div>
                 <SectionCaseTable
                     projectId={props.projectId}
                     data={caseData}
                     handleCopy={handleCopyCase}
-                    setShowCaseTitleModal={setShowCaseTitleModal}
+                    setCaseTitleModal={setCaseTitleModal}
+
+
                 />
+
             </div>
             <div className="flex gap-2 mt-4">
                 {isShowCaseForm ?
@@ -219,9 +235,12 @@ const SectionCase = React.forwardRef((props, ref) => {
                 />
             }
 
-            {showCaseTitleModal &&
+            {caseTitleModal.showModal &&
                 <CaseTitleModal
-                    setShowModal={setShowCaseTitleModal}
+                    caseTitleModal={caseTitleModal}
+                    setCaseTitleModal={setCaseTitleModal}
+                    fetchCaseData={fetchGetCaseDataBySection}
+                    sectionId={sectionId}
                 />
             }
 
