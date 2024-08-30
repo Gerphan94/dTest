@@ -5,8 +5,6 @@ import { useParams, Link } from 'react-router-dom';
 import { useGlobalVariables } from "../../Store/AppContext";
 import SideBar from "./SideBar";
 import SectionModal from "./SectionModal";
-import ExpCaseModal from "./Modal/ExpCaseModal"
-import { FaCheck, FaXmark } from "react-icons/fa6";
 import { GoTag } from "react-icons/go";
 import TagModal from "./Modal/TagModal";
 

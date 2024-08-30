@@ -3,8 +3,7 @@ import { FaCheck, FaXmark, FaRegCopy } from "react-icons/fa6";
 import { CiEdit } from "react-icons/ci";
 import { BsFillExplicitFill } from "react-icons/bs";
 
-import ExpCaseModal from "./Modal/ExpCaseModal";
-import TitleCaseModal from "./Modal/CaseTitleModal";
+
 
 import { IconBtnEdit } from "../Common/IconButton";
 
@@ -126,13 +125,6 @@ function CaseTable({ projectId, data, handleCopy, setCaseTitleModal }) {
                     </tbody>
                 </table>
             </div>
-
-            {showExpCaseModal &&
-                <ExpCaseModal
-                    caseId={selectedCaseId}
-                    setShowModal={setShowExpCaseModal}
-                    expectation={selectedExp}
-                />}
         </>
     )
 

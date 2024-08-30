@@ -3,7 +3,7 @@ import { BtnCancel, BtnOKDisabled, BtnOK } from "../../Common/CustomButton";
 
 import { useGlobalVariables } from "../../../Store/AppContext";
  
-function ExpCaseModal({ caseId, expectation, setShowModal }) {
+function CaseExpectationModal({ caseId, expectation, setShowModal }) {
 
     const urlAPI = process.env.REACT_APP_API_URL;
     const [expForm, setExpForm] = useState(expectation);
@@ -84,7 +84,6 @@ function ExpCaseModal({ caseId, expectation, setShowModal }) {
 
                                         />
                                         <p className="text-gray-400">The expected result after executing the test case.</p>
-
                                     </div>
                                 </div>
                             </div>
@@ -95,18 +94,11 @@ function ExpCaseModal({ caseId, expectation, setShowModal }) {
                             </div>
                         </div>
                     </form>
-
-
                 </div>
             </div>
-            <div className="opacity-25 fixed inset-0 z-40 bg-black overflow-hidden"></div>
-
-            
+            <div className="opacity-25 fixed inset-0 z-40 bg-black overflow-hidden"></div> 
         </div>
-
     )
-
-
 }
 
-export default ExpCaseModal;
+export default CaseExpectationModal;
