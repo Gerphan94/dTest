@@ -18,6 +18,7 @@ import WorkLog from './Component/WorkLog/WorkLog';
 import CaseDetail from './Component/Case/CaseDetail/CaseDetail';
 import Dashboard from './Component/Dashboard/Dashboard';
 import RunOverview from './Component/Run/RunOverview';
+import RunView from './Component/Run/RunView';
 import RunAdd from './Component/Run/RunAdd';
 
 import { useEffect, useState } from 'react';
@@ -43,6 +44,8 @@ function App() {
     { name: "WorkLog", path: "/worklog/:projectId", title: 'WorkLog', component: <WorkLog /> },
     { name: "CaseDetail", path: "/cases/detail/:projectId", title: 'CaseDetail', component: <CaseDetail /> },
     { name: "RunOverview", path: "/runs/overview/:projectId", title: 'RunOverview', component: <RunOverview /> },
+    { name: "RunView", path: "/runs/view/:runId", title: 'RunView', component: <RunView /> },
+
     { name: "RunAdd", path: "/runs/add/:projectId", title: 'RunAdd', component: <RunAdd /> },
     { name: "NotFound", path: "*", title: 'NotFound', component: <NotFound /> },
   ]

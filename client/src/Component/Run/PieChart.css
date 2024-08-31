@@ -1,0 +1,23 @@
+.pie-chart-container {
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    /* Optional padding around the chart */
+}
+
+.pie-chart-container *:focus {
+    outline: none;
+    /* Ensures that all children also do not show outlines */
+}
+
+.recharts-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.recharts-legend-wrapper {
+    margin-left: 20px;
+
+}

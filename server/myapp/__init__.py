@@ -5,6 +5,7 @@ from flask_cors import CORS
 from .routes import main
 from .routes_worklog import worklog
 from .routes_login import login
+from .routes_run import run
 from .model import db
 import os, sys
 
@@ -35,5 +36,6 @@ def create_app():
     app.register_blueprint(main)
     app.register_blueprint(worklog)
     app.register_blueprint(login)
+    app.register_blueprint(run)
 
     return app

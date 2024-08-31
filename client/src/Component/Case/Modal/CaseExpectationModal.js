@@ -3,23 +3,27 @@ import { BtnCancel, BtnOKDisabled, BtnOK } from "../../Common/CustomButton";
 
 import { useGlobalVariables } from "../../../Store/AppContext";
  
-function CaseExpectationModal({ caseId, expectation, setShowModal }) {
+function CaseExpectationModal({ caseExpectationModal, setCaseExpectationModal, fetchCaseData, sectionId }) {
 
     const urlAPI = process.env.REACT_APP_API_URL;
-    const [expForm, setExpForm] = useState(expectation);
+    const caseId = caseExpectationModal.caseId
+
+    const [expForm, setExpForm] = useState(caseExpectationModal.expectation);
     const [availableSave, setAvailableSave] = useState(false);
     const { logginUser } = useGlobalVariables();
 
-
     // const urlWEB = process.env.REACT_APP_WEB_URL;
-
-    const handleCancel = () => {
-        setShowModal(false)
+   
+    const closeModal = () => {
+        setCaseExpectationModal({
+            ...caseExpectationModal,
+            showModal: false
+        })
     }
 
     const handeChange = (e) => {
         setExpForm(e.target.value)
-        if (e.target.value === expectation) {
+        if (e.target.value === caseExpectationModal.expectation) {
             setAvailableSave(false)
         }
         else {
@@ -28,7 +32,7 @@ function CaseExpectationModal({ caseId, expectation, setShowModal }) {
 
     }
 
-    const handleSubmit = useCallback(
+    const handleSubmit = (
         async (e) => {
             e.preventDefault();
             const form = e.target;
@@ -44,8 +48,8 @@ function CaseExpectationModal({ caseId, expectation, setShowModal }) {
                     body: JSON.stringify(formJson),
                 });
                 if (response.ok) {
-                    const data = await response.json();
-                    setShowModal(false)
+                    fetchCaseData(sectionId);
+                    closeModal();
                 }
             } catch (error) {
                 console.error('Error:', error.message);
@@ -90,7 +94,7 @@ function CaseExpectationModal({ caseId, expectation, setShowModal }) {
                             {/*footer*/}
                             <div className="flex gap-2 items-center justify-start p-2 bg-[#f5f5f5]">
                                 {availableSave ? <BtnOK /> : <BtnOKDisabled /> }
-                                <BtnCancel onClick={handleCancel} />
+                                <BtnCancel onClick={() => closeModal()} />
                             </div>
                         </div>
                     </form>

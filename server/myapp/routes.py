@@ -2,12 +2,10 @@ from flask import Blueprint, jsonify, request, make_response
 from .model import db, Project, Section, Testcase, Priority, Casetype, Worklog, Worktask, User, Run
 from sqlalchemy import case, asc, desc
 from sqlalchemy.orm import aliased
-
 from datetime import datetime
-import base64
+
 
 main = Blueprint('main', __name__)
-
 
 
 @main.errorhandler(404)
@@ -24,7 +22,6 @@ def get_priority():
 
 @main.route('/api/get-all-projects', methods=['GET'])
 def getProjects():
-    print("đang fetching ...")
     return jsonify([{
         'id': project.id, 
         'name': project.name 
@@ -302,7 +299,6 @@ def get_cases_by_section(section_id):
     cases = db.session.query(Testcase, Priority)\
                         .join(Priority, Testcase.priority_id == Priority.id)\
                         .filter(Testcase.section_id == section_id).all()
-
     case_ar = []
     for testcase, priority in cases:
         case_obj = {}

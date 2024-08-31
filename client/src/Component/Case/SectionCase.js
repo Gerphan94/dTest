@@ -7,13 +7,13 @@ import CaseTitleModal from "./Modal/CaseTitleModal";
 import { TiDelete } from "react-icons/ti";
 import { PiClipboardTextLight } from "react-icons/pi";
 import { CaseProvider } from "../../Store/CaseContext";
+import CaseExpectationModal from "./Modal/CaseExpectationModal";
 
 const CaseContext = createContext({});
 
 const useCase = () => {
     return useContext(CaseContext);
 };
-
 
 const SectionCase = React.forwardRef((props, ref) => {
 
@@ -32,11 +32,15 @@ const SectionCase = React.forwardRef((props, ref) => {
     const [deleteType, setDeleteType] = useState('');
     const [deleteMessage, setDeleteMessage] = useState('');
 
-    const [showCaseTitleModal, setShowCaseTitleModal] = useState(false);
 
     const [caseTitleModal, setCaseTitleModal] = useState({
         'showModal': false,
         'title': '',
+        'caseId': null
+    })
+    const [caseExpectationModal, setCaseExpectationModal] = useState({
+        'showModal': false,
+        'expectation': '',
         'caseId': null
     })
 
@@ -187,8 +191,7 @@ const SectionCase = React.forwardRef((props, ref) => {
                     data={caseData}
                     handleCopy={handleCopyCase}
                     setCaseTitleModal={setCaseTitleModal}
-
-
+                    setCaseExpectationModal={setCaseExpectationModal}
                 />
 
             </div>
@@ -228,10 +231,12 @@ const SectionCase = React.forwardRef((props, ref) => {
                 }
             </div>
 
-            {showDeleteSection &&
-                <DeleteSectionConfirm
-                    setShowModal={setShowDeleteSection}
-                    section_id={sectionId}
+            {caseExpectationModal.showModal &&
+                <CaseExpectationModal
+                    caseExpectationModal={caseExpectationModal}
+                    setCaseExpectationModal={setCaseExpectationModal}
+                    fetchCaseData={fetchGetCaseDataBySection}
+                    sectionId={sectionId}
                 />
             }
 
