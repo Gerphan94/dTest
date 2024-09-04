@@ -8,6 +8,7 @@ import { TiDelete } from "react-icons/ti";
 import { PiClipboardTextLight } from "react-icons/pi";
 import { CaseProvider } from "../../Store/CaseContext";
 import CaseExpectationModal from "./Modal/CaseExpectationModal";
+import CaseDelModal from "./Modal/CaseDelModal";
 
 const CaseContext = createContext({});
 
@@ -33,11 +34,18 @@ const SectionCase = React.forwardRef((props, ref) => {
     const [deleteMessage, setDeleteMessage] = useState('');
 
 
+
+
+    const [caseDelModal, setCaseDelModal] = useState({
+        'showModal': false,
+        'caseId': null
+    });
     const [caseTitleModal, setCaseTitleModal] = useState({
         'showModal': false,
         'title': '',
         'caseId': null
-    })
+    });
+
     const [caseExpectationModal, setCaseExpectationModal] = useState({
         'showModal': false,
         'expectation': '',
@@ -192,6 +200,7 @@ const SectionCase = React.forwardRef((props, ref) => {
                     handleCopy={handleCopyCase}
                     setCaseTitleModal={setCaseTitleModal}
                     setCaseExpectationModal={setCaseExpectationModal}
+                    setCaseDelModal={setCaseDelModal}
                 />
 
             </div>
@@ -248,6 +257,15 @@ const SectionCase = React.forwardRef((props, ref) => {
                     sectionId={sectionId}
                 />
             }
+
+            {caseDelModal.showModal &&
+                <CaseDelModal
+                    setCaseDelModal={setCaseDelModal}
+                    caseDelModal={caseDelModal}
+                    fetchCaseData={fetchGetCaseDataBySection}
+                    sectionId={sectionId}
+
+                />}
 
         </div>
 

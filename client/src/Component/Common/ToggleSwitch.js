@@ -1,7 +1,6 @@
 import { useState } from "react";
 
-export default function Toggle( {name}  ) {
-    const [enabled, setEnabled] = useState(false);
+export default function Toggle( {name, enabled, setEnabled}  ) {
 
     return (
         <div className="relative flex flex-col items-center justify-center py-1 overflow-hidden">

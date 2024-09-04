@@ -123,35 +123,29 @@ def get_cases(section_id):
         'title': case.title
         } for case in Testcase.query.filter_by(section_id=section_id)])
 
-def get_cases_by_section(section_id):
-    cases = db.session.query(Testcase, Priority).join(Priority, Testcase.priority_id == Priority.id).filter(Testcase.section_id == section_id).all()
-    case_ar = []
-    for testcase, priority in cases:
-        case_obj = {}
-        case_obj['case_id'] = testcase.id
-        case_obj['case_title'] = testcase.title
-        case_obj['priority_name'] = priority.name
-        case_obj['expectation'] = testcase.expectation
-        case_ar.append(case_obj)
-    return case_ar
 
-
-def init_case(section):
-    obj = {}
-    obj["section_id"] = section.id
-    obj["section_name"] = section.name
-    obj["section_des"] = section.description
-    obj['cases'] = get_cases_by_section(section.id)
-    return obj
-    
 @main.route('/api/get-case-by-project/<int:projectId>', methods=['GET'])
 def getCasesByProject(projectId):
+        
     def init_case(section):
+        def get_cases_by_section(section_id):
+            cases = db.session.query(Testcase, Priority)\
+                            .join(Priority, Testcase.priority_id == Priority.id)\
+                            .filter(Testcase.section_id == section_id).all()
+            case_ar = []
+            for testcase, priority in cases:
+                case_obj = {}
+                case_obj['case_id'] = testcase.id
+                case_obj['case_title'] = testcase.title
+                case_obj['priority_name'] = priority.name
+                case_obj['expectation'] = testcase.expectation
+                case_obj['active'] = testcase.is_active
+                case_ar.append(case_obj)
+            return case_ar
         return {
             "section_id": section.id,
             "section_name": section.name,
             "section_des": section.description,
-
             "cases": get_cases_by_section(section.id),
             "case_count": Testcase.query.filter_by(section_id=section.id).count(),
             "sub": fetch_subsections(section.id)
@@ -293,6 +287,19 @@ def copy_case():
             print(str(e))
             return jsonify({"error": str(e)}), 500
     return jsonify({"error": "Case not found"})
+
+@main.route('/api/mark-as-deleted-case/<int:case_id>', methods=['POST'])
+def mark_as_deleted_case(case_id):
+    print("------------------------------------", case_id)
+    case = Testcase.query.get(case_id)
+    if (case):
+        data = request.get_json()
+        case.is_active = 0
+        case.updated_date = datetime.now()
+        case.updated_by = data["user_id"]
+        db.session.commit()
+        return jsonify({"message": "Case deleted successfully"}), 200
+    return jsonify({"error": "Case not found"}), 404
 
 @main.route('/api/get-cases-by-section/<int:section_id>', methods=['GET'])
 def get_cases_by_section(section_id):

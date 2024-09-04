@@ -47,7 +47,7 @@ class Testcase(db.Model):
     priority = db.relationship("Priority", backref=backref("testcases", uselist=True))
     estimate = db.Column(db.String(255))
     uat = db.Column(db.Integer, default = 0)
-    active = db.Column(db.Integer, default = 1)
+    is_active = db.Column(db.Integer, default = 1)
     section_id = db.Column(db.Integer, db.ForeignKey('section.id'), nullable=False)
     section = db.relationship("Section", backref=backref("testcases", uselist=True))
     casetype_id = db.Column(db.Integer, db.ForeignKey('casetype.id'), nullable=False)

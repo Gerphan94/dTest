@@ -42,7 +42,7 @@ function App() {
     { name: "CaseAdd", path: "/cases/add/:projectId", title: 'CaseAdd', component: <CaseAdd /> },
     { name: "CaseEdit", path: "/cases/edit/:projectId", title: 'CaseEdit', component: <CaseEdit /> },
     { name: "WorkLog", path: "/worklog/:projectId", title: 'WorkLog', component: <WorkLog /> },
-    { name: "CaseDetail", path: "/cases/detail/:projectId", title: 'CaseDetail', component: <CaseDetail /> },
+    { name: "CaseDetail", path: "/cases/view/:projectId/:caseId", title: 'CaseDetail', component: <CaseDetail /> },
     { name: "RunOverview", path: "/runs/overview/:projectId", title: 'RunOverview', component: <RunOverview /> },
     { name: "RunView", path: "/runs/view/:runId", title: 'RunView', component: <RunView /> },
 
@@ -92,15 +92,8 @@ function App() {
 
                   )
                 })}
-
-
-              
-           
-
-
               </Routes>
             </div>
-
           </HelmetProvider>
 
         </>

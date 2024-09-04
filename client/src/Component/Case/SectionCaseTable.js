@@ -7,7 +7,7 @@ import { BsFillExplicitFill } from "react-icons/bs";
 
 import { IconBtnEdit } from "../Common/IconButton";
 
-function CaseTable({ projectId, data, handleCopy, setCaseTitleModal, setCaseExpectationModal }) {
+function CaseTable({ projectId, data, handleCopy, setCaseTitleModal, setCaseExpectationModal, setCaseDelModal }) {
 
     const urlWEB = process.env.REACT_APP_WEB_URL;
 
@@ -30,6 +30,13 @@ function CaseTable({ projectId, data, handleCopy, setCaseTitleModal, setCaseExpe
         setCaseTitleModal({
             'showModal': true,
             'title': title,
+            'caseId': caseId
+        })
+    }
+
+    const handleClickDelCase = (caseId) => {
+        setCaseDelModal({
+            'showModal': true,
             'caseId': caseId
         })
     }
@@ -119,7 +126,7 @@ function CaseTable({ projectId, data, handleCopy, setCaseTitleModal, setCaseExpe
                                         <button type="button">
                                             <FaXmark
                                                 className="bg-red-500 border border-red-500 rounded-full text-white cursor-pointer opacity-80 hover:opacity-100"
-                                            // onClick={() => handleClickCaseDel(ele.case_title)}
+                                                onClick={() => handleClickDelCase(ele.case_id)}
                                             />
                                         </button>
 

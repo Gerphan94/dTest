@@ -20,6 +20,8 @@ function CasePage() {
     const [data, setData] = useState([]);
     const [sideData, setSideData] = useState([]);
     const [showTagModal, setShowTagModal] = useState(false);
+    const [showDeleted, setShowDeleted] = useState(false);
+
     const [expCaseModal, setExpCaseModal] = useState({
         show: false,
         caseId: null,
@@ -122,11 +124,7 @@ function CasePage() {
                         </div>
 
                         <div className="w-full border-t-[1px] border-b-[1px] border-[#aecade] flex gap-2 justify-end bg-white text-sm sticky top-20 z-50">
-                            
-                            
-                            <Toggle name="Display deleted Test Case"/>
-                           
-                            
+                            <Toggle enabled={showDeleted} setEnabled={setShowDeleted} name="Display deleted Test Case" />
                             <button
                                 onClick={() => setShowTagModal(true)}
                                 className="px-4 py-0.5 flex items-center font-normal gap-2 border-r-[1px] border-[#aecade] bg-transparent hover:bg-[#dff4ff]">
