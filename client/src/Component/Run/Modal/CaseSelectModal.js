@@ -12,6 +12,8 @@ function CaseSelectModal({ setShowModal, project_id }) {
     const { logginUser } = useGlobalVariables();
 
     const [sections, setSections] = useState([]);
+    const [cases, setCases] = useState([]);
+    const [selectedSection, setSelectedSection] = useState({ id: null, name: '' });
 
 
     useEffect(() => {
@@ -25,8 +27,27 @@ function CaseSelectModal({ setShowModal, project_id }) {
             }
         };
         fetchSections();
-    })
-    // const urlWEB = process.env.REACT_APP_WEB_URL;
+    }, [project_id])
+
+    const getCasesBySection = async (section_id) => {
+        try {
+            const response = await fetch(urlAPI + "api/get-cases-by-section/" + section_id);
+            const data = await response.json();
+            const updatedData = data.map(caseItem => ({
+                ...caseItem,
+                check: false
+            }));
+            console.log(updatedData)
+            setCases(updatedData);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
+    const handleClickSection = async (id, name) => {
+        setSelectedSection({ id: id, name: name })
+        getCasesBySection(id);
+    }
 
     const closeModal = () => {
         setShowModal(false)
@@ -42,9 +63,9 @@ function CaseSelectModal({ setShowModal, project_id }) {
 
                 <li
                     className="w-full text-left block px-2 py-0.5 text-sm text-[#0C1844] hover:bg-[#667BC6] select-none"
-                // onClick={() => handleClick(section.id, section.name)}
+                    onClick={() => handleClickSection(section.id, section.name)}
                 >
-                    <input 
+                    <input
                         type="checkbox"
                         className="mr-1"
                     />
@@ -82,7 +103,35 @@ function CaseSelectModal({ setShowModal, project_id }) {
                                     {renderSections(sections)}
 
                                 </div>
-                                <div className="w-1/2 border border-[#7dabcb] border-l-0">
+                                <div className="w-1/2 border border-[#7dabcb] border-l-0 p-2 overflow-y-auto">
+                                    <p><strong>{selectedSection.name}</strong></p>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th className="w-10 text-center"><input
+                                                    type="checkbox"
+                                                /></th>
+                                                <th>Title</th>
+                                               
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {cases.map((item, index) => (
+                                                <tr key={index}>
+                                                    <td className="text-center">
+                                                        <input
+                                                            type="checkbox"
+                                                            className="mr-1"
+                                                            checked={item.check}
+                                                            onChange={() => setCases(prev => prev.map(x => x.id === item.id ? { ...x, check: !x.check } : x))}
+                                                        />
+                                                    </td>
+                                                    <td>{item.title}</td>
+                                                   
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
 
 
                                 </div>

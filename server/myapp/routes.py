@@ -116,13 +116,6 @@ def is_delete_section(section_id):
 
 # TESTCASE  
 #######################################################################   
-@main.route('/api/cases_by_section/<int:section_id>', methods=['GET'])
-def get_cases(section_id):
-    return jsonify([{
-        'id': case.id, 
-        'title': case.title
-        } for case in Testcase.query.filter_by(section_id=section_id)])
-
 
 @main.route('/api/get-case-by-project/<int:projectId>', methods=['GET'])
 def getCasesByProject(projectId):
@@ -140,6 +133,7 @@ def getCasesByProject(projectId):
                 case_obj['priority_name'] = priority.name
                 case_obj['expectation'] = testcase.expectation
                 case_obj['active'] = testcase.is_active
+                case_obj['section_id'] = section_id
                 case_ar.append(case_obj)
             return case_ar
         return {
@@ -309,12 +303,27 @@ def get_cases_by_section(section_id):
     case_ar = []
     for testcase, priority in cases:
         case_obj = {}
-        case_obj['case_id'] = testcase.id
-        case_obj['case_title'] = testcase.title
+        case_obj['id'] = testcase.id
+        case_obj['title'] = testcase.title
         case_obj['priority_name'] = priority.name
         case_obj['expectation'] = testcase.expectation
         case_ar.append(case_obj)
     return case_ar
+
+# @main.route('/api/get-cases-by-section/<int:section_id>', methods=['GET'])
+# def get_cases_by_section(section_id):
+#     cases = db.session.query(Testcase, Priority)\
+#                         .join(Priority, Testcase.priority_id == Priority.id)\
+#                         .filter(Testcase.section_id == section_id).all()
+#     case_ar = []
+#     for testcase, priority in cases:
+#         case_obj = {}
+#         case_obj['id'] = testcase.id
+#         case_obj['title'] = testcase.title
+#         case_obj['priority_name'] = priority.name
+#         case_obj['expectation'] = testcase.expectation
+#         case_ar.append(case_obj)
+#     return case_ar
 
 @main.route('/api/get-case-by-id/<int:case_id>', methods=['GET'])
 def get_caseDetail(case_id):
