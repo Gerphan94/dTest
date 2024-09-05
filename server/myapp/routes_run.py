@@ -6,6 +6,23 @@ from datetime import datetime
 
 run = Blueprint('run', __name__)
 
+@run.route('/api/get-run-detail/<int:run_id>', methods=['GET'])
+def get_run_detail(run_id):
+    run = Run.query.get(run_id)
+    if run:
+        return jsonify({
+            'id': run.id,
+            'name': run.name,
+            'description': run.description,
+            'project_id': run.project_id,
+            'created_date': run.created_date,
+            'created_by': run.created_by,
+            'assigned_to': run.assigned_to
+        }), 200
+    else:
+        return jsonify({'error': 'Run not found'}), 404
+
+
 @run.route('/api/get-runs/<int:project_id>', methods=['GET'])
 def get_runs_by_project_id(project_id):
     runs = db.session.query(Run, User)\

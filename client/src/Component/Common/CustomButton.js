@@ -15,6 +15,19 @@ export const LinkNew = ( { href, name }) => {
     );
 };
 
+export const BtnNew = ( { onClick, name }) => {
+    return (
+        <button
+            className="flex gap-3 items-center bg-[#376789] hover:bg-[#244358] border border-[#376789]  text-white py-1 pl-4 pr-6  focus:shadow-outline"
+            type="button"
+            onClick={onClick}
+        >
+            <FaPlus  />
+           {name}
+        </button>
+    );
+};
+
 export const BtnCancel = ( {onClick, href='' }) => {
     return (
         href === '' ? (

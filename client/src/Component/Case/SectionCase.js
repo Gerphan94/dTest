@@ -1,20 +1,13 @@
 import React, { useState, useCallback, createContext, useContext } from "react";
 import { FaCheck, FaXmark } from "react-icons/fa6";
 import { CiEdit } from "react-icons/ci";
-import DeleteSectionConfirm from "../MessageBox/DeleteSectionConfirm";
 import SectionCaseTable from "./SectionCaseTable";
 import CaseTitleModal from "./Modal/CaseTitleModal";
 import { TiDelete } from "react-icons/ti";
 import { PiClipboardTextLight } from "react-icons/pi";
-import { CaseProvider } from "../../Store/CaseContext";
 import CaseExpectationModal from "./Modal/CaseExpectationModal";
 import CaseDelModal from "./Modal/CaseDelModal";
 
-const CaseContext = createContext({});
-
-const useCase = () => {
-    return useContext(CaseContext);
-};
 
 const SectionCase = React.forwardRef((props, ref) => {
 

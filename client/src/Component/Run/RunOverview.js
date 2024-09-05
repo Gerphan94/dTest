@@ -62,12 +62,12 @@ function RunOverview() {
                                     <div className="flex gap-1">
                                         <span className="text-[#6e6e6e]">By {run.created_by} on {moment.utc(run.created_date).format("DD/MM/YYYY HH:mm")}</span>
                                         <span>|</span>
-                                         <p className="text-[#5993bc] underline cursor-pointer">Edit</p>
+                                        <p className="text-[#5993bc] underline cursor-pointer">Edit</p>
                                     </div>
                                     <div className="text-[#6e6e6e]">
-                                    139 Passed, 6 Blocked, 83 Untested, 10 Retest and 4 Failed
+                                        139 Passed, 6 Blocked, 83 Untested, 10 Retest and 4 Failed
 
-                                        </div>
+                                    </div>
                                 </div>
 
                             </div>
@@ -81,11 +81,19 @@ function RunOverview() {
 
                     </div>
                 </div>
-                <div className="w-80">
+                <div className="w-80 bg-[#D2E2ED]">
                     <div className="p-4">
+                        <div className="py-1 w-3/4">
+                            <LinkNew name="Add Test Run" href={"/runs/add/" + projectId} />
 
-                        <LinkNew name="Add Test Run" href={"/runs/add/" + projectId} />
+                        </div>
+                        <div className="py-1 w-3/4">
+                            <LinkNew name="Add Test Plan" href={"/runs/add/" + projectId} />
+
+                        </div>
                     </div>
+
+
 
                 </div>
 

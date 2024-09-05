@@ -36,7 +36,8 @@ function App() {
 
   const PageList = [
     { name: "Login", path: "/Login", title: 'Login', component: Login },
-    { name: "Dashboard", path: "/dashboard/:projectId", title: 'Dashboard', component: Dashboard },
+    { name: "Dashboard", path: "/dashboard/:projectId", title: 'Dashboard', component:  <Dashboard />},
+    { name: "Dashboard", path: "/", title: 'Dashboard', component: <Dashboard /> },
     { name: "Overview", path: "/project/overview/:projectId", title: 'Overview', component: Overview },
     { name: "Testcases", path: "/cases/view/:projectId", title: 'Case', component: <CasePage /> },
     { name: "CaseAdd", path: "/cases/add/:projectId", title: 'CaseAdd', component: <CaseAdd /> },
