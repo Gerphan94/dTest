@@ -21,8 +21,6 @@ function SideBar({ projectId, sideData, handleScroll }) {
             }
         };
         fetchSections();
-
-
     }, []);
 
     const renderSections = (sections) => {

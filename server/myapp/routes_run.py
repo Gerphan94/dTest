@@ -22,7 +22,6 @@ def get_run_detail(run_id):
     else:
         return jsonify({'error': 'Run not found'}), 404
 
-
 @run.route('/api/get-runs/<int:project_id>', methods=['GET'])
 def get_runs_by_project_id(project_id):
     runs = db.session.query(Run, User)\
@@ -41,11 +40,20 @@ def get_runs_by_project_id(project_id):
     return jsonify(result), 200
 
 
-@run.route('/api/abc/<int:project_id>', methods=['GET'])
-def abc(project_id):
-    # runs = db.session.query(Run, User)\
-    #     .filter(Run.project_id == project_id, Run.is_actived == 1)\
-    #     .join(User, Run.created_by == User.id)
-   
-    return jsonify({'message': 'ok'}), 200
+@run.route('/run-api/get-cases-by-project-id/<int:project_id>', methods=['GET'])
+def get_cases_by_project_id(project_id):
+    runs = db.session.query(Run, User)\
+        .filter(Run.project_id == project_id, Run.is_actived == 1)\
+        .join(User, Run.assigned_to == User.id)
+    
+    result = [{
+        'id': run.id,
+        'name': run.name,
+        'created_by': user.username,
+        'created_date': run.created_date,
+        'is_completed': run.is_completed
+    } for run, user in runs]
+
+    print(result)
+    return jsonify(result), 200
     

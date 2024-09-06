@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, make_response
-from .model import db, Project, Section, Testcase, Priority, Casetype, Worklog, Worktask, User, Run
-from sqlalchemy import case, asc, desc
+from .model import db, Project, Section, Testcase, Priority, Casetype, Worklog, Worktask, User, Run, Rmtask
+from sqlalchemy import case, asc, desc, func
 from sqlalchemy.orm import aliased
 from datetime import datetime
 
@@ -117,23 +117,26 @@ def is_delete_section(section_id):
 # TESTCASE  
 #######################################################################   
 
-@main.route('/api/get-case-by-project/<int:projectId>', methods=['GET'])
+@main.route('/api/get-cases-by-project/<int:projectId>', methods=['GET'])
 def getCasesByProject(projectId):
         
     def init_case(section):
         def get_cases_by_section(section_id):
-            cases = db.session.query(Testcase, Priority)\
+            cases = db.session.query(Testcase, Priority, func.count(Rmtask.id).label('rmtask_count'))\
                             .join(Priority, Testcase.priority_id == Priority.id)\
-                            .filter(Testcase.section_id == section_id).all()
+                            .outerjoin(Rmtask, Testcase.id == Rmtask.case_id)\
+                            .filter(Testcase.section_id == section_id)\
+                            .group_by(Testcase.id, Priority.id)
             case_ar = []
-            for testcase, priority in cases:
+            for testcase, priority, rmtask_count in cases:
                 case_obj = {}
-                case_obj['case_id'] = testcase.id
-                case_obj['case_title'] = testcase.title
+                case_obj['id'] = testcase.id
+                case_obj['title'] = testcase.title
                 case_obj['priority_name'] = priority.name
                 case_obj['expectation'] = testcase.expectation
                 case_obj['active'] = testcase.is_active
-                case_obj['section_id'] = section_id
+                case_obj['section_id'] = section_id,
+                case_obj['rmtask_count'] = rmtask_count
                 case_ar.append(case_obj)
             return case_ar
         return {
@@ -307,23 +310,11 @@ def get_cases_by_section(section_id):
         case_obj['title'] = testcase.title
         case_obj['priority_name'] = priority.name
         case_obj['expectation'] = testcase.expectation
+        case_obj['active'] = testcase.is_active
         case_ar.append(case_obj)
-    return case_ar
+    return jsonify(case_ar), 200
 
-# @main.route('/api/get-cases-by-section/<int:section_id>', methods=['GET'])
-# def get_cases_by_section(section_id):
-#     cases = db.session.query(Testcase, Priority)\
-#                         .join(Priority, Testcase.priority_id == Priority.id)\
-#                         .filter(Testcase.section_id == section_id).all()
-#     case_ar = []
-#     for testcase, priority in cases:
-#         case_obj = {}
-#         case_obj['id'] = testcase.id
-#         case_obj['title'] = testcase.title
-#         case_obj['priority_name'] = priority.name
-#         case_obj['expectation'] = testcase.expectation
-#         case_ar.append(case_obj)
-#     return case_ar
+
 
 @main.route('/api/get-case-by-id/<int:case_id>', methods=['GET'])
 def get_caseDetail(case_id):
@@ -408,7 +399,19 @@ def get_case(case_id):
             
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+   
+@main.route('/api/get-rmtasks-by-case-id/<int:case_id>', methods=['GET'])
+def get_rmtasks_by_case_id(case_id):
+    rmtasks = db.session.query(Rmtask).filter(Rmtask.case_id == case_id).all()
+    return jsonify([
+        {'id': rmtask.id,
+         'task_id': rmtask.task_id, 
+         'title': rmtask.title,
+         'status': rmtask.status
+         } for rmtask in rmtasks])
     
+
+ 
 @main.route('/api/get-runs-by-project-id/<int:project_id>', methods=['GET'])
 
 @main.route('/api/insert-run/<int:project_id>', methods=['POST'])

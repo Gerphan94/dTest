@@ -73,6 +73,15 @@ class Run(db.Model):
     completed_date = db.Column(db.DateTime)
     is_actived = db.Column(db.Integer, default = 1)
     is_completed = db.Column(db.Integer, default = 0)
+    
+class Rmtask(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    task_id = db.Column(db.Integer, nullable=False)
+    title = db.Column(db.String(1000))
+    status = db.Column(db.String(255))
+    case_id = db.Column(db.Integer, db.ForeignKey('testcase.id'), nullable=False)
+    testcase = db.relationship("Testcase", backref=backref("testcases", uselist=True))
+   
 
 class Worklog(db.Model):
     id = db.Column(db.Integer, primary_key=True)

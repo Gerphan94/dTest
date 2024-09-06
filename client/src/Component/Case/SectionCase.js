@@ -146,7 +146,7 @@ const SectionCase = React.forwardRef((props, ref) => {
         let copied_data = '';
         caseData.forEach((data) => {
             console.log(data)
-            copied_data = copied_data + data.case_title + '\t' + data.expectation + '\n';
+            copied_data = copied_data + data.title + '\t' + data.expectation + '\n';
         })
         console.log(copied_data)
         navigator.clipboard.writeText(copied_data);
