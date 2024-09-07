@@ -13,13 +13,8 @@ function CaseTable({ projectId, data, handleCopy, setCaseTitleModal, setCaseExpe
     const urlWEB = process.env.REACT_APP_WEB_URL;
 
     console.log("adasdsadsadasdasd", data)
-
-   
-
     const [isCheckAll, setIsCheckAll] = useState(false);
-
     const { setSelectedCaseId } = useCase();
-
     // console.log("showRmModal", showRmModal)
 
     const handleClickExp = (caseId, exp) => {
