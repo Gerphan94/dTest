@@ -9,7 +9,6 @@ function CaseExpectationModal({ caseExpectationModal, setCaseExpectationModal, f
     const urlAPI = process.env.REACT_APP_API_URL;
     const caseId = caseExpectationModal.caseId
 
-    const { selectedCaseId } = useCase();
 
     const [expForm, setExpForm] = useState(caseExpectationModal.expectation);
     const [availableSave, setAvailableSave] = useState(false);
@@ -43,7 +42,7 @@ function CaseExpectationModal({ caseExpectationModal, setCaseExpectationModal, f
             const formJson = Object.fromEntries(formData.entries());
             formJson['user_id'] = logginUser.id
             try {
-                const response = await fetch(urlAPI + 'api/update-case-expect/' + selectedCaseId, {
+                const response = await fetch(urlAPI + 'api/update-case-expect/' + caseId, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
