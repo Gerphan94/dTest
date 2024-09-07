@@ -32,19 +32,20 @@ function RmTaskModal( {  fetchCaseData, setRmTaskModal, rmTaskModal, sectionId }
         { id: 'Đóng', name: 'Đóng' },]
 
     const [selectedStatus, setSelectedStatus] = useState({ id: 'Mới', name: 'Mới' });
+    
+    const fetchRmtasks = async () => {
+        const response = await fetch(`${urlAPI}/api/get-rmtasks-by-case-id/${CaseId}`);
+        const data = await response.json();
+        setRmtasks(data);
+    }
+    const fetchCaseDataDetail = async () => {
+        const response = await fetch(`${urlAPI}/api/get-case-by-id/${CaseId}`);
+        const data = await response.json();
+        setCaseTitle(data.title);
+    }
+
 
     useEffect(() => {
-
-        const fetchRmtasks = async () => {
-            const response = await fetch(`${urlAPI}/api/get-rmtasks-by-case-id/${CaseId}`);
-            const data = await response.json();
-            setRmtasks(data);
-        }
-        const fetchCaseDataDetail = async () => {
-            const response = await fetch(`${urlAPI}/api/get-case-by-id/${CaseId}`);
-            const data = await response.json();
-            setCaseTitle(data.title);
-        }
         if (CaseId) {
             fetchRmtasks();
             fetchCaseDataDetail();
@@ -67,7 +68,7 @@ function RmTaskModal( {  fetchCaseData, setRmTaskModal, rmTaskModal, sectionId }
                 body: JSON.stringify(formJson),
             });
             if (response.ok) {
-                const data = await response.json();
+                fetchRmtasks();
                 fetchCaseData(sectionId);
             }
         }
