@@ -84,7 +84,7 @@ function App() {
                   element={
                     <>
                       <Helmet>
-                        <title>"Testcase</title>
+                        <title>Testcases - dTest</title>
                       </Helmet>
                       <CaseProvider>
                         <CasePage />
