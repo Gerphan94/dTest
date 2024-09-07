@@ -13,6 +13,19 @@
   }
 }
 
+/* Hide up and down arrows in Chrome, Safari, and Edge */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hide up and down arrows in Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

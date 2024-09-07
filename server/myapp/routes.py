@@ -300,20 +300,35 @@ def mark_as_deleted_case(case_id):
 
 @main.route('/api/get-cases-by-section/<int:section_id>', methods=['GET'])
 def get_cases_by_section(section_id):
-    cases = db.session.query(Testcase, Priority)\
+    # cases = db.session.query(Testcase, Priority)\
+    #                     .join(Priority, Testcase.priority_id == Priority.id)\
+    #                     .filter(Testcase.section_id == section_id).all()
+    cases = db.session.query(Testcase, Priority, func.count(Rmtask.id).label('rmtask_count'))\
                         .join(Priority, Testcase.priority_id == Priority.id)\
-                        .filter(Testcase.section_id == section_id).all()
-    case_ar = []
-    for testcase, priority in cases:
+                        .outerjoin(Rmtask, Testcase.id == Rmtask.case_id)\
+                        .filter(Testcase.section_id == section_id)\
+                        .group_by(Testcase.id, Priority.id)                  
+    case_ar = []    
+    for testcase, priority, rmtask_count in cases:
         case_obj = {}
         case_obj['id'] = testcase.id
         case_obj['title'] = testcase.title
         case_obj['priority_name'] = priority.name
         case_obj['expectation'] = testcase.expectation
         case_obj['active'] = testcase.is_active
+        case_obj['rmtask_count'] = rmtask_count
         case_ar.append(case_obj)
     return jsonify(case_ar), 200
 
+
+@main.route('/api/get-case-title/<int:case_id>', methods=['GET'])
+def get_case_title(case_id):
+    case = Testcase.query.get(case_id)
+    if (case):
+        return jsonify({
+            'title': case.title
+        }), 200
+    return jsonify({"error": "Case not found"}), 404
 
 
 @main.route('/api/get-case-by-id/<int:case_id>', methods=['GET'])
@@ -400,6 +415,8 @@ def get_case(case_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
    
+# READMINE TASK 
+
 @main.route('/api/get-rmtasks-by-case-id/<int:case_id>', methods=['GET'])
 def get_rmtasks_by_case_id(case_id):
     rmtasks = db.session.query(Rmtask).filter(Rmtask.case_id == case_id).all()
@@ -409,6 +426,23 @@ def get_rmtasks_by_case_id(case_id):
          'title': rmtask.title,
          'status': rmtask.status
          } for rmtask in rmtasks])
+    
+@main.route('/api/insert-rmtask/<int:case_id>', methods=['POST'])
+def insert_rmtask(case_id):
+    data = request.get_json()
+    
+    new_rmtask = Rmtask(
+        task_id = data['task_id'],
+        title = data['title'],
+        status = data['status'],
+        case_id = case_id
+    )
+    
+    db.session.add(new_rmtask)
+    db.session.commit()
+    
+    return jsonify({'message':'rmtask created'}), 200
+
     
 
  

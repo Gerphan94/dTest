@@ -9,21 +9,13 @@ import { GoTag } from "react-icons/go";
 import TagModal from "./Modal/TagModal";
 import Toggle from "../Common/ToggleSwitch";
 import RmTaskModal from "./Modal/RmTaskModal";
+import { useCase } from "../../Store/CaseContext";
 
 
-import { CaseProvider, useCase } from "./CaseContext";
 function CasePage() {
 
     const { projectId } = useParams();
-    const { setProjectId, logginUser } = useGlobalVariables();
-
-    const { showRmModal } = useCase();
-
-
-    // setProjectId(projectId)
-
-
-    // console.log("CasePage rending with projectId is ", projectId)
+    const { setGlobalProjectId, logginUser } = useGlobalVariables();
 
     const urlAPI = process.env.REACT_APP_API_URL;
 
@@ -51,26 +43,34 @@ function CasePage() {
     });
     const get_side_data = (array) => {
         let result = []
-        console.log(array)
+
         for (let i = 0; i < array.length; i++) {
             result.push({ id: array[i]['section_id'], name: array[i]['section_name'] })
         }
         return result
     }
 
-    useEffect(  () => {
-        const fetchCase = async () => {
-            try {
-                const fetchUrl = urlAPI + "api/get-cases-by-project/" + projectId;
-                const response = await fetch(fetchUrl);
-                const responseData = await response.json();
-                setData(responseData);
-                setSideData(get_side_data(responseData))
+    useEffect(() => {
 
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
+        setGlobalProjectId(projectId);
+    }, [projectId])
+
+
+    const fetchCase = async () => {
+        try {
+            const fetchUrl = urlAPI + "api/get-cases-by-project/" + projectId;
+            const response = await fetch(fetchUrl);
+            const responseData = await response.json();
+            console.log(responseData);
+            setData(responseData);
+            setSideData(get_side_data(responseData))
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    useEffect(() => {
         fetchCase();
         // setProjectId(projectId)
     }, [projectId])
@@ -127,54 +127,53 @@ function CasePage() {
 
     return (
         <>
-            <CaseProvider>
-                <div className='mt-20'>
-                    <div className="flex">
-                        <div className="w-full h-full p-3 bg-[#EAF1F7]">
-                            <div className="flex p-2 border-b-2 font-medium">
-                                Test Cases
-                            </div>
 
-                            <div className="w-full border-t-[1px] border-b-[1px] border-[#aecade] flex gap-2 justify-end bg-white text-sm sticky top-20 z-40">
-                                <Toggle enabled={showDeleted} setEnabled={setShowDeleted} name="Display deleted Test Case" />
-                                <button
-                                    onClick={() => setShowTagModal(true)}
-                                    className="px-4 py-0.5 flex items-center font-normal gap-2 border-r-[1px] border-[#aecade] bg-transparent hover:bg-[#dff4ff]">
-                                    <GoTag className="text-[#aecade]" />
-                                    Tag
-                                </button>
-                            </div>
-                            <div className="">
-                                <div className=" py-2 px-5 mb-40">
-                                    {renderSections(data)}
-                                    <div className="text-left">
-                                        <button
-                                            className="text-[#5993bc] underline select-none"
-                                            onClick={() => onClickAddSection()}
-                                        >Add Section</button>
-                                    </div>
+            <div className='mt-20'>
+                <div className="flex">
+                    <div className="w-full h-full p-3 bg-[#EAF1F7]">
+                        <div className="flex p-2 border-b-2 font-medium">
+                            Test Cases
+                        </div>
+
+                        <div className="w-full border-t-[1px] border-b-[1px] border-[#aecade] flex gap-2 justify-end bg-white text-sm sticky top-20 z-40">
+                            <Toggle enabled={showDeleted} setEnabled={setShowDeleted} name="Display deleted Test Case" />
+                            <button
+                                onClick={() => setShowTagModal(true)}
+                                className="px-4 py-0.5 flex items-center font-normal gap-2 border-r-[1px] border-[#aecade] bg-transparent hover:bg-[#dff4ff]">
+                                <GoTag className="text-[#aecade]" />
+                                Tag
+                            </button>
+                        </div>
+                        <div className="">
+                            <div className=" py-2 px-5 mb-40">
+                                {renderSections(data)}
+                                <div className="text-left">
+                                    <button
+                                        className="text-[#5993bc] underline select-none"
+                                        onClick={() => onClickAddSection()}
+                                    >Add Section</button>
                                 </div>
                             </div>
                         </div>
-                        {/* <div className={styles.SideBarHeight}> */}
-                        <SideBar projectId={projectId} sideData={sideData} handleScroll={handleScroll} />
                     </div>
-                </div >
-                {sectionModal['show'] &&
-                    <SectionModal
-                        sectionModal={sectionModal}
-                        setSectionModal={setSectionModal}
-                        projectId={projectId}
-                    />
-                }
-                {showTagModal &&
+                    {/* <div className={styles.SideBarHeight}> */}
+                    <SideBar projectId={projectId} sideData={sideData} handleScroll={handleScroll} />
+                </div>
+            </div >
+            {sectionModal['show'] &&
+                <SectionModal
+                    sectionModal={sectionModal}
+                    setSectionModal={setSectionModal}
+                    projectId={projectId}
+                />
+            }
+            {showTagModal &&
 
-                    <TagModal setShowModal={setShowTagModal} />
-                }
+                <TagModal setShowModal={setShowTagModal} />
+            }
 
-                <RmTaskModal />
 
-            </CaseProvider>
+
         </>
     )
 }

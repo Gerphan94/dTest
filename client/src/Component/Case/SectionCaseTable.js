@@ -5,21 +5,20 @@ import { BsFillExplicitFill } from "react-icons/bs";
 import { FcDeleteRow } from "react-icons/fc";
 import { SiRedmine } from "react-icons/si";
 
-import { useCase } from "./CaseContext";
+import { useCase } from "../../Store/CaseContext";
 
 
-function CaseTable({ projectId, data, handleCopy, setCaseTitleModal, setCaseExpectationModal, setCaseDelModal }) {
+function CaseTable({ projectId, data, handleCopy, setCaseTitleModal, setCaseExpectationModal, setCaseDelModal, setRmTaskModal }) {
 
     const urlWEB = process.env.REACT_APP_WEB_URL;
 
-    const [showExpCaseModal, setShowExpCaseModal] = useState(false);
-    const [showTitleCaseModal, setShowTitleCaseModal] = useState(false);
-    const [selectedExp, setSelectedExp] = useState('');
-    const [selectedTitle, setSelectedTitle] = useState('');
+    console.log("adasdsadsadasdasd", data)
+
+   
 
     const [isCheckAll, setIsCheckAll] = useState(false);
 
-    const { setSelectedCaseId, setShowRmModal } = useCase();
+    const { setSelectedCaseId } = useCase();
 
     // console.log("showRmModal", showRmModal)
 
@@ -48,8 +47,10 @@ function CaseTable({ projectId, data, handleCopy, setCaseTitleModal, setCaseExpe
     }
 
     const handeClickRm = (caseId) => {
-        setSelectedCaseId(caseId)
-        setShowRmModal(true)
+        setRmTaskModal({
+            'showModal': true,
+            'caseId': caseId
+        })
     }
 
     return (
@@ -131,7 +132,7 @@ function CaseTable({ projectId, data, handleCopy, setCaseTitleModal, setCaseExpe
                                 </td>
                                 <td>
                                     <button onClick={() => handeClickRm(ele.id)}>
-                                    
+                                        
                                         <SiRedmine className={`${ele.rmtask_count > 0 ? 'text-red-500' : 'text-gray-400'}`}/>
                                         </button>
                                 </td>

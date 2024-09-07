@@ -10,7 +10,7 @@ import UserMore from './Login/UserMore';
 function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
 
   const urlWEB = process.env.REACT_APP_WEB_URL;
-  const { projectId, logginUser } = useGlobalVariables();
+  const { globalProjectId, logginUser } = useGlobalVariables();
 
   const [projectName, setProjectName] = useState('');
 
@@ -19,24 +19,24 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
 
 
   useEffect(() => {
-    if (projectId) {
+    if (globalProjectId) {
       const urlAPI = process.env.REACT_APP_API_URL;
-      fetch(urlAPI + 'api/get-project-by-id/' + projectId)
+      fetch(urlAPI + 'api/get-project-by-id/' + globalProjectId)
         .then((res) => res.json())
         .then((data) => {
           setProjectName(data.name)
         })
     }
-  }, [projectId])
+  }, [globalProjectId])
 
   const projectMenuList = [
-    { id: 'overview', name: 'Overview', url: urlWEB + 'project/overview/' + projectId },
-    { id: 'todos', name: 'Todos', url: urlWEB + 'project/overview/' + projectId },
-    { id: 'milestones', name: 'Milestones', url: urlWEB + 'project/overview/' + projectId },
-    { id: 'testrun', name: 'Test Runs & Results', url: urlWEB + 'runs/overview/' + projectId },
-    { id: 'cases', name: 'Test Cases', url: urlWEB + 'cases/view/' + projectId },
-    { id: 'issues', name: 'Issues', url: urlWEB + 'issues/view/' + projectId },
-    { id: 'report', name: 'Report', url: urlWEB + 'report/view/' + projectId }
+    { id: 'overview', name: 'Overview', url: urlWEB + 'project/overview/' + globalProjectId },
+    { id: 'todos', name: 'Todos', url: urlWEB + 'project/overview/' + globalProjectId },
+    { id: 'milestones', name: 'Milestones', url: urlWEB + 'project/overview/' + globalProjectId },
+    { id: 'testrun', name: 'Test Runs & Results', url: urlWEB + 'runs/overview/' + globalProjectId },
+    { id: 'cases', name: 'Test Cases', url: urlWEB + 'cases/view/' + globalProjectId },
+    { id: 'issues', name: 'Issues', url: urlWEB + 'issues/view/' + globalProjectId },
+    { id: 'report', name: 'Report', url: urlWEB + 'report/view/' + globalProjectId }
   ]
 
   const [selectedMenu, setSelectedMenu] = useState('');
@@ -58,7 +58,7 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
               dTest |
             </div>
             <div>
-              {projectId ?
+              {globalProjectId ?
                 <>
                   <div className='mb-0 mt-2 cursor-pointer select-none text-left '>
                     <Link className='text-[12px] hover:underline' to={urlWEB} >
@@ -70,7 +70,7 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
                     </Link>
                     <Link 
                       className='font-bold hover:underline text-left'
-                      to={urlWEB + 'project/overview/' + projectId}
+                      to={urlWEB + 'project/overview/' + globalProjectId}
                     >{projectName}</Link>
                   </div>
                 </> :
@@ -96,7 +96,7 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
               WorkLog
             </Link>
             {
-              projectId !== 0 && projectMenuList.map((item) => (
+              globalProjectId !== 0 && projectMenuList.map((item) => (
                 <Link
                   key={item.id}
                   className={`${selectedMenu === item.id ? 'border-b-2 border-white' : ''} px-2 h-full text-gray-200 hover:text-white cursor-pointer hover:border-b-2 hover:border-white`}

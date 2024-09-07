@@ -28,7 +28,7 @@ export const BtnNew = ( { onClick, name }) => {
     );
 };
 
-export const BtnCancel = ( {onClick, href='' }) => {
+export const BtnCancel = ( {onClick, href='', name='Cancel' }) => {
     return (
         href === '' ? (
             <button
@@ -37,7 +37,7 @@ export const BtnCancel = ( {onClick, href='' }) => {
                 onClick={onClick}
             >
                 <IoCloseSharp />
-                Cancel
+                {name}
             </button>
         ) : (
             <Link

@@ -7,7 +7,7 @@ import { TiDelete } from "react-icons/ti";
 import { PiClipboardTextLight } from "react-icons/pi";
 import CaseExpectationModal from "./Modal/CaseExpectationModal";
 import CaseDelModal from "./Modal/CaseDelModal";
-
+import RmTaskModal from "./Modal/RmTaskModal";
 
 const SectionCase = React.forwardRef((props, ref) => {
 
@@ -28,7 +28,6 @@ const SectionCase = React.forwardRef((props, ref) => {
 
 
 
-
     const [caseDelModal, setCaseDelModal] = useState({
         'showModal': false,
         'caseId': null
@@ -43,7 +42,13 @@ const SectionCase = React.forwardRef((props, ref) => {
         'showModal': false,
         'expectation': '',
         'caseId': null
-    })
+    });
+
+
+    const [rmTaskModal, setRmTaskModal] = useState({
+        'showModal': false,
+        'caseId': null
+    });
 
     const fetchGetCaseDataBySection = async (section_Id) => {
         try {
@@ -194,6 +199,7 @@ const SectionCase = React.forwardRef((props, ref) => {
                     setCaseTitleModal={setCaseTitleModal}
                     setCaseExpectationModal={setCaseExpectationModal}
                     setCaseDelModal={setCaseDelModal}
+                    setRmTaskModal={setRmTaskModal}
                 />
 
             </div>
@@ -259,6 +265,16 @@ const SectionCase = React.forwardRef((props, ref) => {
                     sectionId={sectionId}
 
                 />}
+
+            {rmTaskModal.showModal &&
+                <RmTaskModal
+                    setRmTaskModal={setRmTaskModal}
+                    rmTaskModal={rmTaskModal}
+                    fetchCaseData={fetchGetCaseDataBySection}
+                    sectionId={sectionId}
+                />
+            }
+
 
         </div>
 

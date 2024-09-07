@@ -10,30 +10,28 @@ export const CaseProvider = ({ children }) => {
   const [caseTotal, setCaseTotal] = useState(0);
   const [caseData, setCaseData] = useState([]);
 
-  const [showRmModal, setShowRmModal] = useState(false);
   const [selectedCaseId, setSelectedCaseId] = useState(null);
 
 
-  const fetchGetCaseDataBySection = async (sec_id) => {
-    try {
-      const response = await fetch(urlAPI + '/api/get-cases-by-section/' + sec_id);
-      if (response.ok) {
-        const data = await response.json();
-        setCaseTotal(data.length);
-        setCaseData(data);
-      }
-    } catch (error) {
-      console.error('Error:', error.message);
-    }
-  };
+
+  // const fetchCaseByProject = async (project_id) => {
+  //   try {
+  //     const response = await fetch(urlAPI + '/api/get-cases-by-project/' + project_id);
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       setAllCases(data);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error:', error.message);
+  //   }
+  // };
+
   return (
     <CaseContext.Provider value={{
       sectionId, setSectionId,
       caseTotal, setCaseTotal,
       caseData, setCaseData,
-      fetchGetCaseDataBySection,
-      showRmModal, setShowRmModal,
-      selectedCaseId, setSelectedCaseId
+      selectedCaseId, setSelectedCaseId,
     }}>
       {children}
     </CaseContext.Provider>

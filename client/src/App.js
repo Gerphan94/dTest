@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import { AppProvider } from './Store/AppContext';
 
+import { CaseProvider } from './Store/CaseContext';
+
 // import js
 import Navbar from './Component/navBar';
 
@@ -36,10 +38,10 @@ function App() {
 
   const PageList = [
     { name: "Login", path: "/Login", title: 'Login', component: Login },
-    { name: "Dashboard", path: "/dashboard/:projectId", title: 'Dashboard', component:  <Dashboard />},
+    { name: "Dashboard", path: "/dashboard/:projectId", title: 'Dashboard', component: <Dashboard /> },
     { name: "Dashboard", path: "/", title: 'Dashboard', component: <Dashboard /> },
     { name: "Overview", path: "/project/overview/:projectId", title: 'Overview', component: Overview },
-    { name: "Testcases", path: "/cases/view/:projectId", title: 'Case', component: <CasePage /> },
+    // { name: "Testcases", path: "/cases/view/:projectId", title: 'Case', component: <CasePage /> },
     { name: "CaseAdd", path: "/cases/add/:projectId", title: 'CaseAdd', component: <CaseAdd /> },
     { name: "CaseEdit", path: "/cases/edit/:projectId", title: 'CaseEdit', component: <CaseEdit /> },
     { name: "WorkLog", path: "/worklog/:projectId", title: 'WorkLog', component: <WorkLog /> },
@@ -78,6 +80,19 @@ function App() {
           <HelmetProvider>
             <div className=''>
               <Routes >
+                <Route key="Testcase" path="/cases/view/:projectId"
+                  element={
+                    <>
+                      <Helmet>
+                        <title>"Testcase</title>
+                      </Helmet>
+                      <CaseProvider>
+                        <CasePage />
+                      </CaseProvider>
+
+                    </>
+                  } />
+
                 {PageList.map((item, index) => {
                   return (
 
