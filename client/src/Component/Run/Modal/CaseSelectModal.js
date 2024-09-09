@@ -3,6 +3,8 @@ import { BtnCancel, BtnOKDisabled, BtnOK } from "../../Common/CustomButton";
 
 import { useGlobalVariables } from "../../../Store/AppContext";
 
+import CaseSelectTable from "./CaseSelectTable";
+
 function CaseSelectModal({ setShowModal, project_id }) {
 
 
@@ -12,42 +14,114 @@ function CaseSelectModal({ setShowModal, project_id }) {
     const { logginUser } = useGlobalVariables();
 
     const [sections, setSections] = useState([]);
-    const [cases, setCases] = useState([]);
+    const [data, setData] = useState([]);
+
+    const [caseViews, setCaseViews] = useState([]);
+
     const [selectedSection, setSelectedSection] = useState({ id: null, name: '' });
 
 
+
+
     useEffect(() => {
-        const fetchSections = async () => {
+        // const fetchSections = async () => {
+        //     try {
+        //         const response = await fetch(urlAPI + "api/get-section-list/" + project_id);
+        //         const data = await response.json();
+        //         setSections(data);
+        //     } catch (error) {
+        //         console.error('Error fetching data:', error);
+        //     }
+        // };
+        const getCases = async () => {
             try {
-                const response = await fetch(urlAPI + "api/get-section-list/" + project_id);
+                const response = await fetch(urlAPI + "run-api/get-cases-by-project-id/" + project_id);
                 const data = await response.json();
-                setSections(data);
+                setData(data);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
-        };
-        fetchSections();
+        }
+        // fetchSections();
+        getCases();
     }, [project_id])
 
-    const getCasesBySection = async (section_id) => {
-        try {
-            const response = await fetch(urlAPI + "api/get-cases-by-section/" + section_id);
-            const data = await response.json();
-            const updatedData = data.map(caseItem => ({
-                ...caseItem,
-                check: false
-            }));
-            console.log(updatedData)
-            setCases(updatedData);
-        } catch (error) {
-            console.error('Error fetching data:', error);
+
+    // FUNCTION //////////////////////////////////////////////
+
+    const areAllCasesChecked = (cases) => {
+        return cases.length > 0 && cases.every(c => c.checked);
+    };
+    const updateCheckallForSections = (section) => {
+        section.checkall = areAllCasesChecked(section.cases);
+    
+        if (section.sub && section.sub.length > 0) {
+          section.sub.forEach(subSection => {
+            updateCheckallForSections(subSection);
+          });
+    
+          section.checkall = section.sub.every(subSection => subSection.checkall);
         }
-    }
+      };
+    
+
+    //////////////////////////////////////////////
+
+
+
+    // const handleClickSection = async (id, name) => {
+    //     setSelectedSection({ id: id, name: name })
+    //     const getCaseBySection = data.filter((item) => item.section_id === id);
+    //     setCaseViews(getCaseBySection);
+    // }
 
     const handleClickSection = async (id, name) => {
-        setSelectedSection({ id: id, name: name })
-        getCasesBySection(id);
-    }
+        setSelectedSection({ id, name });
+        const findSectionById = (sections, id) => {
+            for (let section of sections) {
+                if (section.section_id === id) {
+                    return section;
+                }
+                if (section.sub && section.sub.length > 0) {
+                    const foundInSub = findSectionById(section.sub, id);
+                    if (foundInSub) {
+                        return foundInSub; 
+                    }
+                }
+            }
+            return null;
+        };
+        const getCaseBySection = findSectionById(data, id);
+        if (getCaseBySection) {
+            setCaseViews(getCaseBySection.cases || []);
+        } else {
+            setCaseViews([]);
+        }
+    };
+
+    const handleCaseCheck = (sectionId, caseId) => {
+        console.log(sectionId, caseId)
+        const updatedSections = [...sections];
+        const findAndUpdateCase = (sections) => {
+          sections.forEach(section => {
+            if (section.section_id === sectionId) {
+              section.cases = section.cases.map(c => 
+                c.id === caseId ? { ...c, checked: !c.checked } : c
+              );
+            }
+    
+            // Recursive update for sub-sections
+            if (section.sub && section.sub.length > 0) {
+              findAndUpdateCase(section.sub);
+            }
+          });
+        };
+    
+        findAndUpdateCase(updatedSections);
+        updatedSections.forEach(section => updateCheckallForSections(section));
+        setData(updatedSections);
+      };
+    
 
     const closeModal = () => {
         setShowModal(false)
@@ -57,19 +131,19 @@ function CaseSelectModal({ setShowModal, project_id }) {
         e.preventDefault();
     }
 
-    const renderSections = (sections) => {
-        return sections.map((section) => (
-            <ul key={section.id} className="">
-
+    const renderSections = (data) => {
+        return data.map((section) => (
+            <ul key={section.section_id} className="">
                 <li
                     className="w-full text-left block px-2 py-0.5 text-sm text-[#0C1844] hover:bg-[#667BC6] select-none"
-                    onClick={() => handleClickSection(section.id, section.name)}
+                    onClick={() => handleClickSection(section.section_id, section.section_name)}
                 >
                     <input
                         type="checkbox"
                         className="mr-1"
+                        checked={section.checkall}
                     />
-                    {section.name}
+                    {section.section_name}
                 </li>
 
                 {
@@ -82,6 +156,11 @@ function CaseSelectModal({ setShowModal, project_id }) {
             </ul>
         ));
     };
+
+    const checkByCase = (id) => {
+        console.log('change', id)
+        setData(data.map(item => item.id === id ? { ...item, checked: !item.checked } : item))
+    }
 
     return (
         <div>
@@ -100,39 +179,17 @@ function CaseSelectModal({ setShowModal, project_id }) {
                             <div className="relative p-6 text-left text-sm flex gap-0 h-[600px] min-h-96 ">
 
                                 <div className="w-1/2 bg-[#EAF1F7] border border-[#7dabcb] overflow-y-auto" >
-                                    {renderSections(sections)}
+                                    {renderSections(data)}
 
                                 </div>
                                 <div className="w-1/2 border border-[#7dabcb] border-l-0 p-2 overflow-y-auto">
                                     <p><strong>{selectedSection.name}</strong></p>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th className="w-10 text-center"><input
-                                                    type="checkbox"
-                                                /></th>
-                                                <th>Title</th>
-                                               
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {cases.map((item, index) => (
-                                                <tr key={index}>
-                                                    <td className="text-center">
-                                                        <input
-                                                            type="checkbox"
-                                                            className="mr-1"
-                                                            checked={item.check}
-                                                            onChange={() => setCases(prev => prev.map(x => x.id === item.id ? { ...x, check: !x.check } : x))}
-                                                        />
-                                                    </td>
-                                                    <td>{item.title}</td>
-                                                   
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-
+                                    <CaseSelectTable 
+                                    caseViews={caseViews} 
+                                    setCaseViews={setCaseViews}
+                                    data={data} 
+                                    setData={setData}
+                                    handleCaseCheck={handleCaseCheck}  />
 
                                 </div>
                             </div>

@@ -10,7 +10,7 @@ function Dashboard() {
     const urlWEB = process.env.REACT_APP_WEB_URL;
     const navigate = useNavigate();
     const location = useLocation();
-    const { setProjectId } = useGlobalVariables();
+    const { setGlobalProjectId } = useGlobalVariables();
     const [projects, setProjects] = useState([])
 
     useEffect(() => {
@@ -26,12 +26,12 @@ function Dashboard() {
                 console.error('Error fetching data:', error);
             }
         }
-        setProjectId(0);
+        setGlobalProjectId(0);
         fetchProject();
     }, []);
 
     const handleClick = (id) => {
-        setProjectId(id)
+        setGlobalProjectId(id)
         navigate('/project/overview/' + id)
     }
 
@@ -40,9 +40,7 @@ function Dashboard() {
             <div className={styles.bodyPage} >
                 <div className="flex flex-row">
                     <div className="w-full bg-[#EAF1F7]">
-
                         <div className="w-full text-left border-b py-2 px-4 font-bold">Projects</div>
-
                         <div className="p-4">
                             {location.state?.eMessage &&
                                 <div className="py-1">
@@ -50,26 +48,25 @@ function Dashboard() {
                                 </div>
                             }
                             {projects.map((item) => (
-                                <>
 
-                                    <div key={item.id} className="flex gap-1 border rounded-md mt-2 p-3 bg-white"  >
-                                        <div className="px-4 py-1">
-                                            <FcBriefcase className="size-8" />
+                                <div key={item.id} className="flex gap-1 border rounded-md mt-2 p-3 bg-white"  >
+                                    <div className="px-4 py-1">
+                                        <FcBriefcase className="size-8" />
+                                    </div>
+
+                                    <div className="text-left">
+                                        <div>
+                                            <Link className="font-medium hover:underline" to={'/project/overview/' + item.id}>{item.name}</Link>
                                         </div>
 
-                                        <div className="text-left">
-                                            <div>
-                                                <Link className="font-medium hover:underline" to={'/project/overview/' + item.id}>{item.name}</Link>
-                                            </div>
-
-                                            <div className="flex gap-1 text-xs text-[#5993bc] underline">
-                                                <Link to={'/runs/overview/' + item.id}>Test Runs</Link>|
-                                                <Link to={'/cases/view/' + item.id}>Test Cases</Link>|
-                                                <Link to={'/project/overview/' + item.id}>Reports</Link>
-                                            </div>
+                                        <div className="flex gap-1 text-xs text-[#5993bc] underline">
+                                            <Link to={'/runs/overview/' + item.id}>Test Runs</Link>|
+                                            <Link to={'/cases/view/' + item.id}>Test Cases</Link>|
+                                            <Link to={'/project/overview/' + item.id}>Reports</Link>
                                         </div>
                                     </div>
-                                </>
+                                </div>
+
                             ))}
                         </div>
                     </div>

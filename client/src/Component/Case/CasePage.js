@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useContext, useRef, createRef } from "react";
 import SectionCase from "./SectionCase";
 import styles from "../styles.module.css"
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useGlobalVariables } from "../../Store/AppContext";
 import SideBar from "./SideBar";
 import SectionModal from "./SectionModal";
@@ -13,6 +13,9 @@ import { useCase } from "../../Store/CaseContext";
 
 
 function CasePage() {
+
+    const navigate = useNavigate();
+
 
     const { projectId } = useParams();
     const { setGlobalProjectId, logginUser } = useGlobalVariables();
@@ -51,8 +54,11 @@ function CasePage() {
     }
 
     useEffect(() => {
-
-        setGlobalProjectId(projectId);
+        if (projectId === 'null') {
+            navigate('/');
+            return;
+        }
+        setGlobalProjectId(projectId);      
     }, [projectId])
 
 
