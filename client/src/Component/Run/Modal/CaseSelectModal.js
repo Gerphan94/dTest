@@ -100,17 +100,17 @@ function CaseSelectModal({ setShowModal, project_id }) {
     };
 
     const handleCaseCheck = (sectionId, caseId) => {
-        console.log(sectionId, caseId)
-        const updatedSections = [...sections];
+        const updatedSections = [...data];
         const findAndUpdateCase = (sections) => {
-          sections.forEach(section => {
+            
+            sections.forEach(section => {
             if (section.section_id === sectionId) {
+                console.log('-----------------------------', section.cases, caseId)
               section.cases = section.cases.map(c => 
                 c.id === caseId ? { ...c, checked: !c.checked } : c
               );
             }
     
-            // Recursive update for sub-sections
             if (section.sub && section.sub.length > 0) {
               findAndUpdateCase(section.sub);
             }
@@ -118,7 +118,7 @@ function CaseSelectModal({ setShowModal, project_id }) {
         };
     
         findAndUpdateCase(updatedSections);
-        updatedSections.forEach(section => updateCheckallForSections(section));
+        // updatedSections.forEach(section => updateCheckallForSections(section));
         setData(updatedSections);
       };
     
