@@ -61,7 +61,8 @@ def run__get_cases_by_project_id(project_id):
             "section_name": section.name,
             "cases": get_cases_by_section(section.id),
             "sub": fetch_subsections(section.id),
-            "checkall": False
+            "case_count": Testcase.query.filter_by(section_id=section.id).count(),
+            "check_count": 0
             
         }
     def fetch_subsections(parent_id):
@@ -79,3 +80,13 @@ def run__get_cases_by_project_id(project_id):
     result_ar = [init_case(section) for section in root_sections]
     return jsonify(result_ar)
     
+@run.route('/run-api/init-run-cases/<int:run_id>', methods=['POST'])
+def run__init_run_cases(run_id):
+    data = request.get_json()
+    print(data)
+    
+    exist_cases = Run.query.filter_by(id=run_id).all()
+    print(exist_cases)
+    
+    return jsonify({}), 200
+

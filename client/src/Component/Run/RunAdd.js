@@ -37,7 +37,7 @@ function RunAdd() {
         formJson['created_by'] = logginUser.id;
         formJson['assigned_to'] = selectedAssignedTo.id;
         try {
-            const response = await fetch(urlAPI + 'api/insert-run/'+projectId, {
+            const response = await fetch(urlAPI + 'api/insert-run/' + projectId, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ function RunAdd() {
             if (response.ok) {
                 const data = await response.json();
                 navigate('/runs/overview/' + projectId)
-                }
+            }
         }
         catch (error) {
             console.error('Error:', error.message);
@@ -81,15 +81,15 @@ function RunAdd() {
                                     Assignted To
                                 </label>
                                 <div className="w-72">
-                                    
-                                <Dropdown
-                                    data={assignedTo}
-                                    selectedOption={selectedAssignedTo}
-                                    setSelectedOption={setSelectedAsignedTo}
 
-                                />
+                                    <Dropdown
+                                        data={assignedTo}
+                                        selectedOption={selectedAssignedTo}
+                                        setSelectedOption={setSelectedAsignedTo}
+
+                                    />
                                 </div>
-                                
+
                             </div>
 
                             <div className="text-left mb-4">
@@ -105,7 +105,7 @@ function RunAdd() {
                             </div>
                             <div className="flex gap-4 text-xs">
                                 <BtnOK name="Add Test Run" />
-                                <BtnCancel href={urlWEB + "runs/overview/" + projectId}/>
+                                <BtnCancel href={urlWEB + "runs/overview/" + projectId} />
                             </div>
                         </form>
                     </div>

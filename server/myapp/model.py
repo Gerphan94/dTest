@@ -22,6 +22,10 @@ class Token(db.Model):
 class Priority(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
+    
+class Status(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))  
 
 class Casetype(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -59,6 +63,8 @@ class Testcase(db.Model):
     created_by_user = db.relationship("User", foreign_keys=[created_by], backref=backref("created_testcases", uselist=True))
     updated_by_user = db.relationship("User", foreign_keys=[updated_by], backref=backref("updated_testcases", uselist=True))
 
+
+
 class Run(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
@@ -73,7 +79,8 @@ class Run(db.Model):
     completed_date = db.Column(db.DateTime)
     is_actived = db.Column(db.Integer, default = 1)
     is_completed = db.Column(db.Integer, default = 0)
-    
+
+
 class Rmtask(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     task_id = db.Column(db.Integer, nullable=False)
@@ -81,7 +88,10 @@ class Rmtask(db.Model):
     status = db.Column(db.String(255))
     case_id = db.Column(db.Integer, db.ForeignKey('testcase.id'), nullable=False)
     testcase = db.relationship("Testcase", backref=backref("testcases", uselist=True))
-   
+    
+
+
+
 
 class Worklog(db.Model):
     id = db.Column(db.Integer, primary_key=True)

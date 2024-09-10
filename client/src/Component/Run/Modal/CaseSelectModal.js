@@ -4,8 +4,9 @@ import { BtnCancel, BtnOKDisabled, BtnOK } from "../../Common/CustomButton";
 import { useGlobalVariables } from "../../../Store/AppContext";
 
 import CaseSelectTable from "./CaseSelectTable";
+import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
 
-function CaseSelectModal({ setShowModal, project_id }) {
+function CaseSelectModal({ runId, setShowModal, project_id }) {
 
 
     const urlAPI = process.env.REACT_APP_API_URL;
@@ -20,6 +21,8 @@ function CaseSelectModal({ setShowModal, project_id }) {
 
     const [selectedSection, setSelectedSection] = useState({ id: null, name: '' });
 
+
+    const [selectedCases, setSelectedCases] = useState([]);
 
 
 
@@ -49,31 +52,35 @@ function CaseSelectModal({ setShowModal, project_id }) {
 
     // FUNCTION //////////////////////////////////////////////
 
-    const areAllCasesChecked = (cases) => {
-        return cases.length > 0 && cases.every(c => c.checked);
+    const countCheckedCase = (cases) => {
+
+        let checkedCount = 0;
+
+        if (cases.length === 0) return 0;
+
+        cases.forEach(caseItem => {
+            if (caseItem.checked) checkedCount++;
+        });
+        console.log(checkedCount)
+        return checkedCount
+
+
     };
     const updateCheckallForSections = (section) => {
-        section.checkall = areAllCasesChecked(section.cases);
-    
+        section.check_count = countCheckedCase(section.cases);
+
         if (section.sub && section.sub.length > 0) {
-          section.sub.forEach(subSection => {
-            updateCheckallForSections(subSection);
-          });
-    
-          section.checkall = section.sub.every(subSection => subSection.checkall);
+            section.sub.forEach(subSection => {
+                updateCheckallForSections(subSection);
+            });
+
+            section.check_count = section.sub.every(subSection => subSection.check_count);
         }
-      };
-    
+    };
+
 
     //////////////////////////////////////////////
 
-
-
-    // const handleClickSection = async (id, name) => {
-    //     setSelectedSection({ id: id, name: name })
-    //     const getCaseBySection = data.filter((item) => item.section_id === id);
-    //     setCaseViews(getCaseBySection);
-    // }
 
     const handleClickSection = async (id, name) => {
         setSelectedSection({ id, name });
@@ -85,7 +92,7 @@ function CaseSelectModal({ setShowModal, project_id }) {
                 if (section.sub && section.sub.length > 0) {
                     const foundInSub = findSectionById(section.sub, id);
                     if (foundInSub) {
-                        return foundInSub; 
+                        return foundInSub;
                     }
                 }
             }
@@ -99,43 +106,64 @@ function CaseSelectModal({ setShowModal, project_id }) {
         }
     };
 
+    const handleCaseCheckAll = (sectionId, checkstatus) => {
+        const updatedSections = [...data];
+        const findAndUpdateCase = (sections) => {
+            sections.forEach(section => {
+                if (section.section_id === sectionId) {
+
+                    section.cases = section.cases.map(c => ({ ...c, checked: checkstatus }));
+                    section.check_count = countCheckedCase(section.cases);
+                }
+
+                if (section.sub && section.sub.length > 0) {
+                    findAndUpdateCase(section.sub);
+                }
+            });
+        };
+        findAndUpdateCase(updatedSections);
+        setData(updatedSections);
+    }
+
     const handleCaseCheck = (sectionId, caseId) => {
         const updatedSections = [...data];
         const findAndUpdateCase = (sections) => {
-            
             sections.forEach(section => {
-            if (section.section_id === sectionId) {
-                console.log('-----------------------------', section.cases, caseId)
-              section.cases = section.cases.map(c => 
-                c.id === caseId ? { ...c, checked: !c.checked } : c
-              );
-            }
-    
-            if (section.sub && section.sub.length > 0) {
-              findAndUpdateCase(section.sub);
-            }
-          });
+                if (section.section_id === sectionId) {
+                    console.log('Checking ', sectionId, section.cases, caseId)
+                    section.cases = section.cases.map(c =>
+                        c.id === caseId ? { ...c, checked: !c.checked } : c
+                    );
+                    section.check_count = countCheckedCase(section.cases);
+                }
+
+                if (section.sub && section.sub.length > 0) {
+                    findAndUpdateCase(section.sub);
+                }
+            });
         };
-    
+
         findAndUpdateCase(updatedSections);
-        // updatedSections.forEach(section => updateCheckallForSections(section));
         setData(updatedSections);
-      };
-    
+
+    };
+
+
+
+
+
+
 
     const closeModal = () => {
         setShowModal(false)
     }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-    }
 
     const renderSections = (data) => {
         return data.map((section) => (
             <ul key={section.section_id} className="">
                 <li
-                    className="w-full text-left block px-2 py-0.5 text-sm text-[#0C1844] hover:bg-[#667BC6] select-none"
+                    className="w-full text-left flex gap-2 px-2 items-center py-0.5 text-sm text-[#0C1844] hover:bg-[#667BC6] select-none"
                     onClick={() => handleClickSection(section.section_id, section.section_name)}
                 >
                     <input
@@ -144,6 +172,11 @@ function CaseSelectModal({ setShowModal, project_id }) {
                         checked={section.checkall}
                     />
                     {section.section_name}
+                    <div className="flex">
+                        <span className=" " >{section.check_count}</span> /
+                        <span className="text-blue-400">{section.case_count}</span>
+
+                    </div>
                 </li>
 
                 {
@@ -162,6 +195,49 @@ function CaseSelectModal({ setShowModal, project_id }) {
         setData(data.map(item => item.id === id ? { ...item, checked: !item.checked } : item))
     }
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const getCheckedCase = () => {
+            const checkArr = [];
+            const checkedData = [...data];
+            const findCheckedCase = (sections) => {
+                sections.forEach((section) => {
+                    section.cases.forEach(c => {
+                        if (c.checked) {
+                            checkArr.push(c.id);
+                        }
+                    });
+                    if (section.sub && section.sub.length > 0) {
+                        findCheckedCase(section.sub);
+                    }
+                });
+            };
+            findCheckedCase(checkedData);
+            return checkArr;
+        };
+
+        const checkedArray = getCheckedCase(data)
+        if (checkedArray.length > 0) {
+            try {
+                const response = await fetch(urlAPI + 'run-api/init-run-cases/' + runId, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 'cases': checkedArray }),
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    closeModal();
+                }
+            }
+            catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+            
+    }
+
     return (
         <div>
             <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -176,26 +252,25 @@ function CaseSelectModal({ setShowModal, project_id }) {
                                 </div>
                             </div>
                             {/*body*/}
-                            <div className="relative p-6 text-left text-sm flex gap-0 h-[600px] min-h-96 ">
+                            <div className="relative p-6 text-left text-sm flex gap-0 h-[450px] min-h-96 ">
 
-                                <div className="w-1/2 bg-[#EAF1F7] border border-[#7dabcb] overflow-y-auto" >
+                                <div className="w-1/3 bg-[#EAF1F7] border border-[#7dabcb] overflow-y-auto" >
                                     {renderSections(data)}
 
                                 </div>
-                                <div className="w-1/2 border border-[#7dabcb] border-l-0 p-2 overflow-y-auto">
+                                <div className="w-2/3 border border-[#7dabcb] border-l-0 p-2 overflow-y-auto">
                                     <p><strong>{selectedSection.name}</strong></p>
-                                    <CaseSelectTable 
-                                    caseViews={caseViews} 
-                                    setCaseViews={setCaseViews}
-                                    data={data} 
-                                    setData={setData}
-                                    handleCaseCheck={handleCaseCheck}  />
+                                    <CaseSelectTable
+                                        sectionId={selectedSection.id}
+                                        cases={caseViews}
+                                        handleCaseCheck={handleCaseCheck}
+                                        handleCaseCheckAll={handleCaseCheckAll} />
 
                                 </div>
                             </div>
                             {/*footer*/}
                             <div className="flex gap-2 items-center justify-start p-2 bg-[#f5f5f5]">
-                                {availableSave ? <BtnOK /> : <BtnOKDisabled />}
+                                <BtnOK onClik={() => handleSubmit()} />
                                 <BtnCancel onClick={() => closeModal()} />
                             </div>
                         </div>

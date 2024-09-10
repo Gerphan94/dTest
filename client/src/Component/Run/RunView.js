@@ -98,6 +98,7 @@ function RunView() {
                 <CaseSelectModal
                     setShowModal={setShowCaseSelectModal}
                     project_id={rundetail?.project_id}
+                    runId={runId}
                 />}
         </>
     );
