@@ -80,6 +80,12 @@ class Run(db.Model):
     is_actived = db.Column(db.Integer, default = 1)
     is_completed = db.Column(db.Integer, default = 0)
 
+class Rundetail(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    run_id = db.Column(db.Integer, db.ForeignKey('run.id'), nullable=False)
+    status_id = db.Column(db.Integer, db.ForeignKey('status.id'), nullable=False)
+    case_id = db.Column(db.Integer, db.ForeignKey('testcase.id'), nullable=False)
+    assign_to = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 class Rmtask(db.Model):
     id = db.Column(db.Integer, primary_key=True)
