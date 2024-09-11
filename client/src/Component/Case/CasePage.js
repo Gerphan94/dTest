@@ -123,7 +123,6 @@ function CasePage() {
                 />
                 {section.sub && section.sub.length > 0 && (
                     <div className="border-l-[1px] border-[#aecade] pl-5">
-
                         {renderSections(section.sub)}
                     </div>
                 )}

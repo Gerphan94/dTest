@@ -83,44 +83,65 @@ def run__get_cases_by_project_id(project_id):
 @run.route('/run-api/get-runs-cases/<int:run_id>', methods=['GET'])
 def run__get_runs_cases(run_id):
     
-    cases = db.session.query(Runcase, Testcase, Section, User, Status)\
-                        .join(Testcase, Runcase.case_id == Testcase.id)\
-                        .join(Status, Runcase.status_id == Status.id )\
-                        .join(Section, Testcase.section_id == Section.id)\
-                        .filter(Runcase.run_id == run_id)\
-                        .all()
-    result = []
-    for runcase, testcase, section in cases:
-        result.append({
-                'case_id': testcase.id,
-                'case_title': testcase.title,
-                'assgned_to': runcase.assigned_to,
+    project_id = Run.query.get(run_id).project_id
+    
+    if not project_id:
+        return jsonify({'error': 'Run not found'}), 404
+    def init_case(section):
+        def get_cases_by_section(section_id):
+            cases = db.session.query(Runcase, Testcase, Status, User)\
+                            .join(Testcase, Runcase.case_id == Testcase.id)\
+                            .join(Status, Runcase.status_id == Status.id)\
+                            .join(User, Runcase.assigned_to == User.id)\
+                            .filter(Testcase.section_id == section_id, Runcase.run_id == run_id)
             
-        })
-         
+            case_ar = []
+            for runcase, testcase, status, user in cases:
+                case_ar.append({
+                    'runcase_id': runcase.id,
+                    'case_id': testcase.id,
+                    'case_title': testcase.title,
+                    'status': {'id': status.id, 'name': status.name},
+                    'assigned_to': {'id': user.id, 'username': user.username},
+                })
+            return case_ar
 
+        cases = get_cases_by_section(section.id)
+        sub = fetch_subsections(section.id)
 
-    
-@run.route('/run-api/init-run-cases/<int:run_id>', methods=['POST'])
-def run__init_run_cases(run_id):
-    data = request.get_json()
-    caseIds = data['cases']
-    if (data['user_id']):
-        assigned_to = data['user_id']
-    else:
-        assigned_to = 0
-    print(run_id, assigned_to)
-    
-    
-    exist_cases = Runcase.query.filter_by(run_id=run_id).all()
-    if (exist_cases):
-        print("exist")
-    else:
-        for caseid in caseIds:
-            new_case = Runcase(run_id=run_id, case_id=caseid, assigned_to=assigned_to)
-            db.session.add(new_case)
-        db.session.commit()
-        print("not exist")
-    
-    return jsonify({}), 200
+        # Return the data only if both cases and sub are not empty
+        if cases or sub:
+            return {
+                "section_id": section.id,
+                "section_name": section.name,
+                "cases": cases,
+                "sub": sub
+            }
+        
+        return None  # Return None if either cases or sub is empty
+
+    def fetch_subsections(parent_id):
+        sections = Section.query.filter_by(parent_id=parent_id).order_by(Section.sort)
+        sub = []
+        for section in sections:
+            data = init_case(section)
+            print(data)
+            if(data):
+                sub.append(data)
+        return sub
+
+    root_sections = Section.query.filter_by(project_id=project_id, parent_id=0).order_by(
+        case(
+            (Section.sort == None, 1),
+            else_=0
+        ),
+        Section.sort.asc()
+    ).all()
+    result_ar = []
+    # result_ar = [init_case(section) for section in root_sections]
+    for section in root_sections:
+        data = init_case(section)
+        if data:
+            result_ar.append(data)
+    return jsonify(result_ar)
 
