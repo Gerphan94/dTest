@@ -12,7 +12,7 @@ import { useGlobalVariables } from "../../Store/AppContext";
 function RunView() {
 
     const { runId } = useParams();
-    const { projectId, setProjectId } = useGlobalVariables();
+    const { projectId, setProjectId, logginUser } = useGlobalVariables();
     const navigate = useNavigate();
 
     const [proId, setProId] = useState(null);
@@ -99,6 +99,7 @@ function RunView() {
                     setShowModal={setShowCaseSelectModal}
                     project_id={rundetail?.project_id}
                     runId={runId}
+                    user_id={logginUser.id}
                 />}
         </>
     );

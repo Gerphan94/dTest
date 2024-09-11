@@ -80,12 +80,20 @@ class Run(db.Model):
     is_actived = db.Column(db.Integer, default = 1)
     is_completed = db.Column(db.Integer, default = 0)
 
-class Rundetail(db.Model):
+class Runcase(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     run_id = db.Column(db.Integer, db.ForeignKey('run.id'), nullable=False)
-    status_id = db.Column(db.Integer, db.ForeignKey('status.id'), nullable=False)
+    run = db.relationship("Run", backref=backref("runcases", uselist=True))  # Reference to the Run model
+    
+    status_id = db.Column(db.Integer, db.ForeignKey('status.id'), nullable=False, default = 1)
+    status = db.relationship("Status", backref=backref("runcases", uselist=True))  # Use singular `status`
+    
     case_id = db.Column(db.Integer, db.ForeignKey('testcase.id'), nullable=False)
-    assign_to = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    testcase = db.relationship("Testcase", backref=backref("runcases", uselist=True))  # Use singular `testcase`
+    
+    assigned_to = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    assigned_to_user = db.relationship("User", foreign_keys=[assigned_to], backref=backref("runcases", uselist=True))
+
 
 class Rmtask(db.Model):
     id = db.Column(db.Integer, primary_key=True)

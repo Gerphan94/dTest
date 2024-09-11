@@ -6,7 +6,7 @@ import { useGlobalVariables } from "../../../Store/AppContext";
 import CaseSelectTable from "./CaseSelectTable";
 import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
 
-function CaseSelectModal({ runId, setShowModal, project_id }) {
+function CaseSelectModal({ runId, setShowModal, project_id, user_id }) {
 
 
     const urlAPI = process.env.REACT_APP_API_URL;
@@ -224,7 +224,7 @@ function CaseSelectModal({ runId, setShowModal, project_id }) {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ 'cases': checkedArray }),
+                    body: JSON.stringify({ 'cases': checkedArray, 'user_id': user_id }),
                 });
                 if (response.ok) {
                     const data = await response.json();

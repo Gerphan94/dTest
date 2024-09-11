@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, make_response
-from .model import db, Project, Section, Testcase, Priority, Casetype, Run, User
+from .model import db, Project, Section, Testcase, Status, Run, Runcase, User
 from sqlalchemy import case, asc, desc
 from sqlalchemy.orm import aliased
 from datetime import datetime
@@ -79,14 +79,48 @@ def run__get_cases_by_project_id(project_id):
     
     result_ar = [init_case(section) for section in root_sections]
     return jsonify(result_ar)
+
+@run.route('/run-api/get-runs-cases/<int:run_id>', methods=['GET'])
+def run__get_runs_cases(run_id):
+    
+    cases = db.session.query(Runcase, Testcase, Section, User, Status)\
+                        .join(Testcase, Runcase.case_id == Testcase.id)\
+                        .join(Status, Runcase.status_id == Status.id )\
+                        .join(Section, Testcase.section_id == Section.id)\
+                        .filter(Runcase.run_id == run_id)\
+                        .all()
+    result = []
+    for runcase, testcase, section in cases:
+        result.append({
+                'case_id': testcase.id,
+                'case_title': testcase.title,
+                'assgned_to': runcase.assigned_to,
+            
+        })
+         
+
+
     
 @run.route('/run-api/init-run-cases/<int:run_id>', methods=['POST'])
 def run__init_run_cases(run_id):
     data = request.get_json()
-    print(data)
+    caseIds = data['cases']
+    if (data['user_id']):
+        assigned_to = data['user_id']
+    else:
+        assigned_to = 0
+    print(run_id, assigned_to)
     
-    exist_cases = Run.query.filter_by(id=run_id).all()
-    print(exist_cases)
+    
+    exist_cases = Runcase.query.filter_by(run_id=run_id).all()
+    if (exist_cases):
+        print("exist")
+    else:
+        for caseid in caseIds:
+            new_case = Runcase(run_id=run_id, case_id=caseid, assigned_to=assigned_to)
+            db.session.add(new_case)
+        db.session.commit()
+        print("not exist")
     
     return jsonify({}), 200
 
