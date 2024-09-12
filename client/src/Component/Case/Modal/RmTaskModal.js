@@ -12,6 +12,7 @@ import { IoIosAddCircle } from "react-icons/io";
 function RmTaskModal({ fetchCaseData, setRmTaskModal, rmTaskModal, sectionId }) {
 
     const urlAPI = process.env.REACT_APP_API_URL;
+    const urlRM = process.env.REACT_APP_RM_URL;
     const { showRmModal, selectedCaseId } = useCase();
     const [caseTitle, setCaseTitle] = useState("");
     const CaseId = rmTaskModal.caseId
@@ -116,14 +117,18 @@ function RmTaskModal({ fetchCaseData, setRmTaskModal, rmTaskModal, sectionId }) 
                                             <tr>
                                                 <td className="text-center">1</td>
                                                 <td className="text-center px-2 py-1">{item.task_id}</td>
-                                                <td className="text-left px-2 py-1">{item.title}</td>
+                                                <td className="text-left px-2 py-1">
+                                                    <a className={`text-[#5993bc] hover:underline hover:text-[#1E201E] `} href={`${urlRM}${item.task_id}`} ref={{ target: "_blank" }}>
+                                                        {item.title}
+                                                    </a>
+                                                </td>
+
                                                 <td className="text-center py-1">
                                                     <select
                                                         className="w-36 border outline-none px-2 py-0.5 rounded-xl"
                                                         onChange={(e) => setSelectedStatus(e.target.value)}
                                                         value={item.status}
                                                     >
-
                                                         <option value="Đã thực hiện">Mới</option>
                                                         <option value="Đã thực hiện">Đang thực hiện</option>
                                                         <option value="Đã thực hiện">Chờ phản hồi</option>

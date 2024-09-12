@@ -27,9 +27,8 @@ function AddResultModal({ setShowModal, setResultStatus, runCaseId, status, colo
 
 
     const handleChangeStatus = (e) => {
-        const selectedValue = e.target.value; // The value of the selected option
+        const selectedValue = e.target.value;
         const selectedText = e.target.options[e.target.selectedIndex].text;
-        console.log(selectedValue, selectedText)
         setSelectedOption({ 'id':selectedValue, 'name': selectedText });
     }
 

@@ -11,10 +11,10 @@ import moment from "moment";
 function RunAdd() {
 
     const { projectId } = useParams();
-    const { setProjectId, logginUser } = useGlobalVariables();
+    const { setGlobalProjectId, logginUser } = useGlobalVariables();
 
     useEffect(() => {
-        setProjectId(projectId)
+        setGlobalProjectId(projectId)
     })
     const navigate = useNavigate();
 
