@@ -95,7 +95,8 @@ def run__get_runs_cases(run_id):
                             .join(Testcase, Runcase.case_id == Testcase.id)\
                             .join(Status, Runcase.status_id == Status.id)\
                             .join(User, Runcase.assigned_to == User.id)\
-                            .filter(Testcase.section_id == section_id, Runcase.run_id == run_id)
+                            .filter(Testcase.section_id == section_id, Runcase.run_id == run_id)\
+                            .order_by(asc(Runcase.id))
             
             case_ar = []
             for runcase, testcase, status, user in cases:
@@ -149,14 +150,15 @@ def run__get_runs_cases(run_id):
 
 @run.route('/run-api/update-runcase-status/<int:runcase_id>', methods=['POST'])
 def run__update_status(runcase_id):
+    print(runcase_id)
     runcase = Runcase.query.get(runcase_id)
     
     if (runcase):
         data = request.get_json()
-        runcase.status_id = data["status_id"]
+        runcase.status_id = data["statusId"]
         db.session.commit()
-        return jsonify({"message": "Runcase updated successfully"})
-    return jsonify({"error": "Runcase not found"})
+        return jsonify({"message": "Runcase updated successfully"}), 200
+    return jsonify({"error": "Runcase not found"}), 404
     
 
 

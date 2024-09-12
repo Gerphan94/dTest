@@ -46,7 +46,7 @@ function RunSectionCase({ data, setShowAddResultModal }) {
                                 <td className="text-center py-1 text-xs">
 
                                     <StatusDropdown
-                                        selectedOption={item.status}
+                                        status={item.status}
                                         setShowAddResultModal={setShowAddResultModal}
                                         runCaseId={item.runcase_id}
 

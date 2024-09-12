@@ -91,7 +91,7 @@ function RunView() {
                                 <button>Test Case</button>
                             </div> */}
                         </div>
-                        <div className="p-4 flex gap-5">
+                        {/* <div className="p-4 flex gap-5">
                             <div className="bg-white min-h-96 w-full">
                                 <ProcessRunChart />
 
@@ -113,7 +113,7 @@ function RunView() {
 
 
 
-                        </div>
+                        </div> */}
 
                         {data && renderSections(data)}
 

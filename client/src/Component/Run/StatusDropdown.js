@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { FaAngleDown } from "react-icons/fa6";
 import AddResultModal from './Modal/AddResultModal';
-const StatusDropdown = ({ selectedOption, setShowAddResultModal, runCaseId }) => {
+const StatusDropdown = ({ status, runCaseId }) => {
 
     const [viewData, setViewData] = useState([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -9,8 +9,10 @@ const StatusDropdown = ({ selectedOption, setShowAddResultModal, runCaseId }) =>
     const [dropdownPosition, setDropdownPosition] = useState('bottom'); // Track dropdown position (top or bottom)
     const dropdownRef = useRef(null);
 
+    const [selectedOption, setSelectedOption] = useState(status);
+    const [changedOption, setChangedOption] = useState(status);
 
-    const [changedOption, setChangedOption] = useState(selectedOption);
+    const colors = ['#737373', '#338A41', '#A9093A', '#474747', '#B99109']
 
     const [showModal, setShowModal] = useState(false)
 
@@ -70,7 +72,7 @@ const StatusDropdown = ({ selectedOption, setShowAddResultModal, runCaseId }) =>
                 <div className="relative inline-block">
                     <div className='relative group'>
                         <div
-                            className={`border select-none outline-none h-full w-full rounded-xl flex items-center justify-between py-0.5 px-2 text-white group-hover:border-blue-200 ${selectedOption.id === 1 ? 'bg-[#737373]' : selectedOption.id === 2 ? 'bg-[#338A41]' : selectedOption.id === 3 ? 'bg-[#A9093A]' : selectedOption.id === 4 ? 'bg-[#474747]' : 'bg-[#B99109]'}`}
+                            className={`border select-none outline-none h-full w-full rounded-xl flex items-center justify-between py-0.5 px-2 text-white group-hover:border-blue-200 bg-[${colors[selectedOption.id - 1]}]`}
                             onClick={toggleDropdown}
                         >
 
@@ -96,7 +98,7 @@ const StatusDropdown = ({ selectedOption, setShowAddResultModal, runCaseId }) =>
                                             className="w-full text-left flex items-center px-4 py-2 text-sm text-[#0C1844] hover:bg-[#667BC6] select-none border-b-2"
                                             onClick={() => handleClick(item.id, item.name)}
                                         >
-                                            <span className={`nline-block w-3 h-3 rounded-full mr-2 ${item.id === 1 ? 'bg-[#737373]' : item.id === 2 ? 'bg-[#338A41]' : item.id === 3 ? 'bg-[#A9093A]' : item.id === 4 ? 'bg-[#474747]' : 'bg-[#B99109]'}`}></span>
+                                            <span className={`nline-block w-3 h-3 rounded-full mr-2 bg-[${colors[item.id - 1]}]`}></span>
                                             {item.name}
                                         </button>
                                     </li>
@@ -110,8 +112,10 @@ const StatusDropdown = ({ selectedOption, setShowAddResultModal, runCaseId }) =>
             {showModal &&
                 <AddResultModal
                     setShowModal={setShowModal}
+                    setResultStatus={setSelectedOption}
                     runCaseId={runCaseId}
                     status={changedOption}
+                    colors={colors}
 
 
                 />

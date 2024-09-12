@@ -2,16 +2,13 @@ import React, { useState, useCallback, useEffect } from "react";
 import { BtnCancel, SubmitButtonOK } from "../../Common/CustomButton";
 
 
-function AddResultModal({ setShowModal, runCaseId, status }) {
+function AddResultModal({ setShowModal, setResultStatus, runCaseId, status, colors }) {
 
     const urlAPI = process.env.REACT_APP_API_URL;
 
-    const [selectedOption, setSelectedOption] = useState({ 'id': 1, 'name': 'Untested' });
-    // 'show': true,
-    //             'runcaseId': runCaseId,
-    //             'statusId': id
+    const [selectedOption, setSelectedOption] = useState(status);
+
     const [users, setUsers] = useState([]);
-    const colors = ['#737373', '#338A41', '#A9093A', '#474747', '#B99109']
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -29,27 +26,35 @@ function AddResultModal({ setShowModal, runCaseId, status }) {
     }, [])
 
 
-    const handleChangeStatus = (event) => {
-        setSelectedOption({ 'id': event.target.value, 'name': event.target.name });
+    const handleChangeStatus = (e) => {
+        const selectedValue = e.target.value; // The value of the selected option
+        const selectedText = e.target.options[e.target.selectedIndex].text;
+        console.log(selectedValue, selectedText)
+        setSelectedOption({ 'id':selectedValue, 'name': selectedText });
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        try {
-            const response = fetch(urlAPI + 'run-api/update-runcase-status/' + runCaseId, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ 'statusId': selectedOption.id }),
-            });
-            if (response.status === 200) {
-                setShowModal(false);
+    const handleSubmit = (
+        async (e) => {
+            e.preventDefault();
+            try {
+                const response = await fetch(urlAPI + 'run-api/update-runcase-status/' + runCaseId, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 'statusId': selectedOption.id }),
+                });
+                if (response.ok) {
+                    console.log(selectedOption)
+                    setResultStatus(selectedOption);
+                    setShowModal(false);
+                } else {
+                    console.error('Failed to update status:', response.statusText)
+                }
+            } catch (error) {
+                console.error('Error:', error.message);
             }
-        } catch (error) {
-            console.error('Error:', error.message);
-        }
-    }
+        })
 
     const closeModal = () => {
         setShowModal(false);
