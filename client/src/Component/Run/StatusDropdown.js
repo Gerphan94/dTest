@@ -1,13 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { FaAngleDown } from "react-icons/fa6";
-
-const StatusDropdown = ({ selectedOption, setShowAddResultModal }) => {
+import AddResultModal from './Modal/AddResultModal';
+const StatusDropdown = ({ selectedOption, setShowAddResultModal, runCaseId }) => {
 
     const [viewData, setViewData] = useState([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [dropdownPosition, setDropdownPosition] = useState('bottom'); // Track dropdown position (top or bottom)
     const dropdownRef = useRef(null);
+
+
+    const [changedOption, setChangedOption] = useState(selectedOption);
+
+    const [showModal, setShowModal] = useState(false)
 
     const statusOpt = [
         { 'id': 2, 'name': 'Passed' },
@@ -21,11 +26,9 @@ const StatusDropdown = ({ selectedOption, setShowAddResultModal }) => {
     };
 
     const handleClick = (id, name) => {
-        setShowAddResultModal({
-            'show': true,
-            'runcaseId': null,
-            'statusId': 0
-        })
+        setShowModal(true)
+        setChangedOption({ 'id': id, 'name': name })
+        
         setIsDropdownOpen(false);
         setSearchTerm('');
     };
@@ -61,46 +64,61 @@ const StatusDropdown = ({ selectedOption, setShowAddResultModal }) => {
     }, [isDropdownOpen]);
 
     return (
-        <div className=' h-full inline-block text-left' ref={dropdownRef}>
-            <div className="relative inline-block">
-                <div className='relative group'>
-                    <div
-                        className={`border select-none outline-none h-full w-full rounded-xl flex items-center justify-between py-0.5 px-2 text-white group-hover:border-blue-200 ${selectedOption.id === 1 ? 'bg-[#737373]' : selectedOption.id === 2 ? 'bg-[#338A41]' : selectedOption.id === 3 ? 'bg-[#A9093A]' : selectedOption.id === 4 ? 'bg-[#474747]' : 'bg-[#B99109]' }`}
-                        onClick={toggleDropdown}
-                    >
-                        
-                        <span>{selectedOption?.name || 'Select Status'}</span>
-                        <span
-                            className="flex items-center ml-1"
+        <>
+
+            <div className=' h-full inline-block text-left' ref={dropdownRef}>
+                <div className="relative inline-block">
+                    <div className='relative group'>
+                        <div
+                            className={`border select-none outline-none h-full w-full rounded-xl flex items-center justify-between py-0.5 px-2 text-white group-hover:border-blue-200 ${selectedOption.id === 1 ? 'bg-[#737373]' : selectedOption.id === 2 ? 'bg-[#338A41]' : selectedOption.id === 3 ? 'bg-[#A9093A]' : selectedOption.id === 4 ? 'bg-[#474747]' : 'bg-[#B99109]'}`}
                             onClick={toggleDropdown}
                         >
-                            <FaAngleDown className="h-5 w-5 text-white0" />
-                        </span>
+
+                            <span>{selectedOption?.name || 'Select Status'}</span>
+                            <span
+                                className="flex items-center ml-1"
+                                onClick={toggleDropdown}
+                            >
+                                <FaAngleDown className="h-5 w-5 text-white0" />
+                            </span>
+                        </div>
+
                     </div>
 
+                    {isDropdownOpen && (
+                        <div
+                            className={`origin-top-right absolute ${dropdownPosition === 'top' ? 'bottom-full' : 'top-full'} left-0 mt-2 w-48 max-h-96 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50`}
+                        >
+                            <ul role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                                {statusOpt.map((item) => (
+                                    <li key={item.id}>
+                                        <button
+                                            className="w-full text-left flex items-center px-4 py-2 text-sm text-[#0C1844] hover:bg-[#667BC6] select-none border-b-2"
+                                            onClick={() => handleClick(item.id, item.name)}
+                                        >
+                                            <span className={`nline-block w-3 h-3 rounded-full mr-2 ${item.id === 1 ? 'bg-[#737373]' : item.id === 2 ? 'bg-[#338A41]' : item.id === 3 ? 'bg-[#A9093A]' : item.id === 4 ? 'bg-[#474747]' : 'bg-[#B99109]'}`}></span>
+                                            {item.name}
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
                 </div>
-
-                {isDropdownOpen && (
-                    <div
-                        className={`origin-top-right absolute ${dropdownPosition === 'top' ? 'bottom-full' : 'top-full'} left-0 mt-2 w-48 max-h-96 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50`}
-                    >
-                        <ul role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                            {statusOpt.map((item) => (
-                                <li key={item.id}>
-                                    <button
-                                        className="w-full text-left flex items-center px-4 py-2 text-sm text-[#0C1844] hover:bg-[#667BC6] select-none border-b-2"
-                                        onClick={() => handleClick(item.id, item.name)}
-                                    >
-                                        <span className={`nline-block w-3 h-3 rounded-full mr-2 ${item.id === 1 ? 'bg-[#737373]' : item.id === 2 ? 'bg-[#338A41]' : item.id === 3 ? 'bg-[#A9093A]' : item.id === 4 ? 'bg-[#474747]' : 'bg-[#B99109]' }`}></span>
-                                        {item.name}
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
             </div>
-        </div>
+
+            {showModal &&
+                <AddResultModal
+                    setShowModal={setShowModal}
+                    runCaseId={runCaseId}
+                    status={changedOption}
+
+
+                />
+            }
+
+
+        </>
     )
 }
 

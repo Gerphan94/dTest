@@ -11,6 +11,10 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100))
     password = db.Column(db.String(1000))
+    is_active = db.Column(db.Integer, default=1)
+    is_admin = db.Column(db.Integer, default=0)
+    
+    
     
 class Token(db.Model):
     id = db.Column(db.Integer, primary_key=True)

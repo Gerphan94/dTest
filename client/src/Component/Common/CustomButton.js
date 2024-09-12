@@ -66,6 +66,19 @@ export const BtnOK = ( {onClik,  name='Save' } ) => {
     );
 };
 
+export const SubmitButtonOK = ( {name='Save' } ) => {
+    return (
+        <button
+            className="flex gap-2 items-center bg-[#049474] border border-[#049474] text-white font-bold py-1 px-4 focus:shadow-outline hover:bg-[#06755C]"
+            type="submit"
+            
+        >
+            <IoCheckmark  />
+            {name}
+        </button>
+    );
+};
+
 export const BtnOKDisabled = ( {  name='Save' } ) => {
     return (
         <button

@@ -44,15 +44,13 @@ function RunSectionCase({ data, setShowAddResultModal }) {
                                     {item.assigned_to.username}
                                 </td>
                                 <td className="text-center py-1 text-xs">
-                                    {/* <select 
-                                        defaultValue={item.status.id} 
-                                        className={`border rounded-xl px-1 py-0.5 text-white ${item.status.id === 1 ? 'bg-[#737373]' : item.status.id === 2 ? 'bg-[#338A41]' : item.status.id === 3 ? 'bg-[#A9093A]' : item.status.id === 4 ? 'bg-[#474747]' : 'bg-[#B99109]' }`}>
-                                        {statusOpt.map((item, index) => (
-                                            <option key={index} value={item.id}>{item.name}</option>
-                                        ))}
 
-                                    </select> */}
-                                    <StatusDropdown selectedOption={item.status} setShowAddResultModal={setShowAddResultModal} />
+                                    <StatusDropdown
+                                        selectedOption={item.status}
+                                        setShowAddResultModal={setShowAddResultModal}
+                                        runCaseId={item.runcase_id}
+
+                                    />
                                 </td>
                                 <td></td>
                             </tr>

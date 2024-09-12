@@ -6,6 +6,8 @@ from datetime import datetime
 
 run = Blueprint('run', __name__)
 
+
+
 @run.route('/api/get-run-detail/<int:run_id>', methods=['GET'])
 def get_run_detail(run_id):
     run = Run.query.get(run_id)
@@ -144,4 +146,17 @@ def run__get_runs_cases(run_id):
         if data:
             result_ar.append(data)
     return jsonify(result_ar)
+
+@run.route('/run-api/update-runcase-status/<int:runcase_id>', methods=['POST'])
+def run__update_status(runcase_id):
+    runcase = Runcase.query.get(runcase_id)
+    
+    if (runcase):
+        data = request.get_json()
+        runcase.status_id = data["status_id"]
+        db.session.commit()
+        return jsonify({"message": "Runcase updated successfully"})
+    return jsonify({"error": "Runcase not found"})
+    
+
 

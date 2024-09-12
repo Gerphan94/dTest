@@ -13,6 +13,14 @@ def handle_404_error(_error):
     """Return a http 404 error to client"""
     return make_response(jsonify({'error': 'Not found'}), 404)
 
+@main.route('/api/users', methods=['GET'])
+def get_users():
+    return jsonify([{
+        'id': user.id, 
+        'name': user.username 
+        } for user in User.query.filter_by(is_active=1, is_admin=0).all()])
+
+
 @main.route('/api/priority', methods=['GET'])
 def get_priority():
     return jsonify([{

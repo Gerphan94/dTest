@@ -79,6 +79,7 @@ def check_token(token):
         print('check --------------------', user.username)
         
         return jsonify({'success': True, 'id': user.id, 'username': user.username}), 200 
+    print('CHECK FAIL', 'lỖI TOKEN')
     return jsonify({'success': False, 'username': None}), 401
     
 @login.route('/login', methods=['GET', 'POST'])
