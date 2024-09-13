@@ -445,11 +445,21 @@ def insert_rmtask(case_id):
         status = data['status'],
         case_id = case_id
     )
-    
     db.session.add(new_rmtask)
     db.session.commit()
     
     return jsonify({'message':'rmtask created'}), 200
+
+@main.route('/api/update-rmtask-status/<int:rmtask_id>', methods=['POST'])
+def update_rmtask_status(rmtask_id):
+    data = request.get_json()
+    rmtask = Rmtask.query.get(rmtask_id)
+    if (rmtask):
+        rmtask.status = data['status']
+        db.session.commit()
+        return jsonify({"message": "Rmtask updated successfully"}), 200
+    return jsonify({"error": "Rmtask not found"}), 404
+
 
     
 

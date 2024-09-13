@@ -5,7 +5,7 @@ import { useCase } from "../../../Store/CaseContext";
 
 import DropDown from "../../Common/Dropdown";
 
-import { IoIosAddCircle } from "react-icons/io";
+import { IoIosAddCircle, IoIosCloseCircleOutline } from "react-icons/io";
 
 
 
@@ -29,14 +29,20 @@ function RmTaskModal({ fetchCaseData, setRmTaskModal, rmTaskModal, sectionId }) 
 
     const status = [
         { id: 'Mới', name: 'Mới' },
+        { id: 'Đang thực hiện', name: 'Đang thực hiện' },
         { id: 'Đã thực hiện', name: 'Đã thực hiện' },
-        { id: 'Đóng', name: 'Đóng' },]
+        { id: 'Chờ phản hồi', name: 'Chờ phản hồi' },
+        { id: 'Đóng', name: 'Đóng' },
+        { id: 'Từ chối', name: 'Từ chối' },
+        { id: 'Mở lại', name: 'Mở lại' }
+    ]
 
     const [selectedStatus, setSelectedStatus] = useState({ id: 'Mới', name: 'Mới' });
 
     const fetchRmtasks = async () => {
         const response = await fetch(`${urlAPI}/api/get-rmtasks-by-case-id/${CaseId}`);
         const data = await response.json();
+        console.log(data)
         setRmtasks(data);
     }
     const fetchCaseDataDetail = async () => {
@@ -79,10 +85,29 @@ function RmTaskModal({ fetchCaseData, setRmTaskModal, rmTaskModal, sectionId }) 
 
     }
 
+    const handleChangeStatus = async (e, id) => {
+        const selectedValue = e.target.value;
+        try {
+            const response = await fetch(`${urlAPI}api/update-rmtask-status/${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 'status': selectedValue }),
+            });
+            if (response.ok) {
+                console.log('Status updated successfully');
+                fetchRmtasks();
+                fetchCaseData(sectionId);
+            }
+            else {
+                console.error('Error:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error:', error.message);
+        }
 
-
-
-
+    }
 
     return (
 
@@ -97,10 +122,9 @@ function RmTaskModal({ fetchCaseData, setRmTaskModal, rmTaskModal, sectionId }) 
                                 <span className=" bg-purple-600 px-2 py-0.5  rounded-xl text-white select-none mr-2">C{selectedCaseId}</span>
                                 {caseTitle}
                             </div>
-                        </div>
+                        </div>setSelectedStatus(e.target.value)
                         {/*body*/}
                         <div className="relative p-6 text-left text-sm h-96">
-
                             <div className="flex flex-col justify-between h-full">
                                 <table>
                                     <thead>
@@ -109,16 +133,20 @@ function RmTaskModal({ fetchCaseData, setRmTaskModal, rmTaskModal, sectionId }) 
                                             <th className="w-20 text-center">Task ID</th>
                                             <th className="text-left px-2">Title</th>
                                             <th className="w-40 text-center">Trạng thái</th>
-                                            <th>...</th>
+                                            <th className="w-6">...</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {rmtasks.map((item) => (
                                             <tr>
                                                 <td className="text-center">1</td>
-                                                <td className="text-center px-2 py-1">{item.task_id}</td>
+                                                <td className="text-center px-2 py-1">
+                                                    <a className={`text-[#5993bc] hover:underline hover:text-[#1E201E] `} href={`${urlRM}${item.task_id}`} target="_blank" rel="noreferrer">
+                                                        {item.task_id}
+                                                    </a>
+                                                </td>
                                                 <td className="text-left px-2 py-1">
-                                                    <a className={`text-[#5993bc] hover:underline hover:text-[#1E201E] `} href={`${urlRM}${item.task_id}`} ref={{ target: "_blank" }}>
+                                                    <a className={`text-[#5993bc] hover:underline hover:text-[#1E201E] `} href={`${urlRM}${item.task_id}`} target="_blank" rel="noreferrer">
                                                         {item.title}
                                                     </a>
                                                 </td>
@@ -126,24 +154,27 @@ function RmTaskModal({ fetchCaseData, setRmTaskModal, rmTaskModal, sectionId }) 
                                                 <td className="text-center py-1">
                                                     <select
                                                         className="w-36 border outline-none px-2 py-0.5 rounded-xl"
-                                                        onChange={(e) => setSelectedStatus(e.target.value)}
+                                                        onChange={(e) => handleChangeStatus(e, item.id)}
                                                         value={item.status}
                                                     >
-                                                        <option value="Đã thực hiện">Mới</option>
-                                                        <option value="Đã thực hiện">Đang thực hiện</option>
-                                                        <option value="Đã thực hiện">Chờ phản hồi</option>
-                                                        <option value="Đã thực hiện">Đã thực hiện</option>
-                                                        <option value="Đóng">Đóng</option>
+                                                        {status.map((item) => (
+                                                            <option value={item.id}>{item.name}</option>
+                                                        ))}
                                                     </select>
 
                                                 </td>
-                                                <td></td>
+                                                <td className="text-center">
+                                                    <button className="text-red-500 flex items-center justify-center">
+                                                        <IoIosCloseCircleOutline className="text-lg" />
+                                                    </button>
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
                                 <form className="flex gap-2" spellCheck="false" onSubmit={(e) => onSubmit(e)}>
                                     <input
+                                        id="task_id"
                                         name="task_id"
                                         className="w-20 border outline-none px-2 py-0.5"
                                         type="number"
@@ -157,6 +188,7 @@ function RmTaskModal({ fetchCaseData, setRmTaskModal, rmTaskModal, sectionId }) 
 
                                     />
                                     <input
+                                        id="title"
                                         name="title"
                                         className="w-full border outline-none px-2 py-0.5"
                                         type="text"
@@ -164,7 +196,17 @@ function RmTaskModal({ fetchCaseData, setRmTaskModal, rmTaskModal, sectionId }) 
                                         required={true}
                                     />
                                     <div className="w-40">
-                                        <DropDown data={status} selectedOption={selectedStatus} setSelectedOption={setSelectedStatus} />
+                                        <select
+                                            id="status"
+                                            name="status"
+                                            className="w-36 border outline-none px-2 py-0.5"
+                                            value={selectedStatus}
+                                        >
+                                            {status.map((item) => (
+                                                <option value={item.id}>{item.name}</option>
+                                            ))}
+                                        </select>
+
 
                                     </div>
                                     <div className="h-full">

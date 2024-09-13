@@ -3,14 +3,16 @@ import styles from "../styles.module.css";
 import { LinkNew } from "../Common/CustomButton";
 import moment from "moment";
 import { Link, useParams } from "react-router-dom";
-
+import { useGlobalVariables } from "../../Store/AppContext";
 
 import { FcDataSheet } from "react-icons/fc";
 
 function RunOverview() {
 
     const { projectId } = useParams();
+    const { setSelectedNavBar } = useGlobalVariables();
     const urlAPI = process.env.REACT_APP_API_URL;
+    const urlWEB = process.env.REACT_APP_WEB_URL;
 
     const [runs, setRuns] = useState([]);
 
@@ -28,6 +30,7 @@ function RunOverview() {
             }
         };
         fetchRuns();
+        setSelectedNavBar('runs');
 
     }, [projectId])
 
@@ -62,7 +65,10 @@ function RunOverview() {
                                     <div className="flex gap-1">
                                         <span className="text-[#6e6e6e]">By {run.created_by} on {moment.utc(run.created_date).format("DD/MM/YYYY HH:mm")}</span>
                                         <span>|</span>
-                                        <p className="text-[#5993bc] underline cursor-pointer">Edit</p>
+                                        <a
+                                            href={urlWEB + "runs/edit/" + run.id}
+                                            className="text-[#5993bc] underline cursor-pointer"
+                                        >Edit</a>
                                     </div>
                                     <div className="text-[#6e6e6e]">
                                         139 Passed, 6 Blocked, 83 Untested, 10 Retest and 4 Failed

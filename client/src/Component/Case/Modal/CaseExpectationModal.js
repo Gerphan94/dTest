@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { BtnCancel, BtnOKDisabled, BtnOK } from "../../Common/CustomButton";
 
 import { useGlobalVariables } from "../../../Store/AppContext";
@@ -9,13 +9,20 @@ function CaseExpectationModal({ caseExpectationModal, setCaseExpectationModal, f
     const urlAPI = process.env.REACT_APP_API_URL;
     const caseId = caseExpectationModal.caseId
 
+    const inputRef = useRef(null);
+
 
     const [expForm, setExpForm] = useState(caseExpectationModal.expectation);
     const [availableSave, setAvailableSave] = useState(false);
     const { logginUser } = useGlobalVariables();
 
     // const urlWEB = process.env.REACT_APP_WEB_URL;
-   
+    useEffect(() => {
+        if (caseExpectationModal) {
+          // Focus the input field when the modal is shown
+          inputRef.current?.focus();
+        }
+      }, [caseExpectationModal]);
     const closeModal = () => {
         setCaseExpectationModal({
             ...caseExpectationModal,
@@ -81,10 +88,12 @@ function CaseExpectationModal({ caseExpectationModal, setCaseExpectationModal, f
                                             Expectation
                                         </label>
                                         <textarea
+                                            id="expectation"
                                             type="text"
                                             name="expectation"
                                             rows={5}
                                             value={expForm}
+                                            ref={inputRef}
                                             className="border w-full outline-none px-2 py-1"
                                             onChange={(e) => handeChange(e)}
 

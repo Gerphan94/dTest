@@ -18,7 +18,7 @@ function CasePage() {
 
 
     const { projectId } = useParams();
-    const { setGlobalProjectId, logginUser } = useGlobalVariables();
+    const { setGlobalProjectId, logginUser, setSelectedNavBar } = useGlobalVariables();
 
     const urlAPI = process.env.REACT_APP_API_URL;
 
@@ -58,7 +58,7 @@ function CasePage() {
             navigate('/');
             return;
         }
-        setGlobalProjectId(projectId);      
+        setGlobalProjectId(projectId);
     }, [projectId])
 
 
@@ -78,6 +78,7 @@ function CasePage() {
 
     useEffect(() => {
         fetchCase();
+        setSelectedNavBar('cases');
         // setProjectId(projectId)
     }, [projectId])
 
@@ -135,13 +136,13 @@ function CasePage() {
 
             <div className='mt-20'>
                 <div className="flex">
-                    <div className="w-full h-full p-3 bg-[#EAF1F7]">
+                    <div className="w-full p-3 bg-[#EAF1F7]">
                         <div className="flex p-2 border-b-2 font-medium">
                             Test Cases
                         </div>
 
                         <div className="w-full border-t-[1px] border-b-[1px] border-[#aecade] flex gap-2 justify-end bg-white text-sm sticky top-20 z-40">
-                            <Toggle enabled={showDeleted} setEnabled={setShowDeleted} name="Display deleted Test Case" />
+                            <Toggle idname='showDeleted' enabled={showDeleted} setEnabled={setShowDeleted} displayName="Display deleted Test Case" />
                             <button
                                 onClick={() => setShowTagModal(true)}
                                 className="px-4 py-0.5 flex items-center font-normal gap-2 border-r-[1px] border-[#aecade] bg-transparent hover:bg-[#dff4ff]">
@@ -150,7 +151,7 @@ function CasePage() {
                             </button>
                         </div>
                         <div className="">
-                            <div className=" py-2 px-5 mb-40">
+                            <div className=" py-2 px-5 mb-40 h-full">
                                 {renderSections(data)}
                                 <div className="text-left">
                                     <button

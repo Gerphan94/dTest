@@ -44,7 +44,6 @@ function AddResultModal({ setShowModal, setResultStatus, runCaseId, status, colo
                     body: JSON.stringify({ 'statusId': selectedOption.id }),
                 });
                 if (response.ok) {
-                    console.log(selectedOption)
                     setResultStatus(selectedOption);
                     setShowModal(false);
                 } else {

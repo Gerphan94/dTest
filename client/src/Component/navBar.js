@@ -10,7 +10,7 @@ import UserMore from './Login/UserMore';
 function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
 
   const urlWEB = process.env.REACT_APP_WEB_URL;
-  const { globalProjectId, logginUser } = useGlobalVariables();
+  const { globalProjectId, logginUser, selectedNavBar } = useGlobalVariables();
 
   const [projectName, setProjectName] = useState('');
 
@@ -33,7 +33,7 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
     { id: 'overview', name: 'Overview', url: urlWEB + 'project/overview/' + globalProjectId },
     { id: 'todos', name: 'Todos', url: urlWEB + 'project/overview/' + globalProjectId },
     { id: 'milestones', name: 'Milestones', url: urlWEB + 'project/overview/' + globalProjectId },
-    { id: 'testrun', name: 'Test Runs & Results', url: urlWEB + 'runs/overview/' + globalProjectId },
+    { id: 'runs', name: 'Test Runs & Results', url: urlWEB + 'runs/overview/' + globalProjectId },
     { id: 'cases', name: 'Test Cases', url: urlWEB + 'cases/view/' + globalProjectId },
     { id: 'issues', name: 'Issues', url: urlWEB + 'issues/view/' + globalProjectId },
     { id: 'report', name: 'Report', url: urlWEB + 'report/view/' + globalProjectId }
@@ -99,7 +99,7 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
               globalProjectId !== 0 && projectMenuList.map((item) => (
                 <Link
                   key={item.id}
-                  className={`${selectedMenu === item.id ? 'border-b-2 border-white' : ''} px-2 h-full text-gray-200 hover:text-white cursor-pointer hover:border-b-2 hover:border-white`}
+                  className={`${selectedNavBar === item.id ? 'border-b-2 border-white' : ''} px-2 h-full text-gray-200 hover:text-white cursor-pointer hover:border-b-2 hover:border-white`}
                   to={item.url}
                   onClick={() => handleClickLink(item.id)}
                 >

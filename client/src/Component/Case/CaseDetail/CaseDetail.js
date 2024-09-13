@@ -5,11 +5,12 @@ import { CiEdit } from "react-icons/ci";
 
 import { useGlobalVariables } from "../../../Store/AppContext";
 import moment from "moment";
+import styles from "../../styles.module.css";
 
 function CaseDetail() {
 
     const { projectId, caseId } = useParams()
-    const { setProjectId, logginUser } = useGlobalVariables();
+    const { setGlobalProjectId,setSelectedNavBar, logginUser } = useGlobalVariables();
     
     const urlAPI = process.env.REACT_APP_API_URL;
 
@@ -27,7 +28,8 @@ function CaseDetail() {
             }
         }
         fetchProject();
-        setProjectId(projectId);
+        setGlobalProjectId(projectId);
+        setSelectedNavBar('cases');
         
 
     }, [caseId])
@@ -39,7 +41,8 @@ function CaseDetail() {
 
     return (
         <>
-            <div className="flex mt-20 h-screen">
+        
+           <div className="flex-grow mt-20 flex overflow-auto">
                 <div className='w-full bg-[#EAF1F7] pb-20'>
                     <div className="border-b border-gray-300 p-2 flex justify-between ">
                         <div className="ml-3 font-medium text-md">
@@ -87,6 +90,7 @@ function CaseDetail() {
                             </div>
                         }
                     </div>
+                   
 
 
                 </div>
@@ -132,10 +136,10 @@ function CaseDetail() {
                             </div>
                         </div>
                     </div>
-
-
                 </div>
-            </div>
+               
+                </div>
+            
 
         </>
     )

@@ -22,6 +22,7 @@ import Dashboard from './Component/Dashboard/Dashboard';
 import RunOverview from './Component/Run/RunOverview';
 import RunView from './Component/Run/RunView';
 import RunAdd from './Component/Run/RunAdd';
+import RunEdit from './Component/Run/RunEdit';
 
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
@@ -50,6 +51,8 @@ function App() {
     { name: "RunView", path: "/runs/view/:runId", title: 'RunView', component: <RunView /> },
 
     { name: "RunAdd", path: "/runs/add/:projectId", title: 'RunAdd', component: <RunAdd /> },
+    { name: "RunEdit", path: "/runs/edit/:runId", title: 'Edit Test Run - dTest', component: <RunEdit /> },
+
     { name: "NotFound", path: "*", title: 'NotFound', component: <NotFound /> },
   ]
 

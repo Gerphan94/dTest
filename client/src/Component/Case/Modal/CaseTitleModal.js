@@ -88,6 +88,7 @@ return (
                                     </label>
                                     <textarea
                                         type="text"
+                                        id="title"
                                         name="title"
                                         rows={5}
                                         value={titleForm}

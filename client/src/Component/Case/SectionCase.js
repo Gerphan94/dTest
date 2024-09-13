@@ -16,8 +16,8 @@ const SectionCase = React.forwardRef((props, ref) => {
 
     const sectionId = props.data.section_id;
     const loggin_id = props.logginUser.id
-
-    const [sectionName, setSectionName] = useState(props.data.section_name)
+    const sectionName = props.data.section_name
+    // const [sectionName, setSectionName] = useState(props.data.section_name)
     const [caseTotal, setCaseTotal] = useState(props.data.case_count);
     const [caseData, setCaseData] = useState(props.data.cases);
     const [isShowCaseForm, setisShowCaseForm] = useState(false);
@@ -195,6 +195,7 @@ const SectionCase = React.forwardRef((props, ref) => {
                 <SectionCaseTable
                     projectId={props.projectId}
                     data={caseData}
+                    sectionId={sectionId}
                     handleCopy={handleCopyCase}
                     setCaseTitleModal={setCaseTitleModal}
                     setCaseExpectationModal={setCaseExpectationModal}

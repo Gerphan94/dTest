@@ -13,7 +13,7 @@ import AddResultModal from "./Modal/AddResultModal";
 function RunView() {
 
     const { runId } = useParams();
-    const { setGlobalProjectId, logginUser } = useGlobalVariables();
+    const { setGlobalProjectId, setSelectedNavBar, logginUser } = useGlobalVariables();
     const navigate = useNavigate();
 
     const urlAPI = process.env.REACT_APP_API_URL;
@@ -59,6 +59,7 @@ function RunView() {
         }
         fetchRunDetail();
         fetchRunCase();
+        setSelectedNavBar('runs');
 
     }, [runId])
 
