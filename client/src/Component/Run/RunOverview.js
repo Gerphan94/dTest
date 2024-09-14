@@ -7,6 +7,8 @@ import { useGlobalVariables } from "../../Store/AppContext";
 
 import { FcDataSheet } from "react-icons/fc";
 
+import Navbar from "../navBar";
+
 function RunOverview() {
 
     const { projectId } = useParams();
@@ -37,9 +39,10 @@ function RunOverview() {
 
 
     return (
-        <div className={styles.bodyPage}>
-            <div className="flex h-full">
-                <div className="w-full h-full bg-[#EAF1F7]">
+        <div className="min-h-screen flex flex-col">
+            <Navbar />
+            <div className="flex-grow flex overflow-auto mt-20">
+                <div className="w-full bg-[#EAF1F7]">
                     <div className="flex p-2 border-b-[1px] border-[#aecade] font-medium">
                         Test Runs & Results
                     </div>

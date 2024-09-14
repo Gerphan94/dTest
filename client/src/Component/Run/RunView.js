@@ -10,6 +10,9 @@ import CaseSelectModal from "./Modal/CaseSelectModal";
 import { useGlobalVariables } from "../../Store/AppContext";
 import RunSectionCase from "./RunSectionCase";
 import AddResultModal from "./Modal/AddResultModal";
+import Navbar from "../navBar";
+
+
 function RunView() {
 
     const { runId } = useParams();
@@ -82,9 +85,9 @@ function RunView() {
 
     return (
         <>
-            <div className="mt-20">
-                {/* <div className={styles.bodyPage}> */}
-                <div className="flex h-full">
+           <div className="min-h-screen flex flex-col">
+            <Navbar />
+            <div className="flex-grow flex overflow-auto mt-20">
                     <div className="w-full h-full bg-[#EAF1F7]">
                         <div className="flex justify-between p-2 border-b-[1px] border-[#aecade] font-medium">
                             {rundetail?.name}

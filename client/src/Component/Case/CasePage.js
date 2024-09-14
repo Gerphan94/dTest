@@ -10,7 +10,7 @@ import TagModal from "./Modal/TagModal";
 import Toggle from "../Common/ToggleSwitch";
 import RmTaskModal from "./Modal/RmTaskModal";
 import { useCase } from "../../Store/CaseContext";
-
+import Navbar from "../navBar";
 
 function CasePage() {
 
@@ -134,14 +134,15 @@ function CasePage() {
     return (
         <>
 
-            <div className='mt-20'>
-                <div className="flex">
-                    <div className="w-full p-3 bg-[#EAF1F7]">
+            <div className="min-h-screen flex flex-col">
+                <Navbar />
+                <div className="flex-grow flex overflow-auto mt-20">
+                    <div className="w-full px-3 bg-[#EAF1F7]">
                         <div className="flex p-2 border-b-2 font-medium">
                             Test Cases
                         </div>
 
-                        <div className="w-full border-t-[1px] border-b-[1px] border-[#aecade] flex gap-2 justify-end bg-white text-sm sticky top-20 z-40">
+                        <div className="w-full border-t-[1px] my-4 border-b-[1px] border-[#aecade] flex gap-2 justify-end bg-white text-sm sticky  z-40">
                             <Toggle idname='showDeleted' enabled={showDeleted} setEnabled={setShowDeleted} displayName="Display deleted Test Case" />
                             <button
                                 onClick={() => setShowTagModal(true)}

@@ -79,8 +79,8 @@ function App() {
       {!loggedIn ? <Login setCookie={setCookie} setLoggedIn={setLoggedIn} />
         :
         <>
-          <Navbar setLoggedIn={setLoggedIn} removeCookie={removeCookie} />
           <HelmetProvider>
+          {/* <Navbar setLoggedIn={setLoggedIn} removeCookie={removeCookie} /> */}
             <div className=''>
               <Routes >
                 <Route key="Testcase" path="/cases/view/:projectId"

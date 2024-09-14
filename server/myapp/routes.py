@@ -184,6 +184,36 @@ def update_section(section_id):
         return jsonify({"id":section_id, "name":data["section_name"]})
     return jsonify({"error": "Section not found"})
 
+
+@main.route('/api/get-neightbor-cases/<int:case_id>', methods=['GET'])
+def get_neightbor_cases(case_id):
+    case_detail = Testcase.query.get(case_id)
+    if not (case_detail):
+        return jsonify({"error": "Case not found"}), 404
+    def get_next_section(section_id):
+        section_detail = Section.query.get(section_id)
+        return Section.query
+        
+        
+        
+    
+    def get_next_case():
+        return Testcase.query.filter(Testcase.id > case_id).order_by(asc(Testcase.id)).first().id
+
+    def get_previous_testcase():
+        return Testcase.query.filter(Testcase.id < case_id).order_by(desc(Testcase.id)).first().id
+    
+    
+    return jsonify({
+        "next_case": get_next_case(),
+        "previous_case": get_previous_testcase()
+    })
+        
+    
+    
+    
+    
+
 @main.route('/api/add-case/<int:section_id>', methods=['POST'])
 def add_case(section_id):
     data = request.get_json()

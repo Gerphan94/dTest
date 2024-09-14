@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+
 }
 
 .App-logo {
@@ -41,9 +42,10 @@ input[type="number"] {
   color: #61dafb;
 }
 
-.PageBody {
+.body-container {
   height: calc(100vh - 80px);
   margin-top: 80px;
+  overflow-y: auto;
 }
 
 table {

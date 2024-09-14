@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from 'react-router-dom';
 import CaseDetailBox from "./CaseDetailBox";
 import { CiEdit } from "react-icons/ci";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 
 import { useGlobalVariables } from "../../../Store/AppContext";
 import moment from "moment";
@@ -10,26 +9,31 @@ import styles from "../../styles.module.css";
 import Navbar from "../../navBar";
 
 function CaseDetail() {
-    const { projectId, caseId } = useParams();
-    const { setGlobalProjectId, setSelectedNavBar, logginUser } = useGlobalVariables();
+
+    const { projectId, caseId } = useParams()
+    const { setGlobalProjectId,setSelectedNavBar, logginUser } = useGlobalVariables();
+    
     const urlAPI = process.env.REACT_APP_API_URL;
+
     const [caseDetail, setCaseDetail] = useState({});
 
     useEffect(() => {
         const fetchProject = async () => {
             try {
-                const response = await fetch(`${urlAPI}api/get-case-by-id/${caseId}`);
+                const response = await fetch(urlAPI + "api/get-case-by-id/" + caseId);
                 const data = await response.json();
                 setCaseDetail(data);
-                document.title = `${data.title} - dTest`;
+                document.title = data.title + ' - dTest'
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
-        };
+        }
         fetchProject();
         setGlobalProjectId(projectId);
         setSelectedNavBar('cases');
-    }, [caseId]);
+        
+
+    }, [caseId])
 
     const isAllDataEmpty = !caseDetail.description &&
         !caseDetail.precondition &&
@@ -37,73 +41,57 @@ function CaseDetail() {
         !caseDetail.expectation;
 
     return (
-        <div className="min-h-screen flex flex-col">
-            <Navbar />
-            <div className="flex-grow flex overflow-auto mt-20">
-                <div className="w-full bg-[#EAF1F7] pb-20">
+        
+           <div className="h-full flex-grow flex overflow-auto">
+                <div className='w-full bg-[#EAF1F7] pb-20'>
                     <div className="border-b border-gray-300 p-2 flex justify-between ">
                         <div className="ml-3 font-medium text-md">
-                            <span className="bg-purple-600 px-1 py-0.5 rounded-xl text-white select-none">
-                                C{caseDetail.id}
-                            </span>
+                            <span className=" bg-purple-600 px-1 py-0.5  rounded-xl text-white select-none">C{caseDetail.id}</span>
                             <div className="ml-2 inline-block">{caseDetail.title}</div>
                         </div>
-                        <div className="flex gap-6">
-                            <div className="flex text-xs py-0.5">
-                            <Link
-                                to={`/cases/view/${projectId}/${caseId}`}
-                                className="flex gap-1 items-center  border border-[#376789] border-r-0 bg-[#d2e2ed] px-2 py-0.5 rounded-tl-full rounded-bl-full">
-                                <FaArrowLeft className="text-[#376789]" />
-                                
-                            </Link>
-                            <Link
-                                to={`/cases/view/${projectId}/${caseId}`}
-                                className="flex gap-1 items-center border border-[#376789] border-l-0 bg-[#d2e2ed] px-2 py-0.5 rounded-tr-full rounded-br-full">
-                                <FaArrowRight className="text-[#376789]" />
-                                
-                            </Link>
-
-                            </div>
+                        <div>
                             <Link
                                 to={`/case/edit/${projectId}/${caseId}`}
                                 className="flex gap-1 items-center text-sm border border-[#aecade] px-3 py-0.5">
                                 <CiEdit className="text-[#aecade]" />
-                                Edit
-                            </Link>
+                                Edit</Link>
                         </div>
-                    </div>
 
+                    </div>
                     <div className="p-3 w-full">
                         <div className="text-left border-b px-4 py-2 font-medium">Section name</div>
+
                         <div className="grid grid-cols-4 bg-[#F6FBFF] p-3 border border-[#aecade]">
                             <div className="text-left text-sm">
                                 <div className="font-bold">Type</div>
-                                <div>{caseDetail.type?.name}</div>
+                                <div>{caseDetail.type && caseDetail.type.name}</div>
                             </div>
                             <div className="text-left text-sm">
                                 <div className="font-bold">Priority</div>
-                                <div>{caseDetail.priority?.name}</div>
+                                <div>{caseDetail.priority && caseDetail.priority.name}</div>
                             </div>
                             <div className="text-left text-sm">
                                 <div className="font-bold">Estimate</div>
                                 <div>{caseDetail.estimate}</div>
                             </div>
+
                         </div>
 
-                        {isAllDataEmpty ? (
-                            <p className="text-left text-sm py-2"><em>No additional details available.</em></p>
-                        ) : (
+                        {isAllDataEmpty ?
+                            <>
+                                <p className="text-left text-sm py-2"><em>No additional details available.</em></p>
+                            </>
+                            :
                             <div>
                                 {caseDetail.description && <CaseDetailBox title={"Description"} data={caseDetail.description} />}
-                                {caseDetail.precondition && <CaseDetailBox title={"Precondition"} data={caseDetail.precondition} />}
-                                {caseDetail.step && <CaseDetailBox title={"Steps"} data={caseDetail.step} />}
-                                {caseDetail.expectation && <CaseDetailBox title={"Expectation"} data={caseDetail.expectation} />}
+                                {caseDetail.precondition && <CaseDetailBox title={"Description"} data={caseDetail.precondition} />}
+                                {caseDetail.step && <CaseDetailBox title={"Description"} data={caseDetail.step} />}
+                                {caseDetail.expectation && <CaseDetailBox title={"Description"} data={caseDetail.expectation} />}
                             </div>
-                        )}
+                        }
                     </div>
                 </div>
-
-                <div className="bg-[#d2e2ed] w-64 ">
+                {/* <div className="bg-[#d2e2ed] w-64 h-full ">
                     <div className="w-full text-sm">
                         <div className="flex gap-2 items-center">
                             <span className="w-full h-px border-b border-[#aecade]"></span>
@@ -144,11 +132,8 @@ function CaseDetail() {
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-    );
+                </div> */}
+                </div> 
+    )
 }
-
 export default CaseDetail;
