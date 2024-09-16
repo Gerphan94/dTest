@@ -5,7 +5,7 @@ import { FcBriefcase } from "react-icons/fc";
 import { useGlobalVariables } from "../../Store/AppContext";
 import Navbar from "../navBar";
 
-const Dashboard = React.memo (() => {
+function Dashboard() {
     console.log('fetChing Dashboard')
 
     const urlAPI = process.env.REACT_APP_API_URL;
@@ -15,7 +15,6 @@ const Dashboard = React.memo (() => {
     const { setGlobalProjectId } = useGlobalVariables();
     const [projects, setProjects] = useState([])
 
-    
     useEffect(() => {
         const fetchUrl = urlAPI + 'api/get-all-projects';
         const fetchProject = async () => {
@@ -28,7 +27,7 @@ const Dashboard = React.memo (() => {
                 console.error('Error fetching data:', error);
             }
         }
-        // location.state.eMessage = ''
+        location.state.eMessage = ''
         setGlobalProjectId(0);
         fetchProject();
     }, []);
@@ -80,5 +79,5 @@ const Dashboard = React.memo (() => {
 
         </>
     )
-});
+}
 export default Dashboard;

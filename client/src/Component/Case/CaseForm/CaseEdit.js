@@ -4,6 +4,7 @@ import SectionDropdown from "./SectionDropdown";
 import Dropdown from "../../Common/Dropdown";
 import { Link, useNavigate } from 'react-router-dom';
 import { useGlobalVariables } from "../../../Store/AppContext";
+import Navbar from "../../navBar";
 
 function CaseEdit(props) {
 
@@ -36,7 +37,7 @@ function CaseEdit(props) {
                 console.error('Error fetching data:', error);
             }
         };
-        
+
         const fetchCase = async () => {
             try {
                 const response = await fetch(urlAPI + "api/get-case-by-id/" + caseId);
@@ -49,7 +50,7 @@ function CaseEdit(props) {
                 setPrecondition(data.precondition)
                 setStep(data.step)
                 setExpectation(data.expectation)
-                
+
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -71,10 +72,8 @@ function CaseEdit(props) {
         formJson['priority_id'] = selectedPriority.id
         formJson['casetype_id'] = selectedType.id
         formJson['user_id'] = logginUser.id
-
-        console.log(formJson)
         try {
-            const response = await fetch(urlAPI + 'api/update-case/'+caseId, {
+            const response = await fetch(urlAPI + 'api/update-case/' + caseId, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -83,10 +82,8 @@ function CaseEdit(props) {
             });
             if (response.ok) {
                 const data = await response.json();
-                navigate('/case/view/' + projectId + '/' + caseId)
-
-
-                }
+                navigate('/cases/view/' + caseId)
+            }
         }
         catch (error) {
             console.error('Error:', error.message);
@@ -95,12 +92,13 @@ function CaseEdit(props) {
 
     return (
         <>
-            <div className='mt-20'>
-                <div className="flex">
+            <div className="min-h-screen flex flex-col">
+                <Navbar />
+                <div className="flex-grow flex overflow-auto mt-20">
                     <div className="w-full h-full bg-[#EAF1F7]">
                         <div className="text-left border-b px-4 py-2 font-medium">
-                        <span className=" bg-purple-600 px-2 py-0.5  rounded-xl text-white select-none">C{caseId}</span>
-                        {title}
+                            <span className=" bg-purple-600 px-2 py-0.5  rounded-xl text-white select-none">C{caseId}</span>
+                            {title}
                         </div>
                         <div className="p-4 text-sm">
                             <form autoComplete="off" onSubmit={handleSubmit} spellCheck={false}>

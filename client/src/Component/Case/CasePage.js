@@ -54,10 +54,24 @@ function CasePage() {
     }
 
     useEffect(() => {
-        if (projectId === 'null') {
-            navigate('/');
+        console.log(isNaN(projectId))
+        if (isNaN(projectId)) {
+            navigate('/', { state: { eMessage: 'Field Test Suite is not a valid ID.' } });
             return;
         }
+        const getProjectDetail = async () => {
+            try {
+                const response = await fetch(urlAPI + "api/get-project-by-id/" + projectId);
+                const statusCode = response.status;
+                if (statusCode !== 200) {
+                    navigate('/', { state: { eMessage: 'Field Test Suite is not a valid ID.' } });
+                    return;
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        getProjectDetail();
         setGlobalProjectId(projectId);
     }, [projectId])
 

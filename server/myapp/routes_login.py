@@ -70,8 +70,21 @@ def token_required(f):
 def gereate_password(pwd):
     return hash_password(pwd)
 
+# @login.route('/auth/check-token/<token>', methods=['GET'])
+# def check_token(token):
+#     check_token = Token.query.filter_by(token=token).first()
+#     if check_token:
+#         user_iid = decode_token(token)  #User_id
+#         user = User.query.get(user_iid)
+#         print('check --------------------', user.username)
+        
+#         return jsonify({'success': True, 'id': user.id, 'username': user.username}), 200 
+#     print('CHECK FAIL', 'lỖI TOKEN')
+#     return jsonify({'success': False, 'username': None}), 401
+
 @login.route('/auth/check-token/<token>', methods=['GET'])
 def check_token(token):
+  
     check_token = Token.query.filter_by(token=token).first()
     if check_token:
         user_iid = decode_token(token)  #User_id
@@ -81,7 +94,8 @@ def check_token(token):
         return jsonify({'success': True, 'id': user.id, 'username': user.username}), 200 
     print('CHECK FAIL', 'lỖI TOKEN')
     return jsonify({'success': False, 'username': None}), 401
-    
+
+ 
 @login.route('/login', methods=['GET', 'POST'])
 def log_in():
     data = request.get_json()

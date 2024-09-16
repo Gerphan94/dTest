@@ -7,7 +7,7 @@ import { FaArrowLeftLong, FaChevronDown  } from "react-icons/fa6";
 import { useGlobalVariables } from "../Store/AppContext";
 import UserMore from './Login/UserMore';
 
-function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
+function Navbar({ usernameLogin, setLoggedIn, removeCookie, type=1 }) {
 
   const urlWEB = process.env.REACT_APP_WEB_URL;
   const { globalProjectId, logginUser, selectedNavBar } = useGlobalVariables();
@@ -29,12 +29,14 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
     }
   }, [globalProjectId])
 
-  const projectMenuList = [
+  const MENU0 = [{ id: 'dashboard', name: 'Dashboard', url: urlWEB + 'dashboard/'  }]
+
+  const MENU1 = [
     { id: 'overview', name: 'Overview', url: urlWEB + 'project/overview/' + globalProjectId },
     { id: 'todos', name: 'Todos', url: urlWEB + 'project/overview/' + globalProjectId },
     { id: 'milestones', name: 'Milestones', url: urlWEB + 'project/overview/' + globalProjectId },
     { id: 'runs', name: 'Test Runs & Results', url: urlWEB + 'runs/overview/' + globalProjectId },
-    { id: 'cases', name: 'Test Cases', url: urlWEB + 'cases/view/' + globalProjectId },
+    { id: 'cases', name: 'Test Cases', url: urlWEB + 'suites/view/' + globalProjectId },
     { id: 'issues', name: 'Issues', url: urlWEB + 'issues/view/' + globalProjectId },
     { id: 'report', name: 'Report', url: urlWEB + 'report/view/' + globalProjectId }
   ]
@@ -96,7 +98,7 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie }) {
               WorkLog
             </Link>
             {
-              globalProjectId !== 0 && projectMenuList.map((item) => (
+              globalProjectId !== 0 && MENU1.map((item) => (
                 <Link
                   key={item.id}
                   className={`${selectedNavBar === item.id ? 'border-b-2 border-white' : ''} px-2 h-full text-gray-200 hover:text-white cursor-pointer hover:border-b-2 hover:border-white`}

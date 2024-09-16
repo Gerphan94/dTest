@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from 'react-router-dom';
 import CaseDetailBox from "./CaseDetailBox";
 import { CiEdit } from "react-icons/ci";
+import { FiDelete } from "react-icons/fi";
+
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 
 import { useGlobalVariables } from "../../../Store/AppContext";
 import moment from "moment";
 import styles from "../../styles.module.css";
 import Navbar from "../../navBar";
+
 
 function CaseDetail() {
     const { projectId, caseId } = useParams();
@@ -46,60 +49,84 @@ function CaseDetail() {
                             <span className="bg-purple-600 px-1 py-0.5 rounded-xl text-white select-none">
                                 C{caseDetail.id}
                             </span>
+                            {caseDetail.is_active === 0 &&
+                                <span className="px-2 py-0.5 rounded-xl text-red-500 border border-red-500 select-none ml-2 text-xs">Deleted</span>}
+
                             <div className="ml-2 inline-block">{caseDetail.title}</div>
                         </div>
-                        <div className="flex gap-6">
+                        <div className="flex gap-2">
                             <div className="flex text-xs py-0.5">
-                            <Link
-                                to={`/cases/view/${projectId}/${caseId}`}
-                                className="flex gap-1 items-center  border border-[#376789] border-r-0 bg-[#d2e2ed] px-2 py-0.5 rounded-tl-full rounded-bl-full">
-                                <FaArrowLeft className="text-[#376789]" />
-                                
-                            </Link>
-                            <Link
-                                to={`/cases/view/${projectId}/${caseId}`}
-                                className="flex gap-1 items-center border border-[#376789] border-l-0 bg-[#d2e2ed] px-2 py-0.5 rounded-tr-full rounded-br-full">
-                                <FaArrowRight className="text-[#376789]" />
-                                
-                            </Link>
+                                <Link
+                                    to={`/cases/view/${projectId}/${caseId}`}
+                                    className="flex gap-1 items-center  border border-[#376789] border-r-0 bg-[#d2e2ed] px-2 py-0.5 rounded-tl-full rounded-bl-full">
+                                    <FaArrowLeft className="text-[#376789]" />
+
+                                </Link>
+                                <Link
+                                    to={`/cases/view/${projectId}/${caseId}`}
+                                    className="flex gap-1 items-center border border-[#376789] border-l-0 bg-[#d2e2ed] px-2 py-0.5 rounded-tr-full rounded-br-full">
+                                    <FaArrowRight className="text-[#376789]" />
+
+                                </Link>
 
                             </div>
+                            {caseDetail.is_active === 0 ?
+                            <button
+                            className="flex gap-1 items-center text-sm border border-[#aecade] px-3 py-0.5">
+                            <CiEdit className="text-[#aecade]" />
+                            
+                            Restore testcase</button>
+                            :
                             <Link
-                                to={`/case/edit/${projectId}/${caseId}`}
+                                to={`/cases/edit/${caseId}`}
                                 className="flex gap-1 items-center text-sm border border-[#aecade] px-3 py-0.5">
                                 <CiEdit className="text-[#aecade]" />
                                 Edit
                             </Link>
+                            
+                        }
+
+                            
                         </div>
                     </div>
 
                     <div className="p-3 w-full">
                         <div className="text-left border-b px-4 py-2 font-medium">Section name</div>
-                        <div className="grid grid-cols-4 bg-[#F6FBFF] p-3 border border-[#aecade]">
-                            <div className="text-left text-sm">
-                                <div className="font-bold">Type</div>
-                                <div>{caseDetail.type?.name}</div>
+                        {caseDetail.is_active === 0 ?
+                            <div className="w-full h-80 flex flex-col-reverse items-center font-medium">
+                                <div>Deleted Test case</div>
+                                <FiDelete className="size-20 text-gray-400" />
                             </div>
-                            <div className="text-left text-sm">
-                                <div className="font-bold">Priority</div>
-                                <div>{caseDetail.priority?.name}</div>
-                            </div>
-                            <div className="text-left text-sm">
-                                <div className="font-bold">Estimate</div>
-                                <div>{caseDetail.estimate}</div>
-                            </div>
-                        </div>
-
-                        {isAllDataEmpty ? (
-                            <p className="text-left text-sm py-2"><em>No additional details available.</em></p>
-                        ) : (
+                            :
                             <div>
-                                {caseDetail.description && <CaseDetailBox title={"Description"} data={caseDetail.description} />}
-                                {caseDetail.precondition && <CaseDetailBox title={"Precondition"} data={caseDetail.precondition} />}
-                                {caseDetail.step && <CaseDetailBox title={"Steps"} data={caseDetail.step} />}
-                                {caseDetail.expectation && <CaseDetailBox title={"Expectation"} data={caseDetail.expectation} />}
+                                <div className="grid grid-cols-4 bg-[#F6FBFF] p-3 border border-[#aecade]">
+                                    <div className="text-left text-sm">
+                                        <div className="font-bold">Type</div>
+                                        <div>{caseDetail.type?.name}</div>
+                                    </div>
+                                    <div className="text-left text-sm">
+                                        <div className="font-bold">Priority</div>
+                                        <div>{caseDetail.priority?.name}</div>
+                                    </div>
+                                    <div className="text-left text-sm">
+                                        <div className="font-bold">Estimate</div>
+                                        <div>{caseDetail.estimate}</div>
+                                    </div>
+                                </div>
+
+                                {isAllDataEmpty ? (
+                                    <p className="text-left text-sm py-2"><em>No additional details available.</em></p>
+                                ) : (
+                                    <div>
+                                        {caseDetail.description && <CaseDetailBox title={"Description"} data={caseDetail.description} />}
+                                        {caseDetail.precondition && <CaseDetailBox title={"Precondition"} data={caseDetail.precondition} />}
+                                        {caseDetail.step && <CaseDetailBox title={"Steps"} data={caseDetail.step} />}
+                                        {caseDetail.expectation && <CaseDetailBox title={"Expectation"} data={caseDetail.expectation} />}
+                                    </div>
+                                )}
                             </div>
-                        )}
+
+                        }
                     </div>
                 </div>
 
@@ -144,8 +171,11 @@ function CaseDetail() {
                             </div>
                         </div>
                     </div>
+
                 </div>
+
             </div>
+
         </div>
 
     );

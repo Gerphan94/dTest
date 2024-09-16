@@ -5,9 +5,10 @@ import { BsFillExplicitFill } from "react-icons/bs";
 import { FcDeleteRow } from "react-icons/fc";
 import { SiRedmine } from "react-icons/si";
 import { useCase } from "../../Store/CaseContext";
+import { Link } from "react-router-dom";
 
-const CaseTable = React.memo(({ projectId, data, handleCopy, setCaseTitleModal, setCaseExpectationModal,sectionId, setCaseDelModal, setRmTaskModal }) => {
-  
+const CaseTable = React.memo(({ projectId, data, handleCopy, setCaseTitleModal, setCaseExpectationModal, sectionId, setCaseDelModal, setRmTaskModal }) => {
+
     const urlWEB = process.env.REACT_APP_WEB_URL;
     const [isCheckAll, setIsCheckAll] = useState(false);
     const { setSelectedCaseId } = useCase();
@@ -83,9 +84,12 @@ const CaseTable = React.memo(({ projectId, data, handleCopy, setCaseTitleModal, 
                                 <td>
                                     {ele.active === 1 ? (
                                         <div className="px-2 py-1 text-left flex gap-1 items-center">
-                                            <a className="text-[#5993bc] hover:underline hover:text-[#1E201E]" href={`${urlWEB}cases/view/${projectId}/${ele.id}`}>
+                                            <Link
+                                                className="text-[#5993bc] hover:underline hover:text-[#1E201E]"
+                                                to={`${urlWEB}cases/view/${ele.id}`}
+                                            >
                                                 {ele.title}
-                                            </a>
+                                            </Link>
                                             <button className="opacity-0 group-hover:opacity-100" onClick={() => handleClickEditTitle(ele.id, ele.title)}>
                                                 <CiEdit />
                                             </button>
@@ -93,9 +97,11 @@ const CaseTable = React.memo(({ projectId, data, handleCopy, setCaseTitleModal, 
                                     ) : (
                                         <div className="px-2 py-1 text-left flex gap-1 items-center">
                                             <FcDeleteRow />
-                                            <a className="text-[#5993bc] hover:underline hover:text-[#1E201E] opacity-50" href={`${urlWEB}cases/view/${projectId}/${ele.id}`}>
+                                            <Link
+                                                className="text-[#5993bc] hover:underline hover:text-[#1E201E] opacity-50"
+                                                to={`${urlWEB}cases/view/${ele.id}`}>
                                                 {ele.title}
-                                            </a>
+                                            </Link>
                                         </div>
                                     )}
                                 </td>
@@ -124,9 +130,9 @@ const CaseTable = React.memo(({ projectId, data, handleCopy, setCaseTitleModal, 
                                             <button className="mr-2" onClick={() => handleCopy(ele.id)}>
                                                 <FaRegCopy className="text-blue-500" />
                                             </button>
-                                            <button className="mr-2">
+                                            <Link to={`/cases/edit/${ele.id}`} className="mr-2">
                                                 <CiEdit />
-                                            </button>
+                                            </Link>
                                             <button type="button">
                                                 <FaXmark className="bg-red-500 border border-red-500 rounded-full text-white cursor-pointer opacity-80 hover:opacity-100" onClick={() => handleClickDelCase(ele.id)} />
                                             </button>

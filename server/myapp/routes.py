@@ -38,14 +38,10 @@ def getProjects():
 @main.route('/api/get-project-by-id/<int:project_id>', methods=['GET'])
 def get_project_by_id(project_id):
     try:
-        # Query the database to get the project by ID
         project = Project.query.get(project_id)
-
         if project:
-            # If the project exists, return its details
-            return jsonify({'id': project.id, 'name': project.name})
+            return jsonify({'id': project.id, 'name': project.name}), 200
         else:
-            # If the project doesn't exist, return a 404 response
             return jsonify({'error': 'Project not found'}), 404
 
     except Exception as e:
@@ -414,7 +410,8 @@ def get_caseDetail(case_id):
                 'updated_by': {
                     'id': case_detail.updated_by_user.id,
                     'username': case_detail.updated_by_user.username
-                }
+                },
+                'is_active': case_detail.is_active
                 
             })
         else:

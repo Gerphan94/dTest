@@ -37,8 +37,6 @@ def get_runs_by_project_id(project_id):
         'created_date': run.created_date,
         'is_completed': run.is_completed
     } for run, user in runs]
-
-    print(result)
     return jsonify(result), 200
 
 

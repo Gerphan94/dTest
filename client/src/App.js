@@ -28,6 +28,8 @@ import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useGlobalVariables } from './Store/AppContext';
 
+import { useAuth } from './Component/Login/UseAuth';
+
 function App() {
 
   const urlAPI = process.env.REACT_APP_API_URL;
@@ -42,14 +44,15 @@ function App() {
     { name: "Dashboard", path: "/dashboard/:projectId", title: 'Dashboard', component: <Dashboard /> },
     { name: "Dashboard", path: "/", title: 'Dashboard', component: <Dashboard /> },
     { name: "Overview", path: "/project/overview/:projectId", title: 'Overview', component: Overview },
+    // TESTCASE
     // { name: "Testcases", path: "/cases/view/:projectId", title: 'Case', component: <CasePage /> },
     { name: "CaseAdd", path: "/cases/add/:projectId", title: 'CaseAdd', component: <CaseAdd /> },
-    { name: "CaseEdit", path: "/cases/edit/:projectId", title: 'CaseEdit', component: <CaseEdit /> },
-    { name: "WorkLog", path: "/worklog/:projectId", title: 'WorkLog', component: <WorkLog /> },
-    { name: "CaseDetail", path: "/cases/view/:projectId/:caseId", title: 'CaseDetail', component: <CaseDetail /> },
+    { name: "CaseEdit", path: "/cases/edit/:caseId", title: 'CaseEdit', component: <CaseEdit /> },
+    // { name: "WorkLog", path: "/worklog/:projectId", title: 'WorkLog', component: <WorkLog /> },
+    { name: "CaseDetail", path: "/cases/view/:caseId", title: 'CaseDetail', component: <CaseDetail /> },
+    
     { name: "RunOverview", path: "/runs/overview/:projectId", title: 'RunOverview', component: <RunOverview /> },
     { name: "RunView", path: "/runs/view/:runId", title: 'RunView', component: <RunView /> },
-
     { name: "RunAdd", path: "/runs/add/:projectId", title: 'RunAdd', component: <RunAdd /> },
     { name: "RunEdit", path: "/runs/edit/:runId", title: 'Edit Test Run - dTest', component: <RunEdit /> },
 
@@ -58,20 +61,26 @@ function App() {
 
   useEffect(() => {
     const checkToken = async () => {
-      const fetchUrl = urlAPI + 'auth/check-token/' + cookies.token;
-      const response = await fetch(fetchUrl);
-      const data = await response.json();
-      console.log(data)
-      if (data.success) {
-        setLoggedIn(true);
-        setLogginUser({ id: data.id, username: data.username });
-      } else {
+      try {
+        const response = await fetch(urlAPI + '/auth/check-token/' + cookies.token);
+        const data = await response.json();
+        console.log(data);
+        if (data.success) {
+          setLoggedIn(true);
+          setLogginUser({ id: data.id, username: data.username });
+        } else {
+          setLoggedIn(false);
+        }
+      } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
         setLoggedIn(false);
       }
-    }
+    };
+  
     checkToken();
+    
   }, [cookies.token, urlAPI]);
-
+  
 
 
   return (
@@ -83,7 +92,7 @@ function App() {
           {/* <Navbar setLoggedIn={setLoggedIn} removeCookie={removeCookie} /> */}
             <div className=''>
               <Routes >
-                <Route key="Testcase" path="/cases/view/:projectId"
+                <Route key="Testcase" path="/suites/view/:projectId"
                   element={
                     <>
                       <Helmet>
