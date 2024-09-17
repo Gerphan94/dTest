@@ -5,11 +5,9 @@ import { FcExpand } from "react-icons/fc";
 
 function SideBar({ projectId, sideData, handleScroll }) {
 
-
     const urlAPI = process.env.REACT_APP_API_URL;
 
     const [sections, setSections] = useState([]);
-
     useEffect(() => {
         const fetchSections = async () => {
             try {
@@ -68,7 +66,7 @@ function SideBar({ projectId, sideData, handleScroll }) {
                     <p className="text-sm text-black">Contains <strong>XX</strong> sections and <strong>YYY</strong> cases.</p>
                 </div>
 
-                <div className="p-2 sticky top-2">
+                <div className="p-2 sticky top-4">
                     <div className=" bg-white mt-20 overflow-y-auto h-[600px]">
                         <div className="flex justify-center">
                             <button>Add Section</button>

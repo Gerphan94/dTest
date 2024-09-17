@@ -1,54 +1,52 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import styles from "../styles.module.css"
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FcBriefcase } from "react-icons/fc";
 import { useGlobalVariables } from "../../Store/AppContext";
 import Navbar from "../navBar";
 
-const Dashboard = React.memo (() => {
+const Dashboard = React.memo(() => {
     console.log('fetChing Dashboard')
 
-    const urlAPI = process.env.REACT_APP_API_URL;
+    const urlAPI = useMemo(() => process.env.REACT_APP_API_URL, []);
     const urlWEB = process.env.REACT_APP_WEB_URL;
     const navigate = useNavigate();
     const location = useLocation();
     const { setGlobalProjectId } = useGlobalVariables();
     const [projects, setProjects] = useState([])
 
-    
+
     useEffect(() => {
         const fetchUrl = urlAPI + 'api/get-all-projects';
-        const fetchProject = async () => {
-            try {
-                console.log(fetchUrl)
-                const response = await fetch(fetchUrl);
-                const data = await response.json();
-                setProjects(data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
+        async function fetchProject() {
+            if (projects.length === 0) { // Only fetch if projects is empty
+                try {
+                    const response = await fetch(fetchUrl);
+                    const data = await response.json();
+                    setProjects(data);
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
             }
         }
-        // location.state.eMessage = ''
-        setGlobalProjectId(0);
         fetchProject();
-    }, []);
-
+    }, [projects, urlAPI]);
 
     return (
         <>
             <div className="min-h-screen flex flex-col">
-                <Navbar />
+                <Navbar  />
                 <div className="flex-grow flex overflow-auto mt-20">
                     <div className="w-full bg-[#EAF1F7]">
                         <div className="w-full text-left border-b py-2 px-4 font-bold">Projects</div>
-                        <div className="p-4">
-                            {location.state?.eMessage &&
-                                <div className="py-1">
-                                    <div className="rounded-sm border border-[#e40046] bg-[#f4e0e0] p-1 text-left">{location.state.eMessage}</div>
-                                </div>
-                            }
-                            {projects.map((item) => (
+                        <div className="p-4 flex flex-col gap-2">
+                            {location.state?.eMessage && (
+                                <div className="rounded-sm border border-[#e40046] bg-[#f4e0e0] p-1 text-left">
+                                    {location.state.eMessage}
 
+                                </div>
+                            )}
+                            {projects.map((item) => (
                                 <div key={item.id} className="flex gap-1 border rounded-md mt-2 p-3 bg-white"  >
                                     <div className="px-4 py-1">
                                         <FcBriefcase className="size-8" />
@@ -70,14 +68,8 @@ const Dashboard = React.memo (() => {
                             ))}
                         </div>
                     </div>
-                    <div className="w-56 h-screen bg-slate-500">
-
-                    </div>
                 </div>
-
             </div>
-
-
         </>
     )
 });

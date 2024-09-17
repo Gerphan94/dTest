@@ -167,8 +167,6 @@ def getCasesByProject(projectId):
     result_ar = [init_case(section) for section in root_sections]
     return jsonify(result_ar)
 
-
-
 @main.route('/api/update_section/<int:section_id>', methods=['POST'])
 def update_section(section_id):
     section = Section.query.get(section_id)
@@ -190,26 +188,17 @@ def get_neightbor_cases(case_id):
         section_detail = Section.query.get(section_id)
         return Section.query
         
-        
-        
-    
     def get_next_case():
         return Testcase.query.filter(Testcase.id > case_id).order_by(asc(Testcase.id)).first().id
 
     def get_previous_testcase():
         return Testcase.query.filter(Testcase.id < case_id).order_by(desc(Testcase.id)).first().id
     
-    
     return jsonify({
         "next_case": get_next_case(),
         "previous_case": get_previous_testcase()
     })
         
-    
-    
-    
-    
-
 @main.route('/api/add-case/<int:section_id>', methods=['POST'])
 def add_case(section_id):
     data = request.get_json()
@@ -334,9 +323,6 @@ def mark_as_deleted_case(case_id):
 
 @main.route('/api/get-cases-by-section/<int:section_id>', methods=['GET'])
 def get_cases_by_section(section_id):
-    # cases = db.session.query(Testcase, Priority)\
-    #                     .join(Priority, Testcase.priority_id == Priority.id)\
-    #                     .filter(Testcase.section_id == section_id).all()
     cases = db.session.query(Testcase, Priority, func.count(Rmtask.id).label('rmtask_count'))\
                         .join(Priority, Testcase.priority_id == Priority.id)\
                         .outerjoin(Rmtask, Testcase.id == Rmtask.case_id)\
@@ -353,7 +339,6 @@ def get_cases_by_section(section_id):
         case_obj['rmtask_count'] = rmtask_count
         case_ar.append(case_obj)
     return jsonify(case_ar), 200
-
 
 @main.route('/api/get-case-title/<int:case_id>', methods=['GET'])
 def get_case_title(case_id):
@@ -419,7 +404,6 @@ def get_caseDetail(case_id):
             
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
 
 @main.route('/api/get-case/<int:case_id>', methods=['GET'])
 def get_case(case_id):

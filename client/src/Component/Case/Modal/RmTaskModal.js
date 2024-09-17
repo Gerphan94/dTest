@@ -122,7 +122,7 @@ function RmTaskModal({ fetchCaseData, setRmTaskModal, rmTaskModal, sectionId }) 
                                 <span className=" bg-purple-600 px-2 py-0.5  rounded-xl text-white select-none mr-2">C{selectedCaseId}</span>
                                 {caseTitle}
                             </div>
-                        </div>setSelectedStatus(e.target.value)
+                        </div>
                         {/*body*/}
                         <div className="relative p-6 text-left text-sm h-96">
                             <div className="flex flex-col justify-between h-full">

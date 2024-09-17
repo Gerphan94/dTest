@@ -7,7 +7,7 @@ import { FaArrowLeftLong, FaChevronDown  } from "react-icons/fa6";
 import { useGlobalVariables } from "../Store/AppContext";
 import UserMore from './Login/UserMore';
 
-function Navbar({ usernameLogin, setLoggedIn, removeCookie, type=1 }) {
+function Navbar({ usernameLogin, setLoggedIn, removeCookie, isSelectProject=false }) {
 
   const urlWEB = process.env.REACT_APP_WEB_URL;
   const { globalProjectId, logginUser, selectedNavBar } = useGlobalVariables();
@@ -30,7 +30,6 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie, type=1 }) {
   }, [globalProjectId])
 
   const MENU0 = [{ id: 'dashboard', name: 'Dashboard', url: urlWEB + 'dashboard/'  }]
-
   const MENU1 = [
     { id: 'overview', name: 'Overview', url: urlWEB + 'project/overview/' + globalProjectId },
     { id: 'todos', name: 'Todos', url: urlWEB + 'project/overview/' + globalProjectId },
@@ -60,6 +59,36 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie, type=1 }) {
               dTest |
             </div>
             <div>
+              {isSelectProject ? 
+              <>
+                <div className='mb-0 mt-2 cursor-pointer select-none text-left '>
+                    <Link className='text-[12px] hover:underline' to={`${urlWEB}/dashboard`} >
+                      <span className='flex gap-1 items-center'>
+                        <FaArrowLeftLong />
+                        back to Dashboard
+                      </span>
+
+                    </Link>
+                    <Link 
+                      className='font-bold hover:underline text-left'
+                      to={urlWEB + 'project/overview/' + globalProjectId}
+                    >{projectName}</Link>
+                  </div>
+              </>
+
+              :
+              <>
+              
+              </>
+              
+            
+            
+            }
+
+
+
+
+
               {globalProjectId ?
                 <>
                   <div className='mb-0 mt-2 cursor-pointer select-none text-left '>

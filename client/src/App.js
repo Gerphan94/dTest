@@ -24,6 +24,9 @@ import RunView from './Component/Run/RunView';
 import RunAdd from './Component/Run/RunAdd';
 import RunEdit from './Component/Run/RunEdit';
 
+import MileStone from './Component/Milestone/MileStone';
+
+
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useGlobalVariables } from './Store/AppContext';
@@ -41,9 +44,10 @@ function App() {
 
   const PageList = [
     { name: "Login", path: "/Login", title: 'Login', component: Login },
-    { name: "Dashboard", path: "/dashboard/:projectId", title: 'Dashboard', component: <Dashboard /> },
+    { name: "Dashboard", path: "/dashboard", title: 'Dashboard', component: <Dashboard /> },
     { name: "Dashboard", path: "/", title: 'Dashboard', component: <Dashboard /> },
     { name: "Overview", path: "/project/overview/:projectId", title: 'Overview', component: Overview },
+    { name: "MileStone", path: "/milestones/overview/:projectId", title: 'MileStone', component: <MileStone /> },
     // TESTCASE
     // { name: "Testcases", path: "/cases/view/:projectId", title: 'Case', component: <CasePage /> },
     { name: "CaseAdd", path: "/cases/add/:projectId", title: 'CaseAdd', component: <CaseAdd /> },
@@ -76,13 +80,9 @@ function App() {
         setLoggedIn(false);
       }
     };
-  
     checkToken();
-    
-  }, [cookies.token, urlAPI]);
+  }, [cookies.token]);
   
-
-
   return (
     <div className="App">
       {!loggedIn ? <Login setCookie={setCookie} setLoggedIn={setLoggedIn} />

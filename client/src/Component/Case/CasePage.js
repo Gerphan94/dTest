@@ -14,6 +14,8 @@ import Navbar from "../navBar";
 
 function CasePage() {
 
+    console.log("fetching CasePage")
+
     const navigate = useNavigate();
 
 
@@ -54,7 +56,6 @@ function CasePage() {
     }
 
     useEffect(() => {
-        console.log(isNaN(projectId))
         if (isNaN(projectId)) {
             navigate('/', { state: { eMessage: 'Field Test Suite is not a valid ID.' } });
             return;
@@ -147,16 +148,15 @@ function CasePage() {
 
     return (
         <>
-
             <div className="min-h-screen flex flex-col">
                 <Navbar />
-                <div className="flex-grow flex overflow-auto mt-20">
+                <div className="flex-grow flex  mt-20">
                     <div className="w-full px-3 bg-[#EAF1F7]">
                         <div className="flex p-2 border-b-2 font-medium">
                             Test Cases
                         </div>
 
-                        <div className="w-full border-t-[1px] my-4 border-b-[1px] border-[#aecade] flex gap-2 justify-end bg-white text-sm sticky  z-40">
+                        <div className="w-full border-t-[1px] my-4 border-b-[1px] border-[#aecade] flex gap-2 justify-end bg-white text-sm sticky top-20 z-40">
                             <Toggle idname='showDeleted' enabled={showDeleted} setEnabled={setShowDeleted} displayName="Display deleted Test Case" />
                             <button
                                 onClick={() => setShowTagModal(true)}
@@ -165,22 +165,26 @@ function CasePage() {
                                 Tag
                             </button>
                         </div>
+
                         <div className="">
-                            <div className=" py-2 px-5 mb-40 h-full">
+                            <div className="py-2 px-5 mb-40 h-full">
                                 {renderSections(data)}
                                 <div className="text-left">
                                     <button
                                         className="text-[#5993bc] underline select-none"
                                         onClick={() => onClickAddSection()}
-                                    >Add Section</button>
+                                    >
+                                        Add Section
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    {/* <div className={styles.SideBarHeight}> */}
+
                     <SideBar projectId={projectId} sideData={sideData} handleScroll={handleScroll} />
                 </div>
-            </div >
+            </div>
+
             {sectionModal['show'] &&
                 <SectionModal
                     sectionModal={sectionModal}

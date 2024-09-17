@@ -6,7 +6,7 @@ export default function Toggle( {idname, enabled, setEnabled, displayName}  ) {
     return (
         <div className="relative flex flex-col items-center justify-center py-1 overflow-hidden">
             <div className="flex">
-                <label class="inline-flex relative items-center mr-5 cursor-pointer">
+                <label className="inline-flex relative items-center mr-5 cursor-pointer">
                     <input
                         id={idname}
                         name={idname}
