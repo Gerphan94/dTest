@@ -6,28 +6,54 @@ import Dropdown from "../Common/Dropdown";
 import { useGlobalVariables } from "../../Store/AppContext";
 import { useParams, useNavigate } from "react-router-dom";
 import moment from "moment";
-
+import Navbar from "../navBar";
+import CaseSelectModal from "./Modal/CaseSelectModal";
 
 function RunEdit() {
 
     const { runId } = useParams();
-    const { setGlobalProjectId, logginUser } = useGlobalVariables();
+
+    const { logginUser } = useGlobalVariables();
 
     // useEffect(() => {
     //     setGlobalProjectId(projectId)
     // })
     const navigate = useNavigate();
 
-
     const urlAPI = process.env.REACT_APP_API_URL;
     const urlWEB = process.env.REACT_APP_WEB_URL;
-
     const toDay = moment.utc().format('DD/MM/YYYY');
 
     const [runTitle, setRunTitle] = useState('Test Run ' + toDay);
 
     const [assignedTo, setAssignedTo] = useState([]);
     const [selectedAssignedTo, setSelectedAsignedTo] = useState({ id: null, name: '' });
+    const [showSelectCaseModal, setShowSelectCaseModal] = useState(false);
+    const [runDetail, setRunDetail] = useState({id:null, name:'', project_id:null});
+    const [projectId, setProjectId] = useState(null);
+    
+
+
+    useEffect(() => {
+        const fetchRunDetail = async () => {
+            try {
+                const response = await fetch(urlAPI + 'api/get-run-detail/' + runId);
+                const data = await response.json();
+                setRunDetail({
+                    id: data.id,
+                    name: data.name,
+                    project_id: data.project_id
+                });
+                setProjectId(data.project_id);
+            }
+            catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+
+        fetchRunDetail();
+
+    }, [runId]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -55,9 +81,12 @@ function RunEdit() {
     }
 
     return (
-        <div className={styles.bodyPage}>
-            <div className="flex h-full">
-                <div className="w-full h-full bg-[#EAF1F7]">
+        <>
+       
+        <div className="min-h-screen flex flex-col">
+            <Navbar selectedNavBar="runs" projectId={projectId} />
+            <div className="flex-grow flex  mt-20">
+                <div className="w-full bg-[#EAF1F7]">
                     <div className="flex p-2 border-b-[1px] border-[#aecade] font-medium">
                         Add Test Run
                     </div>
@@ -103,6 +132,24 @@ function RunEdit() {
                                     className="border border-[#d2e2ed] rounded-sm outline-none w-full px-2 py-1"
                                 />
                             </div>
+                            <div className="text-left w-96 p-4 text-sm border-t-2">
+                                <div className="py-4">
+                                    <p className="font-medium">Select specific test cases</p>
+                                    <p>You can alternatively select the test cases to include in this test run.
+                                    New test cases are not automatically added to this run in this case.</p>
+                                </div>
+
+                                <div className="bg-white border border-[#d2e2ed] w-80 px-2 py-1">
+                                    <span className="font-medium" >0</span> test cases included (
+                                        <button 
+                                            className="text-blue-500 underline"
+                                            type="button"
+                                            onClick={() => setShowSelectCaseModal(true)}
+                                            
+                                            >change selection</button>
+                                        )
+                                </div>
+                            </div>
                             <div className="flex gap-4 text-xs">
                                 <BtnOK name="Add Test Run" />
                                 <BtnCancel href={urlWEB + "runs/view/" + runId} />
@@ -110,17 +157,7 @@ function RunEdit() {
                         </form>
                     </div>
 
-                    <div className="text-left p-4 text-sm">
-                        <div className="py-4">
-                            <p className="font-medium">Select specific test cases</p>
-                            <p>You can alternatively select the test cases to include in this test run. </p>
-                            <p>New test cases are not automatically added to this run in this case.</p>
-                        </div>
 
-                        <div className="bg-white border border-[#d2e2ed] w-80 px-2 py-1">
-                            <span className="font-medium" >0</span> test cases included (<button className="text-blue-500 underline">change selection</button>)
-                        </div>
-                    </div>
 
 
                 </div>
@@ -130,6 +167,17 @@ function RunEdit() {
 
             </div>
         </div>
+
+        {showSelectCaseModal &&
+            <CaseSelectModal
+                projectId={projectId}
+                runId={runId}
+                showSelectCaseModal={showSelectCaseModal}
+                setShowModal={setShowSelectCaseModal}
+            />
+        }
+
+        </>
 
     );
 }

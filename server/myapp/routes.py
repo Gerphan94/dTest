@@ -64,18 +64,21 @@ def getSectionMainByModule(module_id):
 # SUMMARY
 @main.route('/api/get-total-section-and-case-by-project/<int:project_id>', methods=['GET'])
 def get_total_section_and_case_by_project(project_id):
-    
-    case_count = Testcase.query.filter_by(project_id=project_id).count()
-    
     return jsonify({
-        'section_count': Section.query.filter_by(project_id=project_id).count(),
-        'case_count': Testcase.query.filter_by(project_id=project_id).count()
+        'section_total': Section.query.filter_by(project_id=project_id).count(),
+        'case_total': db.session.query(Testcase, Section)\
+            .join(Section, Testcase.section_id == Section.id)\
+            .filter(Section.project_id == project_id).count()
     })
 
-
-
-
 # SECTION #######################################################################
+@main.route('/api/get-count-section-by-project/<int:projectId>', methods=['GET'])
+def get_count_section_by_project(projectId):
+    sections = db.session.query(Section).filter_by(project_id = projectId).count()
+    return jsonify({'total' : sections})
+
+
+
 @main.route('/api/get-section-list/<project_id>', methods=['GET'])
 def get_section_list(project_id):
     def init_section(section):
@@ -119,8 +122,17 @@ def is_delete_section(section_id):
     return jsonify({"total": child_section})
 
 # TESTCASE  
-#######################################################################   
+####################################################################### 
 
+@main.route('/api/get-count-case-by-project/<int:projectId>', methods=['GET'])
+def get_count_cases_by_project(projectId):
+    cases = db.session.query(Testcase, Section)\
+                        .join(Section, Testcase.section_id == Section.id)\
+                        .filter(Section.project_id == projectId)\
+                            .count()
+    return jsonify({'total' : cases})
+    
+    
 @main.route('/api/get-cases-by-project/<int:projectId>', methods=['GET'])
 def getCasesByProject(projectId):
         
@@ -184,19 +196,31 @@ def get_neightbor_cases(case_id):
     case_detail = Testcase.query.get(case_id)
     if not (case_detail):
         return jsonify({"error": "Case not found"}), 404
+    section_id = case_detail.section_id
     def get_next_section(section_id):
         section_detail = Section.query.get(section_id)
         return Section.query
-        
-    def get_next_case():
-        return Testcase.query.filter(Testcase.id > case_id).order_by(asc(Testcase.id)).first().id
-
-    def get_previous_testcase():
-        return Testcase.query.filter(Testcase.id < case_id).order_by(desc(Testcase.id)).first().id
+    
+    
+    
+    
+    def get_next_case(section_id):
+        max_case = Testcase.query.filter(Testcase.section_id == section_id).order_by(desc(Testcase.id)).first().id
+        if (case_id == max_case):
+            return
+        case = Testcase.query.filter(Testcase.id > case_id, Testcase.section_id == section_id).order_by(asc(Testcase.id)).first().id
+        if case:
+            return case
+        return case_id
+    def get_previous_testcase(section_id):
+        case = Testcase.query.filter(Testcase.id < case_id, Testcase.section_id == section_id).order_by(desc(Testcase.id)).first().id
+        if case:
+            return case
+        return case_id
     
     return jsonify({
-        "next_case": get_next_case(),
-        "previous_case": get_previous_testcase()
+        "next_case": get_next_case(section_id),
+        "previous_case": get_previous_testcase(section_id)
     })
         
 @main.route('/api/add-case/<int:section_id>', methods=['POST'])

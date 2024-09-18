@@ -18,7 +18,7 @@ const SectionCase = memo(
     const loggin_id = props.logginUser.id;
     const sectionName = props.data.section_name;
 
-    console.log("rendering SectionCase", sectionName);
+    // console.log("rendering SectionCase", sectionName);
 
     const [caseTotal, setCaseTotal] = useState(props.data.case_count);
     const [caseData, setCaseData] = useState(props.data.cases);

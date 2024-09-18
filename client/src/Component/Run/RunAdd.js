@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import styles from "../styles.module.css";
 
+import Navbar from "../navBar";
 import { BtnOK, BtnCancel } from "../Common/CustomButton";
 import Dropdown from "../Common/Dropdown";
 import { useGlobalVariables } from "../../Store/AppContext";
 import { useParams, useNavigate } from "react-router-dom";
 import moment from "moment";
-
+import CaseSelectModal from "./Modal/CaseSelectModal";
 
 function RunAdd() {
 
     const { projectId } = useParams();
     const { setGlobalProjectId, logginUser } = useGlobalVariables();
+    const [showSelectModal, setShowSelectModal] = useState(false);
 
     useEffect(() => {
         setGlobalProjectId(projectId)
@@ -55,9 +57,12 @@ function RunAdd() {
     }
 
     return (
-        <div className={styles.bodyPage}>
-            <div className="flex h-full">
-                <div className="w-full h-full bg-[#EAF1F7]">
+        <>
+       
+        <div className="min-h-screen flex flex-col">
+            <Navbar />
+            <div className="flex-grow flex  mt-20">
+                <div className="w-full bg-[#EAF1F7]">
                     <div className="flex p-2 border-b-[1px] border-[#aecade] font-medium">
                         Add Test Run
                     </div>
@@ -103,6 +108,25 @@ function RunAdd() {
                                     className="border border-[#d2e2ed] rounded-sm outline-none w-full px-2 py-1"
                                 />
                             </div>
+                            <div className="text-left p-4 text-sm">
+                                <div className="py-4">
+                                    <p className="font-medium">Select specific test cases</p>
+                                    <p>You can alternatively select the test cases to include in this test run. </p>
+                                    <p>New test cases are not automatically added to this run in this case.</p>
+                                </div>
+
+                                <div className="bg-white border border-[#d2e2ed] w-80 px-2 py-1">
+                                    <span className="font-medium" >0</span> test cases included (
+                                        <button 
+                                        type="button"
+                                        className="text-blue-500 underline"
+                                        onClick={() => setShowSelectModal(true)}
+
+                                        
+                                        >change selection</button>
+                                        )
+                                </div>
+                            </div>
                             <div className="flex gap-4 text-xs">
                                 <BtnOK name="Add Test Run" />
                                 <BtnCancel href={urlWEB + "runs/overview/" + projectId} />
@@ -112,12 +136,17 @@ function RunAdd() {
 
 
                 </div>
-                <div className="w-80">
+                <div className="w-80 bg-[#d2e2ed]">
 
                 </div>
 
             </div>
         </div>
+        {showSelectModal && <CaseSelectModal
+            projectId={projectId}
+            setShowModal={setShowSelectModal}
+        />}
+        </>
 
     );
 }

@@ -7,10 +7,10 @@ import { FaArrowLeftLong, FaChevronDown  } from "react-icons/fa6";
 import { useGlobalVariables } from "../Store/AppContext";
 import UserMore from './Login/UserMore';
 
-function Navbar({ usernameLogin, setLoggedIn, removeCookie, isSelectProject=false }) {
+function Navbar({ usernameLogin, setLoggedIn, removeCookie, projectId=null, isSelectProject=false, selectedNavBar =' ' }) {
 
   const urlWEB = process.env.REACT_APP_WEB_URL;
-  const { globalProjectId, logginUser, selectedNavBar } = useGlobalVariables();
+  const { logginUser } = useGlobalVariables();
 
   const [projectName, setProjectName] = useState('');
 
@@ -19,25 +19,25 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie, isSelectProject=fals
 
 
   useEffect(() => {
-    if (globalProjectId) {
+    if (projectId) {
       const urlAPI = process.env.REACT_APP_API_URL;
-      fetch(urlAPI + 'api/get-project-by-id/' + globalProjectId)
+      fetch(urlAPI + 'api/get-project-by-id/' + projectId)
         .then((res) => res.json())
         .then((data) => {
           setProjectName(data.name)
         })
     }
-  }, [globalProjectId])
+  }, [projectId])
 
   const MENU0 = [{ id: 'dashboard', name: 'Dashboard', url: urlWEB + 'dashboard/'  }]
   const MENU1 = [
-    { id: 'overview', name: 'Overview', url: urlWEB + 'project/overview/' + globalProjectId },
-    { id: 'todos', name: 'Todos', url: urlWEB + 'project/overview/' + globalProjectId },
-    { id: 'milestones', name: 'Milestones', url: urlWEB + 'project/overview/' + globalProjectId },
-    { id: 'runs', name: 'Test Runs & Results', url: urlWEB + 'runs/overview/' + globalProjectId },
-    { id: 'cases', name: 'Test Cases', url: urlWEB + 'suites/view/' + globalProjectId },
-    { id: 'issues', name: 'Issues', url: urlWEB + 'issues/view/' + globalProjectId },
-    { id: 'report', name: 'Report', url: urlWEB + 'report/view/' + globalProjectId }
+    { id: 'overview', name: 'Overview', url: urlWEB + 'project/overview/' + projectId },
+    { id: 'todos', name: 'Todos', url: urlWEB + 'project/overview/' + projectId },
+    { id: 'milestones', name: 'Milestones', url: urlWEB + 'project/overview/' + projectId },
+    { id: 'runs', name: 'Test Runs & Results', url: urlWEB + 'runs/overview/' + projectId },
+    { id: 'cases', name: 'Test Cases', url: urlWEB + 'suites/view/' + projectId },
+    { id: 'issues', name: 'Issues', url: urlWEB + 'issues/view/' + projectId },
+    { id: 'report', name: 'Report', url: urlWEB + 'report/view/' + projectId }
   ]
 
   const [selectedMenu, setSelectedMenu] = useState('');
@@ -71,7 +71,7 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie, isSelectProject=fals
                     </Link>
                     <Link 
                       className='font-bold hover:underline text-left'
-                      to={urlWEB + 'project/overview/' + globalProjectId}
+                      to={urlWEB + 'project/overview/' + projectId}
                     >{projectName}</Link>
                   </div>
               </>
@@ -80,16 +80,8 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie, isSelectProject=fals
               <>
               
               </>
-              
-            
-            
             }
-
-
-
-
-
-              {globalProjectId ?
+              {projectId ?
                 <>
                   <div className='mb-0 mt-2 cursor-pointer select-none text-left '>
                     <Link className='text-[12px] hover:underline' to={urlWEB} >
@@ -101,7 +93,7 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie, isSelectProject=fals
                     </Link>
                     <Link 
                       className='font-bold hover:underline text-left'
-                      to={urlWEB + 'project/overview/' + globalProjectId}
+                      to={urlWEB + 'project/overview/' + projectId}
                     >{projectName}</Link>
                   </div>
                 </> :
@@ -127,7 +119,7 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie, isSelectProject=fals
               WorkLog
             </Link>
             {
-              globalProjectId !== 0 && MENU1.map((item) => (
+              projectId !== 0 && MENU1.map((item) => (
                 <Link
                   key={item.id}
                   className={`${selectedNavBar === item.id ? 'border-b-2 border-white' : ''} px-2 h-full text-gray-200 hover:text-white cursor-pointer hover:border-b-2 hover:border-white`}

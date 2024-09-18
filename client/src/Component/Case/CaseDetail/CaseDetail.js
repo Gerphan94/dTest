@@ -41,7 +41,7 @@ function CaseDetail() {
 
     return (
         <div className="min-h-screen flex flex-col">
-            <Navbar />
+            <Navbar projectId={projectId} selectedNavBar="cases" />
             <div className="flex-grow flex overflow-auto mt-20">
                 <div className="w-full bg-[#EAF1F7] pb-20">
                     <div className="border-b border-gray-300 p-2 flex justify-between ">

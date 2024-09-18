@@ -6,7 +6,7 @@ import { useGlobalVariables } from "../../../Store/AppContext";
 import CaseSelectTable from "./CaseSelectTable";
 import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
 
-function CaseSelectModal({ runId, setShowModal, project_id, user_id }) {
+function CaseSelectModal({ runId=null, setShowModal, project_id, user_id }) {
 
 
     const urlAPI = process.env.REACT_APP_API_URL;

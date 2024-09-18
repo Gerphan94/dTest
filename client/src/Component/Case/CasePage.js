@@ -18,7 +18,6 @@ function CasePage() {
 
     const navigate = useNavigate();
 
-
     const { projectId } = useParams();
     const { setGlobalProjectId, logginUser, setSelectedNavBar } = useGlobalVariables();
 
@@ -28,12 +27,8 @@ function CasePage() {
     const [sideData, setSideData] = useState([]);
     const [showTagModal, setShowTagModal] = useState(false);
     const [showDeleted, setShowDeleted] = useState(false);
-
-    const [expCaseModal, setExpCaseModal] = useState({
-        show: false,
-        caseId: null,
-        exp: ''
-    });
+    const [totalCase, setTotalCase] = useState(0);
+    const [totalSection, setTotalSection] = useState(0);
 
     const [sectionModal, setSectionModal] = useState({
         show: false,
@@ -46,6 +41,20 @@ function CasePage() {
             'parent_id': 0
         }
     });
+
+    const fetchTotal = async () => {
+        console.log("fetching total")
+        try {
+            const response = await fetch(urlAPI + "api/get-total-section-and-case-by-project/" + projectId);
+            const data = await response.json();
+            console.log(data.case_total, data.section_total)
+            setTotalCase(data.case_total);
+            setTotalSection(data.section_total);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
     const get_side_data = (array) => {
         let result = []
 
@@ -74,6 +83,7 @@ function CasePage() {
         }
         getProjectDetail();
         setGlobalProjectId(projectId);
+        fetchTotal();
     }, [projectId])
 
 
@@ -149,7 +159,7 @@ function CasePage() {
     return (
         <>
             <div className="min-h-screen flex flex-col">
-                <Navbar />
+                <Navbar projectId={projectId} selectedNavBar="cases" />
                 <div className="flex-grow flex  mt-20">
                     <div className="w-full px-3 bg-[#EAF1F7]">
                         <div className="flex p-2 border-b-2 font-medium">
@@ -181,7 +191,12 @@ function CasePage() {
                         </div>
                     </div>
 
-                    <SideBar projectId={projectId} sideData={sideData} handleScroll={handleScroll} />
+                    <SideBar
+                        projectId={projectId}
+                        sideData={sideData}
+                        handleScroll={handleScroll}
+                        totalCase={totalCase}
+                        totalSection={totalSection} />
                 </div>
             </div>
 
@@ -190,6 +205,7 @@ function CasePage() {
                     sectionModal={sectionModal}
                     setSectionModal={setSectionModal}
                     projectId={projectId}
+
                 />
             }
             {showTagModal &&
