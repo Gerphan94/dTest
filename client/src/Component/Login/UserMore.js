@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { RiSearch2Line, RiAlignJustify } from "react-icons/ri";
+import { useCookies } from 'react-cookie';
 
-const UserMore = ({ setLoggedIn, removeCookie }) => {
+const UserMore = ({ setLoggedIn }) => {
 
-    const urlAPI = process.env.REACT_APP_API_URL;
+    // const urlAPI = process.env.REACT_APP_API_URL;
 
-
+    const [cookies, setCookie, removeCookie] = useCookies(['token']);
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -61,7 +62,7 @@ const UserMore = ({ setLoggedIn, removeCookie }) => {
                             <li>
                                 <button
                                     className="w-full text-left block px-4 py-2 text-sm text-[#0C1844] hover:bg-gray-100 select-none"
-                                    onClick={() => handleLogout()}
+                                    onClick={handleLogout}
                                 >
                                     Logout
                                 </button>

@@ -45,12 +45,14 @@ function Login({ setCookie, setLoggedIn }) {
 
         <div>
             <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-[90] outline-none focus:outline-none">
-                <div className="relative w-[300px] my-6 mx-auto max-w-3xl p-4">
+                <div className="relative w-[400px] my-6 mx-auto max-w-3xl p-4">
                     <form method="post" onSubmit={(e) => handleSubmit(e)} autoComplete='none'>
                         {/*content*/}
                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none text-[#536493]">
                             {/*header*/}
-                            <div className="text-xl mt-4 text-center font-semibold select-none">Welcome</div>
+                            <div className="text-xl mt-4 text-center font-semibold select-none">dTest QA</div>
+                            <div className="text-sm mt-1 text-center font-semibold select-none">Log into Your Account</div>
+
                             {/*body*/}
                             <div className="relative px-6 py-2 text-left text-sm">
                                 <div>
@@ -116,7 +118,7 @@ function Login({ setCookie, setLoggedIn }) {
 
                 </div>
             </div>
-            <div className="opacity-100 fixed inset-0 z-50 bg-gray-100 dark:bg-gray-900"></div>
+            <div className="opacity-100 fixed inset-0 z-50 bg-[#0E3754] dark:bg-gray-900"></div>
         </div>
 
     )
