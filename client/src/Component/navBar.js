@@ -7,7 +7,7 @@ import { FaArrowLeftLong, FaChevronDown  } from "react-icons/fa6";
 import { useGlobalVariables } from "../Store/AppContext";
 import UserMore from './Login/UserMore';
 
-function Navbar({ usernameLogin, setLoggedIn, removeCookie, projectId=null, isSelectProject=false, selectedNavBar =' ' }) {
+function Navbar({ usernameLogin, setLoggedIn, removeCookie, projectId=0, isSelectProject=false, selectedNavBar =' ' }) {
 
   const urlWEB = process.env.REACT_APP_WEB_URL;
   const { logginUser } = useGlobalVariables();
@@ -59,7 +59,7 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie, projectId=null, isSe
               dTest |
             </div>
             <div>
-              {isSelectProject ? 
+              {projectId > 0 ? 
               <>
                 <div className='mb-0 mt-2 cursor-pointer select-none text-left '>
                     <Link className='text-[12px] hover:underline' to={`${urlWEB}/dashboard`} >
@@ -67,7 +67,6 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie, projectId=null, isSe
                         <FaArrowLeftLong />
                         back to Dashboard
                       </span>
-
                     </Link>
                     <Link 
                       className='font-bold hover:underline text-left'
@@ -75,35 +74,15 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie, projectId=null, isSe
                     >{projectName}</Link>
                   </div>
               </>
-
               :
               <>
+               <div className='mb-0 mt-2 cursor-pointer select-none flex gap-1'>
+                    dTest QA
+                  </div>
               
               </>
             }
-              {projectId ?
-                <>
-                  <div className='mb-0 mt-2 cursor-pointer select-none text-left '>
-                    <Link className='text-[12px] hover:underline' to={urlWEB} >
-                      <span className='flex gap-1 items-center'>
-                        <FaArrowLeftLong />
-                        back to Dashboard
-                      </span>
-
-                    </Link>
-                    <Link 
-                      className='font-bold hover:underline text-left'
-                      to={urlWEB + 'project/overview/' + projectId}
-                    >{projectName}</Link>
-                  </div>
-                </> :
-                <>
-                  <div className='mb-0 mt-2 cursor-pointer select-none flex gap-1'>
-                    dTest QA
-                  </div>
-                </>
-
-              }
+              
             </div>
           </div>
           <div className='relative bg-[#376789] w-64 h-6 flex items-center gap-1 px-4 text-[#e0e3f4] hover:underline cursor-pointer'>
@@ -115,9 +94,9 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie, projectId=null, isSe
         </div>
         <div className='w-full h-6 px-2'>
           <ul className="h-full flex gap-3 text-[12px] text-[#aecade] py-0.5 uppercase">
-            <Link className={menuClass} to="/work-log">
+            {/* <Link className={menuClass} to="/work-log">
               WorkLog
-            </Link>
+            </Link> */}
             {
               projectId !== 0 && MENU1.map((item) => (
                 <Link
