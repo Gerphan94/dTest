@@ -1,13 +1,8 @@
 import './App.css';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-
-import { AppProvider } from './Store/AppContext';
-
 import { CaseProvider } from './Store/CaseContext';
 
-// import js
-import Navbar from './Component/navBar';
 
 import Login from './Component/Login/Login';
 import NotFound from './Page/404';
