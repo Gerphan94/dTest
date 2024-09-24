@@ -13,10 +13,11 @@ import Navbar from "../../navBar";
 
 
 function CaseDetail() {
-    const { projectId, caseId } = useParams();
-    const { setGlobalProjectId, setSelectedNavBar, logginUser } = useGlobalVariables();
+    const { caseId } = useParams();
+    const { setGlobalProjectId, setSelectedNavBar } = useGlobalVariables();
     const urlAPI = process.env.REACT_APP_API_URL;
     const [caseDetail, setCaseDetail] = useState({});
+    const [projectId, setProjectId] = useState('');
 
     useEffect(() => {
         const fetchProject = async () => {
@@ -30,7 +31,6 @@ function CaseDetail() {
             }
         };
         fetchProject();
-        setGlobalProjectId(projectId);
         setSelectedNavBar('cases');
     }, [caseId]);
 

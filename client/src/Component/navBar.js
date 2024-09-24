@@ -17,6 +17,8 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie, projectId=0, isSelec
   const location = useLocation();
   const firstPath = location.pathname.split('/')[1];
 
+  console.log(selectedNavBar)
+
 
   useEffect(() => {
     if (projectId) {

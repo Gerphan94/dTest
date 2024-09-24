@@ -63,7 +63,8 @@ function RmTaskModal({ fetchCaseData, setRmTaskModal, rmTaskModal, sectionId }) 
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        const formData = new FormData(e.target);
+        const form = e.target;
+        const formData = new FormData(form);
         const formJson = Object.fromEntries(formData.entries());
         formJson['status'] = selectedStatus.id
         try {
@@ -75,8 +76,10 @@ function RmTaskModal({ fetchCaseData, setRmTaskModal, rmTaskModal, sectionId }) 
                 body: JSON.stringify(formJson),
             });
             if (response.ok) {
+
                 fetchRmtasks();
                 fetchCaseData(sectionId);
+                form.reset();
             }
         }
         catch (error) {

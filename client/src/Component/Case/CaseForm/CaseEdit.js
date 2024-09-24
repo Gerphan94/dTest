@@ -11,7 +11,7 @@ function CaseEdit(props) {
     const urlAPI = process.env.REACT_APP_API_URL;
 
     const navigate = useNavigate();
-    const { projectId, logginUser } = useGlobalVariables();
+    const { logginUser } = useGlobalVariables();
     const { caseId } = useParams()
 
     const [sections, setSections] = useState([]);
@@ -26,6 +26,8 @@ function CaseEdit(props) {
     const [selectedPriority, setSelectedPriority] = useState({ id: null, name: 'null' });
     const [selectedSection, setSelectedSection] = useState({ id: null, name: '' });
     const [selectedType, setSelectedType] = useState({ id: 1, name: 'Other' });
+
+    const [projectId, setProjectId] = useState(3);
 
     useEffect(() => {
         const fetchSections = async () => {
@@ -93,7 +95,7 @@ function CaseEdit(props) {
     return (
         <>
             <div className="min-h-screen flex flex-col">
-                <Navbar />
+                <Navbar projectId={projectId} selectedNavBar="cases" />
                 <div className="flex-grow flex overflow-auto mt-20">
                     <div className="w-full h-full bg-[#EAF1F7]">
                         <div className="text-left border-b px-4 py-2 font-medium">
