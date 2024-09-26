@@ -34,6 +34,14 @@ class Status(db.Model):
 class Casetype(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
+
+class Tag(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
+    project = db.relationship("Project", backref=backref("tag", uselist=True))
+    
+
   
 class Section(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -55,6 +63,7 @@ class Testcase(db.Model):
     priority = db.relationship("Priority", backref=backref("testcases", uselist=True))
     estimate = db.Column(db.String(255))
     uat = db.Column(db.Integer, default = 0)
+    tags = db.Column(db.String(100))
     is_active = db.Column(db.Integer, default = 1)
     section_id = db.Column(db.Integer, db.ForeignKey('section.id'), nullable=False)
     section = db.relationship("Section", backref=backref("testcases", uselist=True))
@@ -66,7 +75,6 @@ class Testcase(db.Model):
     updated_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     created_by_user = db.relationship("User", foreign_keys=[created_by], backref=backref("created_testcases", uselist=True))
     updated_by_user = db.relationship("User", foreign_keys=[updated_by], backref=backref("updated_testcases", uselist=True))
-
 
 
 class Run(db.Model):

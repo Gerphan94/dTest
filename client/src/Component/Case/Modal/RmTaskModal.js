@@ -19,7 +19,6 @@ function RmTaskModal({ fetchCaseData, setRmTaskModal, rmTaskModal, sectionId }) 
 
     const [rmtasks, setRmtasks] = useState([]);
 
-
     const closeModal = () => {
         setRmTaskModal({
             'showModal': false,

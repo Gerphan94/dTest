@@ -4,7 +4,7 @@ import { BtnCancel, BtnOKDisabled, BtnOK } from "../../Common/CustomButton";
 import { useGlobalVariables } from "../../../Store/AppContext";
 import { useCase } from "../CaseContext";
  
-function CaseExpectationModal({ caseExpectationModal, setCaseExpectationModal, fetchCaseData, sectionId }) {
+function CaseExpectationModal({ caseExpectationModal, setModal, fetchCaseData, sectionId }) {
 
     const urlAPI = process.env.REACT_APP_API_URL;
     const caseId = caseExpectationModal.caseId
@@ -16,19 +16,19 @@ function CaseExpectationModal({ caseExpectationModal, setCaseExpectationModal, f
     const [availableSave, setAvailableSave] = useState(false);
     const { logginUser } = useGlobalVariables();
 
-    // const urlWEB = process.env.REACT_APP_WEB_URL;
     useEffect(() => {
         if (caseExpectationModal) {
-          // Focus the input field when the modal is shown
           inputRef.current?.focus();
         }
       }, [caseExpectationModal]);
+      
     const closeModal = () => {
-        setCaseExpectationModal({
+        setModal({
             ...caseExpectationModal,
             showModal: false
         })
     }
+       
 
     const handeChange = (e) => {
         setExpForm(e.target.value)

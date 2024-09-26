@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { BtnCancel, BtnOKDisabled, BtnOK } from "../../Common/CustomButton";
 
 import { useGlobalVariables } from "../../../Store/AppContext";
@@ -6,12 +6,19 @@ import { useGlobalVariables } from "../../../Store/AppContext";
 function CaseTitleModal({ caseTitleModal, setCaseTitleModal, fetchCaseData, sectionId }) {
 
     console.log('caseTitleModal', caseTitleModal)
+    const inputRef = useRef(null);
 
     const urlAPI = process.env.REACT_APP_API_URL;
     const [titleForm, setTitleForm] = useState(caseTitleModal.title);
     const [availableSave, setAvailableSave] = useState(false);
     const { logginUser } = useGlobalVariables();
 
+    useEffect(() => {
+        if (caseTitleModal) {
+          inputRef.current?.focus();
+          inputRef.current.select();
+        }
+      }, [caseTitleModal]);
 
     const closeModal = () => {
         setCaseTitleModal({
@@ -20,7 +27,6 @@ function CaseTitleModal({ caseTitleModal, setCaseTitleModal, fetchCaseData, sect
         })
     }
 
-  
 const handleKeyPress = (event) => {
     if (event.key === 'Enter') {
         event.preventDefault();
@@ -92,6 +98,7 @@ return (
                                         name="title"
                                         rows={5}
                                         value={titleForm}
+                                        ref={inputRef}
                                         className="border w-full outline-none px-2 py-1"
                                         onChange={(e) => handeChange(e)}
                                         onKeyDown={handleKeyPress}

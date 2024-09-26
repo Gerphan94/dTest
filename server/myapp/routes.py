@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, make_response
-from .model import db, Project, Section, Testcase, Priority, Casetype, Worklog, Worktask, User, Run, Rmtask
+from .model import db, Project, Section, Testcase, Priority, Casetype, Worklog, Worktask, User, Run, Rmtask, Tag
 from sqlalchemy import case, asc, desc, func
 from sqlalchemy.orm import aliased
 from datetime import datetime
@@ -46,6 +46,14 @@ def get_project_by_id(project_id):
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+@main.route('/api/get-tags/<int:project_id>', methods=['GET'])
+def get_tags(project_id):
+    return jsonify([{
+        'id': tag.id, 
+        'name': tag.name
+        } for tag in Tag.query.filter_by(project_id=project_id).all()])
+
 
 # MODULE #######################################################################
 
@@ -153,6 +161,7 @@ def getCasesByProject(projectId):
                 case_obj['active'] = testcase.is_active
                 case_obj['section_id'] = section_id,
                 case_obj['rmtask_count'] = rmtask_count
+                case_obj['tags'] = testcase.tags
                 case_ar.append(case_obj)
             return case_ar
         return {

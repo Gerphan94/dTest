@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { FaCheck, FaXmark, FaRegCopy } from "react-icons/fa6";
+import { FaCheck, FaXmark, FaRegCopy, FaTag } from "react-icons/fa6";
 import { CiEdit } from "react-icons/ci";
 import { BsFillExplicitFill } from "react-icons/bs";
 import { FcDeleteRow } from "react-icons/fc";
@@ -7,7 +7,21 @@ import { SiRedmine } from "react-icons/si";
 import { useCase } from "../../Store/CaseContext";
 import { Link } from "react-router-dom";
 
-const CaseTable = React.memo(({ projectId, data, handleCopy, setCaseTitleModal, setCaseExpectationModal, sectionId, setCaseDelModal, setRmTaskModal }) => {
+// const CaseTable = React.memo(({ projectId, data, setModals, handleCopy, setCaseTitleModal, setCaseExpectationModal, sectionId, setCaseDelModal, setRmTaskModal }) => {
+const CaseTable = React.memo((props) => {
+
+    const {
+        projectId,
+        data,
+        setModals,
+        handleCopy,
+        setCaseTitleModal,
+        setCaseExpectationModal,
+        sectionId,
+        etCaseDelModal,
+        setRmTaskModal,
+        setTagModal
+    } = props;
 
     const urlWEB = process.env.REACT_APP_WEB_URL;
     const [isCheckAll, setIsCheckAll] = useState(false);
@@ -15,12 +29,17 @@ const CaseTable = React.memo(({ projectId, data, handleCopy, setCaseTitleModal, 
 
     // Memoized function to prevent re-creation on each render
     const handleClickExp = useCallback((caseId, exp) => {
-        setCaseExpectationModal({
-            'showModal': true,
-            'expectation': exp,
-            'caseId': caseId
-        });
+        setModals((prevModals) => ({
+            ...prevModals,
+            caseExpectationModal: {
+                showModal: true,
+                expectation: exp,
+                caseId: caseId
+            }
+        }))
+
         setSelectedCaseId(caseId);
+
     }, [setCaseExpectationModal, setSelectedCaseId]);
 
     const handleClickEditTitle = useCallback((caseId, title) => {
@@ -32,12 +51,12 @@ const CaseTable = React.memo(({ projectId, data, handleCopy, setCaseTitleModal, 
         setSelectedCaseId(caseId);
     }, [setCaseTitleModal, setSelectedCaseId]);
 
-    const handleClickDelCase = useCallback((caseId) => {
-        setCaseDelModal({
-            'showModal': true,
-            'caseId': caseId
-        });
-    }, [setCaseDelModal]);
+    // const handleClickDelCase = useCallback((caseId) => {
+    //     setCaseDelModal({
+    //         'showModal': true,
+    //         'caseId': caseId
+    //     });
+    // }, [setCaseDelModal]);
 
     const handeClickRm = useCallback((caseId) => {
         setRmTaskModal({
@@ -45,6 +64,13 @@ const CaseTable = React.memo(({ projectId, data, handleCopy, setCaseTitleModal, 
             'caseId': caseId
         });
     }, [setRmTaskModal]);
+
+    const handleClickTag = useCallback((caseId) => {
+        setTagModal({
+            'showModal': true,
+            'caseId': caseId
+        });
+    }, [setTagModal]);
 
     return (
         <>
@@ -126,15 +152,28 @@ const CaseTable = React.memo(({ projectId, data, handleCopy, setCaseTitleModal, 
                                 </td>
                                 <td className="">
                                     {ele.active === 1 && (
-                                        <div name="action" className="flex gap-0 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-100 ease-in-out">
-                                            <button className="mr-2" onClick={() => handleCopy(ele.id)}>
+                                        <div name="action" className="flex gap-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-100 ease-in-out">
+                                            {/* <button className="mr-2" onClick={() => handleCopy(ele.id)}>
                                                 <FaRegCopy className="text-blue-500" />
+                                            </button> */}
+                                            <button type="button"
+                                                onClick={() => setTagModal({
+                                                    'showModal': true,
+                                                    'caseId': ele.id,
+                                                    'caseTitle': ele.title,
+                                                    'tags': ele.tags
+                                                })}
+                                            >
+                                                <FaTag className="text-[#FF885B]" />
                                             </button>
-                                            <Link to={`/cases/edit/${ele.id}`} className="mr-2">
+
+                                            <Link to={`/cases/edit/${ele.id}`} className="">
                                                 <CiEdit />
                                             </Link>
                                             <button type="button">
-                                                <FaXmark className="bg-red-500 border border-red-500 rounded-full text-white cursor-pointer opacity-80 hover:opacity-100" onClick={() => handleClickDelCase(ele.id)} />
+                                                <FaXmark className="bg-red-500 border border-red-500 rounded-full text-white cursor-pointer opacity-80 hover:opacity-100" 
+                                                // onClick={() => handleClickDelCase(ele.id)}
+                                                 />
                                             </button>
                                         </div>
                                     )}

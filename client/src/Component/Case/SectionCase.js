@@ -8,6 +8,7 @@ import { PiClipboardTextLight } from "react-icons/pi";
 import CaseExpectationModal from "./Modal/CaseExpectationModal";
 import CaseDelModal from "./Modal/CaseDelModal";
 import RmTaskModal from "./Modal/RmTaskModal";
+import TagModal from "./Modal/TagModal";
 
 // Memoizing the component to avoid unnecessary re-renders
 const SectionCase = memo(
@@ -24,32 +25,26 @@ const SectionCase = memo(
     const [caseData, setCaseData] = useState(props.data.cases);
     const [isShowCaseForm, setisShowCaseForm] = useState(false);
 
-    // Delete state
-    const [showDeleteSection, setShowDeleteSection] = useState(false);
-    const [deleteType, setDeleteType] = useState("");
-    const [deleteMessage, setDeleteMessage] = useState("");
+    const [tagModal, setTagModal] = useState({ showModal: false, caseId: null, caseTitle: '', tags: '' });
+    const [rmTaskModal, setRmTaskModal] = useState({ showModal: false, caseId: null});
+    const [caseTitleModal, setCaseTitleModal] = useState({ showModal: false, title: "", caseId: null });  
 
-    const [caseDelModal, setCaseDelModal] = useState({
-      showModal: false,
-      caseId: null
+    const [modals, setModals] = useState({
+      caseDelModal: { showModal: false, caseId: null },
+      caseTitleModal: { showModal: false, title: "", caseId: null },
+      caseExpectationModal: { showModal: false, expectation: "", caseId: null },
+      rmTaskModal: { showModal: false, caseId: null },
     });
 
-    const [caseTitleModal, setCaseTitleModal] = useState({
-      showModal: false,
-      title: "",
-      caseId: null
-    });
+    const setModal = (modalName, newState) => setModals((prevModals) => ({
+      ...prevModals,
+      [modalName]: { ...prevModals[modalName], ...newState },
+    }));
 
-    const [caseExpectationModal, setCaseExpectationModal] = useState({
-      showModal: false,
-      expectation: "",
-      caseId: null
-    });
 
-    const [rmTaskModal, setRmTaskModal] = useState({
-      showModal: false,
-      caseId: null
-    });
+
+
+    
 
     const fetchGetCaseDataBySection = useCallback(async (section_Id) => {
       try {
@@ -157,17 +152,13 @@ const SectionCase = memo(
       navigator.clipboard.writeText(copied_data);
     }, [caseData]);
 
-    const handleClickSectionDel = () => {
-      setShowDeleteSection(true);
-      setDeleteType("section_delete");
-      setDeleteMessage(sectionName);
-    };
+    // const handleClickSectionDel = () => setDeleteSection({ show: true, type: "section_delete", message: sectionName });
 
-    const handleClickCaseDel = (case_name) => {
-      setShowDeleteSection(true);
-      setDeleteType("case_delete");
-      setDeleteMessage(case_name);
-    };
+    // const handleClickCaseDel = (case_name) => {
+    //   setShowDeleteSection(true);
+    //   setDeleteType("case_delete");
+    //   setDeleteMessage(case_name);
+    // };
 
     return (
       <div className="mb-6 text-sm" ref={ref}>
@@ -182,7 +173,7 @@ const SectionCase = memo(
             <button className="ml-4 text-blue-600" onClick={handleClickEditSection}>
               <CiEdit />
             </button>
-            <button className="ml-1 text-red-500" onClick={handleClickSectionDel}>
+            <button className="ml-1 text-red-500" >
               <TiDelete />
             </button>
             <button className="ml-1 text-blue-500" onClick={handleCopy2Clipboard}>
@@ -196,10 +187,10 @@ const SectionCase = memo(
             data={caseData}
             sectionId={sectionId}
             handleCopy={handleCopyCase}
-            setCaseTitleModal={setCaseTitleModal}
-            setCaseExpectationModal={setCaseExpectationModal}
-            setCaseDelModal={setCaseDelModal}
+            setModals={setModals}
+            setTagModal={setTagModal}
             setRmTaskModal={setRmTaskModal}
+            setCaseTitleModal={setCaseTitleModal}
           />
         </div>
         <div className="flex gap-2 mt-4">
@@ -234,10 +225,10 @@ const SectionCase = memo(
           )}
         </div>
 
-        {caseExpectationModal.showModal && (
+        {modals.caseExpectationModal.showModal && (
           <CaseExpectationModal
-            caseExpectationModal={caseExpectationModal}
-            setCaseExpectationModal={setCaseExpectationModal}
+            caseExpectationModal={modals.caseExpectationModal}
+            setModal={(newState) => setModal('caseExpectationModal', newState)}
             fetchCaseData={fetchGetCaseDataBySection}
             sectionId={sectionId}
           />
@@ -246,16 +237,16 @@ const SectionCase = memo(
         {caseTitleModal.showModal && (
           <CaseTitleModal
             caseTitleModal={caseTitleModal}
-            setCaseTitleModal={setCaseTitleModal}
             fetchCaseData={fetchGetCaseDataBySection}
             sectionId={sectionId}
+            setCaseTitleModal={setCaseTitleModal}
           />
         )}
 
-        {caseDelModal.showModal && (
+        {modals.caseDelModal.showModal && (
           <CaseDelModal
-            caseDelModal={caseDelModal}
-            setCaseDelModal={setCaseDelModal}
+            caseDelModal={modals.caseDelModal}
+            setModal={(newState) => setModal('caseDelModal', newState)}
             fetchCaseData={fetchGetCaseDataBySection}
             sectionId={sectionId}
           />
@@ -264,9 +255,17 @@ const SectionCase = memo(
         {rmTaskModal.showModal && (
           <RmTaskModal
             rmTaskModal={rmTaskModal}
-            setRmTaskModal={setRmTaskModal}
             fetchCaseData={fetchGetCaseDataBySection}
             sectionId={sectionId}
+            setRmTaskModal={setRmTaskModal}
+          />
+        )}
+
+        {tagModal.showModal && (
+          <TagModal
+          
+            setTagModal={setTagModal}
+            tagModal={tagModal}
           />
         )}
       </div>

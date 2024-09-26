@@ -209,11 +209,8 @@ function CasePage() {
                 />
             }
             {showTagModal &&
-
                 <TagModal setShowModal={setShowTagModal} />
             }
-
-
 
         </>
     )
