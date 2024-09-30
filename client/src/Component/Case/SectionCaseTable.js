@@ -18,7 +18,6 @@ const CaseTable = React.memo((props) => {
         setCaseTitleModal,
         setCaseExpectationModal,
         sectionId,
-        etCaseDelModal,
         setRmTaskModal,
         setTagModal
     } = props;
@@ -26,6 +25,13 @@ const CaseTable = React.memo((props) => {
     const urlWEB = process.env.REACT_APP_WEB_URL;
     const [isCheckAll, setIsCheckAll] = useState(false);
     const { setSelectedCaseId } = useCase();
+
+    const convertStr2Array = (str) => {
+        if (!str) {
+            return [];
+        }
+        return str.split(',').map(item => item.trim());
+    }
 
     // Memoized function to prevent re-creation on each render
     const handleClickExp = useCallback((caseId, exp) => {
@@ -50,13 +56,6 @@ const CaseTable = React.memo((props) => {
         });
         setSelectedCaseId(caseId);
     }, [setCaseTitleModal, setSelectedCaseId]);
-
-    // const handleClickDelCase = useCallback((caseId) => {
-    //     setCaseDelModal({
-    //         'showModal': true,
-    //         'caseId': caseId
-    //     });
-    // }, [setCaseDelModal]);
 
     const handeClickRm = useCallback((caseId) => {
         setRmTaskModal({
@@ -89,6 +88,7 @@ const CaseTable = React.memo((props) => {
                             <th className="w-10 text-center py-1">#</th>
                             <th className="w-14 text-center py-1">ID</th>
                             <th className="text-left px-2">Title</th>
+                            <th className="text-center px-2">Tags</th>
                             <th className="text-center w-32 px-2">Expectation</th>
                             <th className="text-center w-36">Priority</th>
                             <th className="text-center w-24">Rm</th>
@@ -132,6 +132,22 @@ const CaseTable = React.memo((props) => {
                                     )}
                                 </td>
                                 <td>
+                                    <div>
+                                        <span 
+                                        className="border border-[#87A2FF] rounded-2xl px-2 py-0.5 text-xs cursor-pointer bg-white hover:bg-[#87A2FF] hover:text-white"
+                                        onClick={() => setTagModal({
+                                            'showModal': true,
+                                            'caseId': ele.id,
+                                            'caseTitle': ele.title,
+                                            'tags': ele.tags
+                                        })}
+                                        >
+                                            {ele.tags ? convertStr2Array(ele.tags).length : 0} tags
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <td>
                                     {ele.expectation === '' ? (
                                         <div className="flex gap-1 items-center hover:underline cursor-pointer" onClick={() => handleClickExp(ele.id, ele.expectation)}>
                                             <FaCheck className="text-gray-200" /> No expectation
@@ -153,20 +169,6 @@ const CaseTable = React.memo((props) => {
                                 <td className="">
                                     {ele.active === 1 && (
                                         <div name="action" className="flex gap-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-100 ease-in-out">
-                                            {/* <button className="mr-2" onClick={() => handleCopy(ele.id)}>
-                                                <FaRegCopy className="text-blue-500" />
-                                            </button> */}
-                                            <button type="button"
-                                                onClick={() => setTagModal({
-                                                    'showModal': true,
-                                                    'caseId': ele.id,
-                                                    'caseTitle': ele.title,
-                                                    'tags': ele.tags
-                                                })}
-                                            >
-                                                <FaTag className="text-[#FF885B]" />
-                                            </button>
-
                                             <Link to={`/cases/edit/${ele.id}`} className="">
                                                 <CiEdit />
                                             </Link>

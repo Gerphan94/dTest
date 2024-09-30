@@ -55,7 +55,7 @@ export const BtnCancel = ( {onClick, href='', name='Cancel' }) => {
 export const BtnOK = ( {onClik,  name='Save' } ) => {
     return (
         <button
-            className="flex gap-2 items-center bg-[#049474] border border-[#049474] text-white font-bold py-1 px-4 focus:shadow-outline hover:bg-[#06755C]"
+            className="flex gap-2 items-center bg-[#049474] border border-[#049474] text-white font-bold py-1 pl-4 pr-6 focus:shadow-outline hover:bg-[#06755C]"
             type="submit"
             onClik={onClik}
             
@@ -69,7 +69,7 @@ export const BtnOK = ( {onClik,  name='Save' } ) => {
 export const SubmitButtonOK = ( {name='Save' } ) => {
     return (
         <button
-            className="flex gap-2 items-center bg-[#049474] border border-[#049474] text-white font-bold py-1 px-4 focus:shadow-outline hover:bg-[#06755C]"
+            className="flex gap-2 items-center bg-[#049474] border border-[#049474] text-white font-bold py-1 pl-4 pr-6 focus:shadow-outline hover:bg-[#06755C]"
             type="submit"
             
         >
@@ -82,7 +82,7 @@ export const SubmitButtonOK = ( {name='Save' } ) => {
 export const BtnOKDisabled = ( {  name='Save' } ) => {
     return (
         <button
-            className="flex gap-3 items-center bg-white border border-[#979797]  text-[#979797] font-bold py-1 pl-4 pr-6 focus:outline-none focus:shadow-outline cursor-not-allowed"
+            className="flex gap-2 items-center bg-white border border-[#979797]  text-[#979797] font-bold py-1 pl-4 pr-6 focus:outline-none focus:shadow-outline cursor-not-allowed"
             type="button"
             
         >

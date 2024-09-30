@@ -160,7 +160,7 @@ def getCasesByProject(projectId):
                 case_obj['expectation'] = testcase.expectation
                 case_obj['active'] = testcase.is_active
                 case_obj['section_id'] = section_id,
-                case_obj['rmtask_count'] = rmtask_count
+                case_obj['rmtask_count'] = rmtask_count,
                 case_obj['tags'] = testcase.tags
                 case_ar.append(case_obj)
             return case_ar

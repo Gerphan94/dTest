@@ -3,10 +3,16 @@ import { BtnCancel, BtnOKDisabled, BtnOK } from "../../Common/CustomButton";
 
 import { useGlobalVariables } from "../../../Store/AppContext";
 
-function TagModal({ setTagModal, tagModal }) {
+function TagModal({ setTagModal, tagModal, projectId }) {
 
     const urlAPI = process.env.REACT_APP_API_URL;
+    const [initTagString, setInitTagString] = useState('');
+    const [resultTagString, setResultTagString] = useState('');
+    console.log('resultTagString', resultTagString)
+    console.log('initTagString', initTagString)
+
     const [tags, setTags] = useState([]);
+
     const [caseTags, setCaseTags] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
 
@@ -18,25 +24,36 @@ function TagModal({ setTagModal, tagModal }) {
             return tag;
         });
         setTags(updatedTags);
+        setResultTagString(convertArray2Str(updatedTags.filter(tag => tag.checked).map(tag => tag.id)));
     }
 
     const convertStr2Array = (str) => {
+        if (!str) {
+            return [];
+        }
         return str.split(',').map(item => item.trim());
     }
+    const convertArray2Str = (arr) => {
+        if (!arr) {
+            return '';
+        }
+        return arr.join(',');
+    }
+
     useEffect(() => {
-        // setCaseTags(convertStr2Array(tagModal.tags));
         const fetchTag = async () => {
             try {
-                const response = await fetch(urlAPI + "api/get-tags/" + 3);
+                const response = await fetch(urlAPI + "api/get-tags/" + projectId);
                 const data = await response.json();
-
-                const caseTagIds = convertStr2Array(tagModal.tags);
+                const caseTagIds = new Set(convertStr2Array(tagModal.tags));
+                console.log('caseTagIds', caseTagIds)
 
                 const updatedTags = data.map(tag => ({
                     ...tag,
-                    checked: caseTagIds.includes(tag.id.toString()) 
+                    checked: caseTagIds.has(tag.id.toString())
                 }));
-
+                setInitTagString(tagModal.tags);
+                setResultTagString(tagModal.tags);
                 setTags(updatedTags);
 
             } catch (error) {
@@ -69,26 +86,37 @@ function TagModal({ setTagModal, tagModal }) {
                         {/*body*/}
                         <div className="relative text-left text-sm">
                             <div className="font-medium text-lg px-3 py-2 border-b">
-                            {tagModal.caseTitle}
+                                {tagModal.caseTitle}
                             </div>
-                            <div className="flex flex-wrap px-3 py-6 gap-2">
-                                {tags.map((tag) => (
-                                    <span key={tag.id}
-                                        className={`px-2 py-1 border rounded-xl select-none cursor-pointer ${tag.checked ? 'bg-blue-500 text-white' : 'bg-white text-black'}`}
-                                        onClick={() => handleCheckTag(tag.id)}
+                            <div className="h-[400px]">
+                                <div className="flex flex-wrap px-3 py-6 gap-2 ">
+                                    {tags.map((tag) => (
+                                        <span key={tag.id}
+                                            className={`px-2 py-1 border rounded-xl select-none cursor-pointer ${tag.checked ? 'bg-blue-500 text-white' : 'bg-white text-black'}`}
+                                            onClick={() => handleCheckTag(tag.id)}
 
-                                    >
-                                        {tag.name}
-                                    </span>
-                                ))}
+                                        >
+                                            {tag.name}
+                                        </span>
+                                    ))}
+                                </div>
                             </div>
-                           
+
+
                         </div>
                         {/*footer*/}
                         <div className="flex gap-2 items-center justify-start p-2 bg-[#f5f5f5] text-sm">
                             <BtnCancel onClick={() => setTagModal({
                                 showModal: false
                             })} />
+
+                            {initTagString === resultTagString ?
+
+                                <BtnOKDisabled />
+                                :
+                                <BtnOK />
+
+                            }
                         </div>
                     </div>
 

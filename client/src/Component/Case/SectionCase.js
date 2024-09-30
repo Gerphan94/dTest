@@ -266,6 +266,7 @@ const SectionCase = memo(
           
             setTagModal={setTagModal}
             tagModal={tagModal}
+            projectId={props.projectId}
           />
         )}
       </div>

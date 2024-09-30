@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import SectionDropdown from "./SectionDropdown";
 
 import { btnCancel, btnOK } from "../Common/CustomButton";
@@ -10,9 +10,6 @@ function SectionModal({ projectId, sectionModal, setSectionModal, setData }) {
     const [formData, setFormData] = useState(sectionModal['formData'])
 
     const [selectedParent, setSelectedParent] = useState({id: null, name: 'null'});
-
-
-    // const urlWEB = process.env.REACT_APP_WEB_URL;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
