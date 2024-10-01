@@ -9,6 +9,7 @@ import CaseExpectationModal from "./Modal/CaseExpectationModal";
 import CaseDelModal from "./Modal/CaseDelModal";
 import RmTaskModal from "./Modal/RmTaskModal";
 import TagModal from "./Modal/TagModal";
+import CaseDeleteModal from "./Modal/CaseDeleteModal";
 
 // Memoizing the component to avoid unnecessary re-renders
 const SectionCase = memo(
@@ -28,6 +29,7 @@ const SectionCase = memo(
     const [tagModal, setTagModal] = useState({ showModal: false, caseId: null, caseTitle: '', tags: '' });
     const [rmTaskModal, setRmTaskModal] = useState({ showModal: false, caseId: null});
     const [caseTitleModal, setCaseTitleModal] = useState({ showModal: false, title: "", caseId: null });  
+    const [caseDelModal, setCaseDelModal] = useState({ showModal: false, caseId: null, caseTitle: '' });
 
     const [modals, setModals] = useState({
       caseDelModal: { showModal: false, caseId: null },
@@ -161,7 +163,7 @@ const SectionCase = memo(
     // };
 
     return (
-      <div className="mb-6 text-sm" ref={ref}>
+      <div className="mb-6 text-sm" ref={ref} data-id={sectionId}>
         <div className="flex mb-2 w-full group">
           <div className="text-left font-medium">{sectionName}</div>
           <div className="ml-2 flex items-center flex-wrap">
@@ -191,6 +193,7 @@ const SectionCase = memo(
             setTagModal={setTagModal}
             setRmTaskModal={setRmTaskModal}
             setCaseTitleModal={setCaseTitleModal}
+            setCaseDelModal={setCaseDelModal}
           />
         </div>
         <div className="flex gap-2 mt-4">
@@ -243,15 +246,7 @@ const SectionCase = memo(
           />
         )}
 
-        {modals.caseDelModal.showModal && (
-          <CaseDelModal
-            caseDelModal={modals.caseDelModal}
-            setModal={(newState) => setModal('caseDelModal', newState)}
-            fetchCaseData={fetchGetCaseDataBySection}
-            sectionId={sectionId}
-          />
-        )}
-
+    
         {rmTaskModal.showModal && (
           <RmTaskModal
             rmTaskModal={rmTaskModal}
@@ -267,6 +262,15 @@ const SectionCase = memo(
             setTagModal={setTagModal}
             tagModal={tagModal}
             projectId={props.projectId}
+          />
+        )}
+
+        {caseDelModal.showModal && (
+          <CaseDeleteModal
+            caseDelModal={caseDelModal}
+            fetchCaseData={fetchGetCaseDataBySection}
+            sectionId={sectionId}
+            setCaseDelModal={setCaseDelModal}
           />
         )}
       </div>

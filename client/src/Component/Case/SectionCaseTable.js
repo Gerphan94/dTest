@@ -19,7 +19,8 @@ const CaseTable = React.memo((props) => {
         setCaseExpectationModal,
         sectionId,
         setRmTaskModal,
-        setTagModal
+        setTagModal,
+        setCaseDelModal
     } = props;
 
     const urlWEB = process.env.REACT_APP_WEB_URL;
@@ -174,7 +175,11 @@ const CaseTable = React.memo((props) => {
                                             </Link>
                                             <button type="button">
                                                 <FaXmark className="bg-red-500 border border-red-500 rounded-full text-white cursor-pointer opacity-80 hover:opacity-100" 
-                                                // onClick={() => handleClickDelCase(ele.id)}
+                                                onClick={() => setCaseDelModal({
+                                                    'showModal': true,
+                                                    'caseId': ele.id,
+                                                    'caseTitle': ele.title
+                                                })}
                                                  />
                                             </button>
                                         </div>
