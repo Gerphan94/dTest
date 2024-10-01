@@ -307,6 +307,15 @@ def update_case_expect(case_id):
         return jsonify({"message": "Case updated successfully"}), 200
     return jsonify({"error": "Case not found"}), 404
 
+@main.route('/api/delete-case/<int:case_id>', methods=['POST'])
+def delete_case(case_id):
+    case = Testcase.query.get(case_id)
+    if (case):
+        db.session.delete(case)
+        db.session.commit()
+        return jsonify({"message": "Case deleted successfully"}), 200
+
+
 
 @main.route('/api/copy-case', methods=['POST'])
 def copy_case():
