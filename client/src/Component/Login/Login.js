@@ -3,9 +3,10 @@ import { PiEyeLight, PiEyeSlash } from "react-icons/pi";
 
 function Login({ setCookie, setLoggedIn }) {
 
-
     const urlAPI = process.env.REACT_APP_API_URL;
     const urlWEB = process.env.REACT_APP_WEB_URL;
+
+    const [showFailLogin, setShowFailLogin] = useState(false);
 
     const [hidePwd, setHidePwd] = useState(true);
 
@@ -30,14 +31,13 @@ function Login({ setCookie, setLoggedIn }) {
 
                     // setCookie('token', data.token, { path: '/' });
                     setLoggedIn(true);
-
                 } else {
-                    const data = await response.json();
-                    alert(data.message);
+                    setShowFailLogin(true);
                 }
 
             } catch (error) {
                 console.error("Error:", error);
+                setShowFailLogin(true);
             }
         }, []);
 

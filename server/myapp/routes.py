@@ -34,6 +34,17 @@ def getProjects():
         'id': project.id, 
         'name': project.name 
         } for project in Project.query.all()])
+
+@main.route('/api/insert-project', methods=['POST'])
+def create_project():
+    data = request.get_json()
+    project = Project(
+        name = data['project_name'],
+    )
+    db.session.add(project)
+    db.session.commit()
+    return jsonify({"id": project.id,"name": project.name}), 200
+
     
 @main.route('/api/get-project-by-id/<int:project_id>', methods=['GET'])
 def get_project_by_id(project_id):
@@ -428,6 +439,7 @@ def get_caseDetail(case_id):
                     'id': case_detail.section.id,
                     'name': case_detail.section.name
                 },
+                'project_id': case_detail.section.project_id,
                 'created_date': case_detail.created_date,
                 'created_by': {
                     'id': case_detail.created_by_user.id,

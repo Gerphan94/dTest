@@ -15,6 +15,7 @@ import Navbar from "../../navBar";
 function CaseDetail() {
     const { caseId } = useParams();
     const { setGlobalProjectId, setSelectedNavBar } = useGlobalVariables();
+
     const urlAPI = process.env.REACT_APP_API_URL;
     const [caseDetail, setCaseDetail] = useState({});
     const [projectId, setProjectId] = useState('');
@@ -25,6 +26,8 @@ function CaseDetail() {
                 const response = await fetch(`${urlAPI}api/get-case-by-id/${caseId}`);
                 const data = await response.json();
                 setCaseDetail(data);
+                setGlobalProjectId(data.project_id);
+                setProjectId(data.project_id);
                 document.title = `${data.title} - dTest`;
             } catch (error) {
                 console.error('Error fetching data:', error);

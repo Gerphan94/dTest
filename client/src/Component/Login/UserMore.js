@@ -1,12 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { RiSearch2Line, RiAlignJustify } from "react-icons/ri";
 import { useCookies } from 'react-cookie';
+import { useGlobalVariables } from '../../Store/AppContext';
 
-const UserMore = ({ setLoggedIn }) => {
+const UserMore = () => {
 
     // const urlAPI = process.env.REACT_APP_API_URL;
 
     const [cookies, setCookie, removeCookie] = useCookies(['token']);
+
+    const { setLoggedIn } = useGlobalVariables();
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 

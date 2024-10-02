@@ -4,6 +4,8 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FcBriefcase } from "react-icons/fc";
 import { useGlobalVariables } from "../../Store/AppContext";
 import Navbar from "../navBar";
+import { FaPlus } from "react-icons/fa6";
+import AddProjectModal from "./AddProjectModal";
 
 const Dashboard = React.memo(() => {
     console.log('fetChing Dashboard')
@@ -14,6 +16,8 @@ const Dashboard = React.memo(() => {
     const location = useLocation();
     const { setGlobalProjectId } = useGlobalVariables();
     const [projects, setProjects] = useState([])
+
+    const [showAddProjectModal, setShowAddProjectModal] = useState(false);
 
 
     useEffect(() => {
@@ -35,7 +39,7 @@ const Dashboard = React.memo(() => {
     return (
         <>
             <div className="min-h-screen flex flex-col">
-                <Navbar  />
+                <Navbar />
                 <div className="flex-grow flex overflow-auto mt-20">
                     <div className="w-full bg-[#EAF1F7]">
                         <div className="w-full text-left border-b py-2 px-4 font-bold">Projects</div>
@@ -68,8 +72,27 @@ const Dashboard = React.memo(() => {
                             ))}
                         </div>
                     </div>
+
+                    <div className="bg-[#d2e2ed] w-80 p-4">
+                        <button
+                            className="w-40 text-white px-4 py-1 flex gap-2 items-center justify-center bg-[#376789]"
+                            onClick={() => setShowAddProjectModal(true)}
+
+
+                        >
+                            <FaPlus />
+                            Add Project
+                        </button>
+
+                    </div>
                 </div>
             </div>
+
+            {showAddProjectModal && (
+                <AddProjectModal
+                    setShowModal={setShowAddProjectModal}
+                />
+            )}
         </>
     )
 });

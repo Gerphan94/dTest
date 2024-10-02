@@ -38,10 +38,10 @@ function App() {
   const { setLogginUser } = useGlobalVariables();
 
   const PageList = [
-    { name: "Login", path: "/Login", title: 'Login', component: Login },
+    { name: "Login", path: "/Login", title: 'Login', component: <Login /> },
     { name: "Dashboard", path: "/dashboard", title: 'Dashboard', component: <Dashboard /> },
     { name: "Dashboard", path: "/", title: 'Dashboard', component: <Dashboard /> },
-    { name: "Overview", path: "/project/overview/:projectId", title: 'Overview', component: Overview },
+    { name: "Overview", path: "/project/overview/:projectId", title: 'Overview', component: <Overview />},
     { name: "MileStone", path: "/milestones/overview/:projectId", title: 'MileStone', component: <MileStone /> },
     // TESTCASE
     // { name: "Testcases", path: "/cases/view/:projectId", title: 'Case', component: <CasePage /> },

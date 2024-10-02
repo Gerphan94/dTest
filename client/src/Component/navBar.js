@@ -31,7 +31,6 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie, projectId=0, isSelec
     }
   }, [projectId])
 
-  const MENU0 = [{ id: 'dashboard', name: 'Dashboard', url: urlWEB + 'dashboard/'  }]
   const MENU1 = [
     { id: 'overview', name: 'Overview', url: urlWEB + 'project/overview/' + projectId },
     { id: 'todos', name: 'Todos', url: urlWEB + 'project/overview/' + projectId },
@@ -64,7 +63,7 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie, projectId=0, isSelec
               {projectId > 0 ? 
               <>
                 <div className='mb-0 mt-2 cursor-pointer select-none text-left '>
-                    <Link className='text-[12px] hover:underline' to={`${urlWEB}/dashboard`} >
+                    <Link className='text-[12px] hover:underline' to={`../dashboard`} >
                       <span className='flex gap-1 items-center'>
                         <FaArrowLeftLong />
                         back to Dashboard
@@ -100,7 +99,7 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie, projectId=0, isSelec
               WorkLog
             </Link> */}
             {
-              projectId !== 0 && MENU1.map((item) => (
+              projectId > 0 ? MENU1.map((item) => (
                 <Link
                   key={item.id}
                   className={`${selectedNavBar === item.id ? 'border-b-2 border-white' : ''} px-2 h-full text-gray-200 hover:text-white cursor-pointer hover:border-b-2 hover:border-white`}
@@ -110,6 +109,16 @@ function Navbar({ usernameLogin, setLoggedIn, removeCookie, projectId=0, isSelec
                   {item.name}
                 </Link>
               ))
+              :
+              <>
+                <Link
+                  className={`border-b-2 border-white px-2 h-full text-gray-200 hover:text-white cursor-pointer hover:border-b-2 hover:border-white`}
+                  to={'.'}
+                  onClick={() => handleClickLink('dashboard')}
+                >
+                  Dashboard
+                </Link>
+              </>
 
             }
           </ul>
