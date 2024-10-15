@@ -59,7 +59,6 @@ const StatusDropdown = ({ status, runCaseId }) => {
         } else {
             document.removeEventListener("mousedown", handleClickOutside);
         }
-
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
@@ -75,7 +74,6 @@ const StatusDropdown = ({ status, runCaseId }) => {
                             className={`border select-none outline-none h-full w-full rounded-xl flex items-center justify-between py-0.5 px-2 text-white group-hover:border-blue-200 bg-[${colors[selectedOption.id - 1]}]`}
                             onClick={toggleDropdown}
                         >
-
                             <span>{selectedOption?.name || 'Select Status'}</span>
                             <span
                                 className="flex items-center ml-1"
